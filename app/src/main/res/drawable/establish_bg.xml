@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+
+    <!-- Màu nền -->
+    <gradient
+        android:startColor="#0063a7"
+        android:endColor="#0063a7"
+        android:angle="45" />
+    <!-- Padding bên trong nếu cần -->
+    <padding
+        android:left="4dp"
+        android:top="4dp"
+        android:right="4dp"
+        android:bottom="4dp" />
+</shape>
