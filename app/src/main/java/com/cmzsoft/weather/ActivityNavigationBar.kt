@@ -1,22 +1,18 @@
 package com.cmzsoft.weather
 
-import android.content.Intent
 import android.os.Bundle
-import android.widget.Button
-import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.drawerlayout.widget.DrawerLayout
-import com.cmzsoft.weather.APICall.RequestAPI
 import com.google.android.material.navigation.NavigationView
+import androidx.appcompat.app.ActionBarDrawerToggle
+import android.widget.Toast
 
-
-class MainActivity : AppCompatActivity() {
+class ActivityNavigationBar : AppCompatActivity() {
 
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var navView: NavigationView
@@ -24,29 +20,15 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         enableEdgeToEdge()
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_navigation_bar)
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-
-        val requestAPI = RequestAPI()
-        Thread {
-            val result = requestAPI.CallAPI()
-            runOnUiThread {
-                Toast.makeText(this, result, Toast.LENGTH_SHORT).show()
-            }
-        }.start()
-
-        val btn = findViewById<Button>(R.id.button2)
-        btn.setOnClickListener {
-//            val changePage = Intent(this, activity_setting_scene::class.java);
-            val changePage = Intent(this, ActivityNavigationBar::class.java);
-            startActivity(changePage);
-        }
-
 
         drawerLayout = findViewById(R.id.drawer_layout)
         navView = findViewById(R.id.nav_view)
@@ -93,9 +75,5 @@ class MainActivity : AppCompatActivity() {
         } else {
             super.onBackPressed()
         }
-    }
-
-//        val intent = Intent(this, R.layout.)
-//        startActivity(intent)
     }
 }
