@@ -1,8 +1,10 @@
 package com.cmzsoft.weather
 
-import android.content.Intent
 import android.os.Bundle
+import android.view.Gravity
+import android.view.View
 import android.widget.Button
+import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -12,14 +14,7 @@ import androidx.core.view.GravityCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.drawerlayout.widget.DrawerLayout
-import com.cmzsoft.weather.APICall.RequestAPI
 import com.google.android.material.navigation.NavigationView
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
-import android.view.LayoutInflater
-import android.widget.ArrayAdapter
-import android.widget.Spinner
-import androidx.appcompat.app.AlertDialog
 
 class MainActivity : AppCompatActivity() {
 
@@ -37,22 +32,48 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
-        val requestAPI = RequestAPI()
-        Thread {
-            val result = requestAPI.CallAPI()
-            runOnUiThread {
-                Toast.makeText(this, result, Toast.LENGTH_SHORT).show()
-            }
-        }.start()
+//        val requestAPI = RequestAPI()
+//        Thread {
+//            val result = requestAPI.CallAPI()
+//            runOnUiThread {
+//                Toast.makeText(this, result, Toast.LENGTH_SHORT).show()
+//            }
+//        }.start()
 
         val btn = findViewById<Button>(R.id.button2)
         btn.setOnClickListener {
 //            val changePage = Intent(this, activity_setting_scene::class.java);
-            val changePage = Intent(this, activity_setting_scene::class.java);
-            startActivity(changePage);
+//            startActivity(changePage);
+
+            showSettingsDialog();
         }
 
         InitEventNavigationBar();
+    }
+
+
+    private fun showSettingsDialog() {
+        val container = findViewById<FrameLayout>(R.id.container_dialog_setting)
+
+        if (container.childCount == 0) {
+            val dialogView = layoutInflater.inflate(R.layout.dialog_setting, container, false)
+            val params = FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.MATCH_PARENT,
+                FrameLayout.LayoutParams.WRAP_CONTENT
+            )
+            params.gravity = Gravity.CENTER
+            dialogView.layoutParams = params
+
+            container.addView(dialogView)
+
+            val btnDone = dialogView.findViewById<Button>(R.id.btn_done)
+            btnDone.setOnClickListener {
+                container.visibility = View.GONE
+                container.removeAllViews()
+            }
+        }
+
+        container.visibility = View.VISIBLE
     }
 
 
@@ -86,58 +107,13 @@ class MainActivity : AppCompatActivity() {
                 R.id.nav_daily_weather -> {
                     Toast.makeText(this, "Thời tiết hàng ngày", Toast.LENGTH_SHORT).show()
                 }
-
+                R.id.nav_settings -> {
+                    showSettingsDialog();
+                }
                 else -> {}
             }
             drawerLayout.closeDrawer(GravityCompat.START)
             true
         }
-
-//        showSettingsDialog();
     }
-
-//    private fun showSettingsDialog() {
-//        val view = LayoutInflater.from(this).inflate(R.layout.dialog_settings, null)
-//
-//        val spinnerTemp = view.findViewById<Spinner>(R.id.spinner_temp)
-//        val spinnerRain = view.findViewById<Spinner>(R.id.spinner_rain)
-//        // Add more spinners here if needed
-//
-//        spinnerTemp.adapter = ArrayAdapter.createFromResource(
-//            this,
-//            R.array.temp_units,
-//            android.R.layout.simple_spinner_dropdown_item
-//        )
-//
-//        spinnerRain.adapter = ArrayAdapter.createFromResource(
-//            this,
-//            R.array.rain_units,
-//            android.R.layout.simple_spinner_dropdown_item
-//        )
-//
-//        val dialog = AlertDialog.Builder(this)
-//            .setView(view)
-//            .create()
-//
-//        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-//
-//        val btnDone = view.findViewById<Button>(R.id.btn_done)
-//        btnDone.setOnClickListener {
-//            dialog.dismiss()
-//        }
-//
-//        dialog.show()
-//    }
-
-//    override fun onBackPressed() {
-//        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
-//            drawerLayout.closeDrawer(GravityCompat.START)
-//            Toast.makeText(this, "Close drawer onBackPressed", Toast.LENGTH_SHORT).show()
-//        } else {
-//            super.onBackPressed()
-//        }
-//    }
-
-//        val intent = Intent(this, R.layout.)
-//        startActivity(intent)
 }

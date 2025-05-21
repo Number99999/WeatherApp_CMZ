@@ -5,8 +5,8 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/sky_blue">
-
+    android:background="@color/sky_blue"
+    android:fitsSystemWindows="true">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -32,6 +32,7 @@
                 android:id="@+id/cityName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:fitsSystemWindows="true"
                 android:text="Hà Nội"
                 android:textColor="@android:color/white"
                 android:textSize="24sp"
@@ -166,7 +167,6 @@
                         android:text="Gió: ĐN • 9.8 mph"
                         android:textColor="@android:color/white" />
 
-
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -180,6 +180,7 @@
                     android:id="@+id/button2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
                     android:text="change activity"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -187,6 +188,14 @@
             </LinearLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
+
+    <FrameLayout
+        android:id="@+id/container_dialog_setting"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#99000000"
+        android:visibility="gone"
+        android:gravity="center"/>
 
     <!--    nav luôn đặt dưới cùng để lấy event-->
     <com.google.android.material.navigation.NavigationView
