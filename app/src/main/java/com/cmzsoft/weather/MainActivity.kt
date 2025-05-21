@@ -14,7 +14,12 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import com.cmzsoft.weather.APICall.RequestAPI
 import com.google.android.material.navigation.NavigationView
-
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
+import android.view.LayoutInflater
+import android.widget.ArrayAdapter
+import android.widget.Spinner
+import androidx.appcompat.app.AlertDialog
 
 class MainActivity : AppCompatActivity() {
 
@@ -43,19 +48,21 @@ class MainActivity : AppCompatActivity() {
         val btn = findViewById<Button>(R.id.button2)
         btn.setOnClickListener {
 //            val changePage = Intent(this, activity_setting_scene::class.java);
-            val changePage = Intent(this, ActivityNavigationBar::class.java);
+            val changePage = Intent(this, activity_setting_scene::class.java);
             startActivity(changePage);
         }
 
+        InitEventNavigationBar();
+    }
 
-        drawerLayout = findViewById(R.id.drawer_layout)
+
+    private fun InitEventNavigationBar() {
+        drawerLayout = findViewById(R.id.main)
         navView = findViewById(R.id.nav_view)
 
-        // Thiết lập Toolbar
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
 
-        // Khởi tạo và liên kết toggle với drawer layout và toolbar
         toggle = ActionBarDrawerToggle(
             this,
             drawerLayout,
@@ -66,36 +73,71 @@ class MainActivity : AppCompatActivity() {
         drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
 
-        // Xử lý sự kiện chọn menu trong navigation drawer
         navView.setNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.nav_location -> {
                     Toast.makeText(this, "Quản lý vị trí", Toast.LENGTH_SHORT).show()
                 }
+
                 R.id.nav_notification -> {
                     Toast.makeText(this, "Thông báo", Toast.LENGTH_SHORT).show()
                 }
+
                 R.id.nav_daily_weather -> {
                     Toast.makeText(this, "Thời tiết hàng ngày", Toast.LENGTH_SHORT).show()
                 }
-                // TODO: Xử lý các item menu khác tương tự
 
                 else -> {}
             }
             drawerLayout.closeDrawer(GravityCompat.START)
             true
         }
+
+//        showSettingsDialog();
     }
 
-    override fun onBackPressed() {
-        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
-            drawerLayout.closeDrawer(GravityCompat.START)
-        } else {
-            super.onBackPressed()
-        }
-    }
+//    private fun showSettingsDialog() {
+//        val view = LayoutInflater.from(this).inflate(R.layout.dialog_settings, null)
+//
+//        val spinnerTemp = view.findViewById<Spinner>(R.id.spinner_temp)
+//        val spinnerRain = view.findViewById<Spinner>(R.id.spinner_rain)
+//        // Add more spinners here if needed
+//
+//        spinnerTemp.adapter = ArrayAdapter.createFromResource(
+//            this,
+//            R.array.temp_units,
+//            android.R.layout.simple_spinner_dropdown_item
+//        )
+//
+//        spinnerRain.adapter = ArrayAdapter.createFromResource(
+//            this,
+//            R.array.rain_units,
+//            android.R.layout.simple_spinner_dropdown_item
+//        )
+//
+//        val dialog = AlertDialog.Builder(this)
+//            .setView(view)
+//            .create()
+//
+//        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+//
+//        val btnDone = view.findViewById<Button>(R.id.btn_done)
+//        btnDone.setOnClickListener {
+//            dialog.dismiss()
+//        }
+//
+//        dialog.show()
+//    }
+
+//    override fun onBackPressed() {
+//        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+//            drawerLayout.closeDrawer(GravityCompat.START)
+//            Toast.makeText(this, "Close drawer onBackPressed", Toast.LENGTH_SHORT).show()
+//        } else {
+//            super.onBackPressed()
+//        }
+//    }
 
 //        val intent = Intent(this, R.layout.)
 //        startActivity(intent)
-    }
 }
