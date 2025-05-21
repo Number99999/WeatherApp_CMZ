@@ -1,5 +1,6 @@
 package com.cmzsoft.weather
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.Gravity
 import android.view.View
@@ -40,13 +41,11 @@ class MainActivity : AppCompatActivity() {
 //            }
 //        }.start()
 
-        val btn = findViewById<Button>(R.id.button2)
-        btn.setOnClickListener {
-//            val changePage = Intent(this, activity_setting_scene::class.java);
+//        val btn = findViewById<Button>(R.id.button2)
+//        btn.setOnClickListener {
+//            val changePage = Intent(this, SettingTheme::class.java);
 //            startActivity(changePage);
-
-            showSettingsDialog();
-        }
+//        }
 
         InitEventNavigationBar();
     }
@@ -100,16 +99,28 @@ class MainActivity : AppCompatActivity() {
                     Toast.makeText(this, "Quản lý vị trí", Toast.LENGTH_SHORT).show()
                 }
 
-                R.id.nav_notification -> {
-                    Toast.makeText(this, "Thông báo", Toast.LENGTH_SHORT).show()
-                }
+//                R.id.nav_notification -> {
+//                    Toast.makeText(this, "Thông báo", Toast.LENGTH_SHORT).show()
+//                }
+//
+//                R.id.nav_daily_weather -> {
+//                    Toast.makeText(this, "Thời tiết hàng ngày", Toast.LENGTH_SHORT).show()
+//                }
 
-                R.id.nav_daily_weather -> {
-                    Toast.makeText(this, "Thời tiết hàng ngày", Toast.LENGTH_SHORT).show()
-                }
                 R.id.nav_settings -> {
                     showSettingsDialog();
                 }
+
+                R.id.nav_establish -> {
+                    val changePage = Intent(this, activity_setting_scene::class.java);
+                    startActivity(changePage);
+                }
+
+                R.id.nav_choose_theme -> {
+                    val changePage = Intent(this, SettingTheme::class.java);
+                    startActivity(changePage);
+                }
+
                 else -> {}
             }
             drawerLayout.closeDrawer(GravityCompat.START)
