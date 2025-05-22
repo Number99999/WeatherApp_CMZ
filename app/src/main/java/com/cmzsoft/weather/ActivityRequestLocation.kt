@@ -1,10 +1,10 @@
 package com.cmzsoft.weather
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import android.widget.ScrollView
-import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -21,8 +21,15 @@ class ActivityRequestLocation : AppCompatActivity() {
             insets
         }
 
+        InitEventBtn()
+    }
+
+    private fun InitEventBtn() {
         InitEventButtonAcceptLocation()
         InitEventButtonManual()
+        InitEventAcceptAllTime()
+        InitEventAcceptThisTime()
+        InitEventDontAccept()
     }
 
     private fun InitEventButtonAcceptLocation() {
@@ -39,7 +46,32 @@ class ActivityRequestLocation : AppCompatActivity() {
     private fun InitEventButtonManual() {
         val btn = findViewById<Button>(R.id.btn_manual_search)
         btn.setOnClickListener {
-            Toast.makeText(this, "Tìm kiếm thủ công", Toast.LENGTH_SHORT).show()
+            val changePage = Intent(this, MainActivity::class.java);
+            startActivity(changePage);
+        }
+    }
+
+    private fun InitEventAcceptAllTime() {
+        val btn = findViewById<Button>(R.id.btn_accept_when_use_app)
+        btn.setOnClickListener {
+            val changePage = Intent(this, MainActivity::class.java);
+            startActivity(changePage);
+        }
+    }
+
+    private fun InitEventAcceptThisTime() {
+        val btn = findViewById<Button>(R.id.btn_accept_this_time)
+        btn.setOnClickListener {
+            val changePage = Intent(this, MainActivity::class.java);
+            startActivity(changePage);
+        }
+    }
+
+    private fun InitEventDontAccept() {
+        val btn = findViewById<Button>(R.id.btn_dont_accept)
+        btn.setOnClickListener {
+            val changePage = Intent(this, MainActivity::class.java);
+            startActivity(changePage);
         }
     }
 }

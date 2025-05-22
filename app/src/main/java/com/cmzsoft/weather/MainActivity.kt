@@ -1,6 +1,11 @@
 package com.cmzsoft.weather
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.view.Gravity
 import android.view.View
@@ -11,6 +16,9 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
+import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -48,6 +56,8 @@ class MainActivity : AppCompatActivity() {
 //        }
 
         InitEventNavigationBar();
+        createNotificationChannel(this)
+        RequestAcceptSendNotification();
     }
 
     private fun showSettingsDialog() {
@@ -98,14 +108,6 @@ class MainActivity : AppCompatActivity() {
                     Toast.makeText(this, "Quản lý vị trí", Toast.LENGTH_SHORT).show()
                 }
 
-//                R.id.nav_notification -> {
-//                    Toast.makeText(this, "Thông báo", Toast.LENGTH_SHORT).show()
-//                }
-//
-//                R.id.nav_daily_weather -> {
-//                    Toast.makeText(this, "Thời tiết hàng ngày", Toast.LENGTH_SHORT).show()
-//                }
-
                 R.id.nav_settings -> {
                     showSettingsDialog();
                 }
@@ -126,4 +128,93 @@ class MainActivity : AppCompatActivity() {
             true
         }
     }
+
+
+    private val NOTIFICATION_PERMISSION_REQUEST_CODE = 1001
+    private fun RequestAcceptSendNotification() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (checkSelfPermission(android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(
+                    arrayOf(android.Manifest.permission.POST_NOTIFICATIONS),
+                    NOTIFICATION_PERMISSION_REQUEST_CODE
+                )
+            } else {
+                sendNotification()
+            }
+        } else {
+            sendNotification()
+        }
+    }
+
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == NOTIFICATION_PERMISSION_REQUEST_CODE) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                sendNotification()
+            } else {
+                Toast.makeText(this, "Quyền thông báo bị từ chối", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private val CHANNEL_ID = "my_channel_id"
+    private val CHANNEL_NAME = "My Channel"
+    private val CHANNEL_DESCRIPTION = "Channel for app notifications"
+
+    fun createNotificationChannel(context: Context) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val importance = NotificationManager.IMPORTANCE_DEFAULT
+            val channel = NotificationChannel(CHANNEL_ID, CHANNEL_NAME, importance).apply {
+                description = CHANNEL_DESCRIPTION
+            }
+            val notificationManager =
+                context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(channel)
+        }
+    }
+
+    private fun sendNotification() {
+        val builder = NotificationCompat.Builder(this, CHANNEL_ID)
+            .setSmallIcon(R.drawable.icon_correct_location)
+            .setContentTitle("Thông báo từ Weath")
+            .setContentText("test 1 2 3 1 2 3")
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(
+                    this,
+                    android.Manifest.permission.POST_NOTIFICATIONS
+                ) == PackageManager.PERMISSION_GRANTED
+            ) {
+                with(NotificationManagerCompat.from(this)) {
+                    notify(1001, builder.build())
+                }
+            } else {
+                requestPermissions(
+                    arrayOf(android.Manifest.permission.POST_NOTIFICATIONS),
+                    NOTIFICATION_PERMISSION_REQUEST_CODE
+                )
+            }
+        } else {
+            try {
+                with(NotificationManagerCompat.from(this)) {
+                    notify(1001, builder.build())
+                }
+            } catch (e: Exception) {
+                Toast.makeText(this, e.toString(), Toast.LENGTH_LONG).show()
+            }
+        }
+    }
+
+
+    // same enable
+//    override fun onResume() {
+//        super.onResume()
+//        sendNotification()
+//    }
 }

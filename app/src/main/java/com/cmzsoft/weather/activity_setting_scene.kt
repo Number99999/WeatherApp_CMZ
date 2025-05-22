@@ -4,6 +4,7 @@ package com.cmzsoft.weather
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -25,9 +26,8 @@ class activity_setting_scene : AppCompatActivity() {
     }
 
     private fun initEventBack() {
-        val button = findViewById<Button>(R.id.backButton);
+        val button = findViewById<ImageButton>(R.id.backButton);
         button.setOnClickListener {
-            Toast.makeText(this, "btn clicked", Toast.LENGTH_SHORT).show()
             val changePage = Intent(this, MainActivity::class.java);
             startActivity(changePage);
         }
