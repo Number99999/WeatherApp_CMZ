@@ -21,7 +21,6 @@ class activity_setting_scene : AppCompatActivity() {
             insets
         }
 
-        initAnimToggle();
         initEventBack()
     }
 
@@ -33,23 +32,4 @@ class activity_setting_scene : AppCompatActivity() {
             startActivity(changePage);
         }
     }
-
-    private fun initAnimToggle() {
-//        val toggleContainer = findViewById<FrameLayout>(R.id.toggleContainer)
-//        val knob = findViewById<View>(R.id.knob)
-//
-//        var isOn = true
-//        toggleContainer.setOnClickListener {
-//            val endX = if (isOn) 0f else (toggleContainer.width - knob.width).toFloat()
-//            isOn = !isOn
-//            knob.animate()
-//                .x(endX)
-//                .setDuration(300)
-//                .withEndAction {
-//                    toggleContainer.setBackgroundResource(if(isOn) R.drawable.bg_toggle_checked else R.drawable.bg_toggle_unchecked);
-//                }
-//                .start()
-//        }
-    }
-
 }

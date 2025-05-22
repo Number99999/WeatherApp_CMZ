@@ -3,6 +3,7 @@
     <string name="title_activity_test_location">TestLocationActivity</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="underline_policy"><u>Chính sách quyền riêng tư</u></string>
     <string-array name="temp_units">
         <item>°C</item>
         <item>°F</item>

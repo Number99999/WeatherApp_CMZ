@@ -50,7 +50,6 @@ class MainActivity : AppCompatActivity() {
         InitEventNavigationBar();
     }
 
-
     private fun showSettingsDialog() {
         val container = findViewById<FrameLayout>(R.id.container_dialog_setting)
 
