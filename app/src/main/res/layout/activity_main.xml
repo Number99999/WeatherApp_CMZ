@@ -20,7 +20,7 @@
                 android:id="@+id/toolbar"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:title="Thời tiết"
+                android:title=""
                 android:titleTextColor="@android:color/white"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -37,7 +37,7 @@
                 android:textColor="@android:color/white"
                 android:textSize="24sp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintStart_toStartOf="@id/toolbar"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <!-- Icon thời tiết -->

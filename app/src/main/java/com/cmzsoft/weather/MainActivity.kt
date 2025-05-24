@@ -27,6 +27,8 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import com.bumptech.glide.Glide
 import com.cmzsoft.weather.APICall.RequestAPI
+import com.cmzsoft.weather.DatabaService.DatabaseService
+import com.cmzsoft.weather.Model.LocationWeatherModel
 import com.google.android.material.navigation.NavigationView
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -37,6 +39,9 @@ class MainActivity : AppCompatActivity() {
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var navView: NavigationView
     private lateinit var toggle: ActionBarDrawerToggle
+    private val handler = android.os.Handler()
+    private lateinit var updateRunnable: Runnable
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,12 +58,24 @@ class MainActivity : AppCompatActivity() {
         RequestAcceptSendNotification();
 
         UpdateWeatherInfor()
+        startAutoUpdateWeather()
+    }
+
+    private fun getCurLocationInDb(): LocationWeatherModel? {
+        val listLocation: List<LocationWeatherModel> =
+            DatabaseService.getInstance(this).locationWeatherService.getAllLocationWeather()
+
+        if (listLocation.size == 0) return null
+        return listLocation[listLocation.size - 1]
     }
 
     private fun UpdateWeatherInfor() {
         val requestAPI = RequestAPI.getInstance();
         Thread {
-            val result = requestAPI.CallAPI(21.0285, 105.8542);
+            var result = requestAPI.CallAPI(21.0285, 105.8542);
+            val curLocationInDb = getCurLocationInDb();
+            if (curLocationInDb != null)
+                result = requestAPI.CallAPI(curLocationInDb.latitude, curLocationInDb.longitude)
 
             runOnUiThread {
                 val txtDegree = findViewById<TextView>(R.id.temperature)
@@ -145,7 +162,7 @@ class MainActivity : AppCompatActivity() {
         navView = findViewById(R.id.nav_view)
 
         val toolbar: Toolbar = findViewById(R.id.toolbar)
-        setSupportActionBar(toolbar)
+//        setSupportActionBar(toolbar)
 
         toggle = ActionBarDrawerToggle(
             this,
@@ -183,6 +200,27 @@ class MainActivity : AppCompatActivity() {
             drawerLayout.closeDrawer(GravityCompat.START)
             true
         }
+    }
+
+    private fun startAutoUpdateWeather() {
+        val now = java.util.Calendar.getInstance()
+        val second = now.get(java.util.Calendar.SECOND)
+        val delayToNextMinute = (60 - second) * 1000
+
+        updateRunnable = Runnable {
+            UpdateWeatherInfor()
+            handler.postDelayed(updateRunnable, 60_000) // Lặp mỗi 60 giây
+        }
+
+        handler.postDelayed({
+            UpdateWeatherInfor()
+            handler.postDelayed(updateRunnable, 60_000) // Sau đó lặp đều mỗi 60 giây
+        }, delayToNextMinute.toLong())
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        handler.removeCallbacks(updateRunnable) // Dừng lặp khi Activity bị huỷ
     }
 
 

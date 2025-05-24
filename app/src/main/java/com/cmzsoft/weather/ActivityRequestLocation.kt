@@ -4,6 +4,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.ScrollView
+import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -29,6 +31,17 @@ class ActivityRequestLocation : AppCompatActivity() {
         InitEventAcceptAllTime()
         InitEventAcceptThisTime()
         InitEventDontAccept()
+        InitEventClickPolicy()
+    }
+
+    private fun InitEventClickPolicy() {
+        val txt = findViewById<TextView>(R.id.txt_policy)
+        txt.setOnClickListener {
+//            val intent = Intent(Intent.ACTION_VIEW)
+//            intent.data = Uri.parse(" https://www.google.com/") // Thay link tại đây
+//            startActivity(intent)
+            Toast.makeText(this, "Policy clicked", Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun InitEventButtonAcceptLocation() {

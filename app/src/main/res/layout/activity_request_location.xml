@@ -61,6 +61,7 @@
                 android:textColor="#FFFFFF" />
 
             <TextView
+                android:id="@+id/txt_policy"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
