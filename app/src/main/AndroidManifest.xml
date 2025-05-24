@@ -17,11 +17,18 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Weather"
         tools:targetApi="31">
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyAE_6F6J92mVoin5BvwysIpafryT0gUyRs" />
+
+
         <activity
             android:name=".ActivityRequestLocation"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -29,10 +36,16 @@
             android:name=".SettingTheme"
             android:exported="false" />
         <activity
+            android:name=".TestLineChart"
+            android:exported="false" />
+        <activity
             android:name=".activity_setting_scene"
             android:exported="false" />
         <activity
             android:name=".MainActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ActivityChooseLocationWithMap"
             android:exported="false" />
     </application>
 

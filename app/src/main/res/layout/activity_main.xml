@@ -104,7 +104,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="Không có mưa trong 120 phút"
+                android:text=""
                 android:textColor="@android:color/white"
                 android:textSize="14sp"
                 android:textStyle="italic"
@@ -112,9 +112,8 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/timeInfo" />
 
-            <!-- Khu vực thống kê -->
 
-
+            <!--            Khu vực thống kê-->
             <LinearLayout
                 android:id="@+id/infoStats"
                 android:layout_width="0dp"
@@ -134,6 +133,7 @@
                     android:weightSum="2">
 
                     <TextView
+                        android:id="@+id/txt_feel_like"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -142,6 +142,7 @@
                         android:textColor="@android:color/white" />
 
                     <TextView
+                        android:id="@+id/txt_humidity"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -160,6 +161,7 @@
                     android:weightSum="2">
 
                     <TextView
+                        android:id="@+id/wind_kph"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -168,6 +170,7 @@
                         android:textColor="@android:color/white" />
 
                     <TextView
+                        android:id="@+id/txt_uv"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -176,15 +179,15 @@
                         android:textColor="@android:color/white" />
                 </LinearLayout>
 
-<!--                <Button-->
-<!--                    android:id="@+id/button2"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_gravity="center_horizontal"-->
-<!--                    android:text="change activity"-->
-<!--                    app:layout_constraintEnd_toEndOf="parent"-->
-<!--                    app:layout_constraintStart_toStartOf="parent"-->
-<!--                    app:layout_constraintTop_toTopOf="parent" />-->
+                <!--                <Button-->
+                <!--                    android:id="@+id/button2"-->
+                <!--                    android:layout_width="wrap_content"-->
+                <!--                    android:layout_height="wrap_content"-->
+                <!--                    android:layout_gravity="center_horizontal"-->
+                <!--                    android:text="change activity"-->
+                <!--                    app:layout_constraintEnd_toEndOf="parent"-->
+                <!--                    app:layout_constraintStart_toStartOf="parent"-->
+                <!--                    app:layout_constraintTop_toTopOf="parent" />-->
             </LinearLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
@@ -194,8 +197,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#99000000"
-        android:visibility="gone"
-        android:gravity="center"/>
+        android:gravity="center"
+        android:visibility="gone" />
 
     <!--    nav luôn đặt dưới cùng để lấy event-->
     <com.google.android.material.navigation.NavigationView

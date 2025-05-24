@@ -11,6 +11,8 @@ import android.view.Gravity
 import android.view.View
 import android.widget.Button
 import android.widget.FrameLayout
+import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -23,7 +25,12 @@ import androidx.core.view.GravityCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import com.bumptech.glide.Glide
+import com.cmzsoft.weather.APICall.RequestAPI
 import com.google.android.material.navigation.NavigationView
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 
 class MainActivity : AppCompatActivity() {
 
@@ -41,33 +48,83 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
-//        val requestAPI = RequestAPI()
-//        Thread {
-//            val result = requestAPI.CallAPI()
-//            runOnUiThread {
-//                Toast.makeText(this, result, Toast.LENGTH_SHORT).show()
-//            }
-//        }.start()
-
-//        val btn = findViewById<Button>(R.id.button2)
-//        btn.setOnClickListener {
-//            val changePage = Intent(this, SettingTheme::class.java);
-//            startActivity(changePage);
-//        }
-
         InitEventNavigationBar();
         createNotificationChannel(this)
         RequestAcceptSendNotification();
+
+        UpdateWeatherInfor()
     }
+
+    private fun UpdateWeatherInfor() {
+        val requestAPI = RequestAPI.getInstance();
+        Thread {
+            val result = requestAPI.CallAPI(21.0285, 105.8542);
+
+            runOnUiThread {
+                val txtDegree = findViewById<TextView>(R.id.temperature)
+                val tempC = result.getJSONObject("current").getDouble("temp_c")
+                txtDegree.text = tempC.toString() + "℃"
+
+                UpdateCurrentTime()
+
+                val txtWeatherStatus = findViewById<TextView>(R.id.weatherStatus)
+                val current =
+                    result.getJSONObject("current").getJSONObject("condition").getString("text")
+                txtWeatherStatus.text = current
+
+                val imgWeatherIcon = findViewById<ImageView>(R.id.weatherIcon)
+                val imgUrl = "https:" + result.getJSONObject("current").getJSONObject("condition")
+                    .getString("icon")
+
+                val windDir = result.getJSONObject("current").getString("wind_dir")
+
+                val txtWindKph = findViewById<TextView>(R.id.wind_kph)
+                var wind_kph = result.getJSONObject("current").getString("wind_kph")
+                txtWindKph.text = "Hướng gió\n " + windDir + " - " + wind_kph + "km/h"
+
+                val uv = result.getJSONObject("current").getDouble("uv")
+                val txtUv = findViewById<TextView>(R.id.txt_uv)
+                txtUv.text = "UV: " + uv
+
+                val humidity = result.getJSONObject("current").getDouble("humidity")
+                findViewById<TextView>(R.id.txt_humidity).text = "Độ ẩm\n $humidity%"
+
+                val feelsLike = result.getJSONObject("current").getDouble("feelslike_c")
+                findViewById<TextView>(R.id.txt_feel_like).text = "Môi trường: $feelsLike℃"
+
+                Glide.with(this).load(imgUrl).into(imgWeatherIcon)
+            }
+        }.start()
+    }
+
+    private fun UpdateCurrentTime() {
+        val textView = findViewById<TextView>(R.id.timeInfo)
+        val now = java.util.Date()
+
+        val hourMinute = SimpleDateFormat("HH:mm", Locale.getDefault()).format(now)
+
+        val calendar = Calendar.getInstance()
+        calendar.time = now
+        val day = calendar.get(Calendar.DAY_OF_MONTH)
+        val month = calendar.get(Calendar.MONTH) + 1
+        val year = calendar.get(Calendar.YEAR)
+
+        val weekday = calendar.get(Calendar.DAY_OF_WEEK)
+        val weekdays = arrayOf("Chủ nhật", "Thứ 2", "Thứ 3", "Thứ 4", "Thứ 5", "Thứ 6", "Thứ 7")
+        val weekdayStr = weekdays[weekday - 1]
+
+        val formatted = "$hourMinute - $weekdayStr, $day tháng $month $year"
+
+        textView.text = formatted
+    }
+
 
     private fun showSettingsDialog() {
         val container = findViewById<FrameLayout>(R.id.container_dialog_setting)
-
         if (container.childCount == 0) {
             val dialogView = layoutInflater.inflate(R.layout.dialog_setting, container, false)
             val params = FrameLayout.LayoutParams(
-                FrameLayout.LayoutParams.MATCH_PARENT,
-                FrameLayout.LayoutParams.WRAP_CONTENT
+                FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT
             )
             params.gravity = Gravity.CENTER
             dialogView.layoutParams = params
@@ -80,10 +137,8 @@ class MainActivity : AppCompatActivity() {
                 container.removeAllViews()
             }
         }
-
         container.visibility = View.VISIBLE
     }
-
 
     private fun InitEventNavigationBar() {
         drawerLayout = findViewById(R.id.main)
@@ -99,6 +154,7 @@ class MainActivity : AppCompatActivity() {
             R.string.navigation_drawer_open,
             R.string.navigation_drawer_close
         )
+
         drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
 
@@ -148,9 +204,7 @@ class MainActivity : AppCompatActivity() {
 
 
     override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<String>,
-        grantResults: IntArray
+        requestCode: Int, permissions: Array<String>, grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == NOTIFICATION_PERMISSION_REQUEST_CODE) {
@@ -179,16 +233,16 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun sendNotification() {
+
+        return
+
         val builder = NotificationCompat.Builder(this, CHANNEL_ID)
-            .setSmallIcon(R.drawable.icon_correct_location)
-            .setContentTitle("Thông báo từ Weath")
-            .setContentText("test 1 2 3 1 2 3")
-            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .setSmallIcon(R.drawable.icon_correct_location).setContentTitle("Thông báo từ Weath")
+            .setContentText("test 1 2 3 1 2 3").setPriority(NotificationCompat.PRIORITY_DEFAULT)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             if (ContextCompat.checkSelfPermission(
-                    this,
-                    android.Manifest.permission.POST_NOTIFICATIONS
+                    this, android.Manifest.permission.POST_NOTIFICATIONS
                 ) == PackageManager.PERMISSION_GRANTED
             ) {
                 with(NotificationManagerCompat.from(this)) {
