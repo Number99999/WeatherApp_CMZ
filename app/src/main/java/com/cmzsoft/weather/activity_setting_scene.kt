@@ -28,8 +28,9 @@ class activity_setting_scene : AppCompatActivity() {
     private fun initEventBack() {
         val button = findViewById<ImageButton>(R.id.backButton);
         button.setOnClickListener {
-            val changePage = Intent(this, MainActivity::class.java);
-            startActivity(changePage);
+//            val changePage = Intent(this, MainActivity::class.java);
+//            startActivity(changePage);
+            finish()
         }
     }
 }

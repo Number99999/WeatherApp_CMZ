@@ -53,49 +53,52 @@
                 android:text="Pro cao cấp"
                 android:textColor="#fefa72" />
 
-            <RelativeLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/establish_bg_item">
 
-                <!--                <Button-->
-                <!--                    android:id="@+id/buyVipBtn"-->
-                <!--                    android:layout_width="match_parent"-->
-                <!--                    android:layout_height="80dp"-->
-                <!--                    android:layout_marginStart="0dp"-->
-                <!--                    android:layout_marginEnd="0dp"-->
-                <!--                    android:background="@drawable/" />-->
-
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="50dp"
-                    android:layout_marginLeft="10dp"
+                    android:id="@+id/tvUpgrade"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
                     android:layout_marginTop="10dp"
+                    android:layout_marginEnd="10dp"
                     android:text="Nâng cấp lên phiên bản VIP"
                     android:textColor="@android:color/white"
-                    android:textSize="24sp" />
+                    android:textSize="24sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/tvPrice"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toTopOf="@+id/tvOneTime" />
 
                 <TextView
+                    android:id="@+id/tvOneTime"
                     android:layout_width="wrap_content"
-                    android:layout_height="25dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
-                    android:layout_marginTop="40dp"
+                    android:layout_marginTop="4dp"
                     android:alpha="0.7"
                     android:text="Mua một lần"
                     android:textColor="@android:color/white"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tvUpgrade" />
 
                 <TextView
+                    android:id="@+id/tvPrice"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginTop="25dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginEnd="10dp"
-                    android:gravity="center_vertical"
                     android:text="199,000 đ/năm"
                     android:textColor="#fefa72"
-                    android:textSize="18sp" />
-            </RelativeLayout>
+                    android:textSize="18sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/tvUpgrade"
+                    app:layout_constraintBottom_toBottomOf="@id/tvUpgrade"
+                    app:layout_constraintVertical_bias="0.5"/>
+            </androidx.constraintlayout.widget.ConstraintLayout>
         </LinearLayout>
 
         <LinearLayout

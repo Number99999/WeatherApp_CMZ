@@ -5,6 +5,7 @@ import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.view.Gravity
@@ -12,6 +13,8 @@ import android.view.View
 import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.LinearLayout.LayoutParams
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -29,10 +32,20 @@ import com.bumptech.glide.Glide
 import com.cmzsoft.weather.APICall.RequestAPI
 import com.cmzsoft.weather.DatabaService.DatabaseService
 import com.cmzsoft.weather.Model.LocationWeatherModel
+import com.github.mikephil.charting.charts.LineChart
+import com.github.mikephil.charting.components.AxisBase
+import com.github.mikephil.charting.components.XAxis
+import com.github.mikephil.charting.data.Entry
+import com.github.mikephil.charting.data.LineData
+import com.github.mikephil.charting.data.LineDataSet
+import com.github.mikephil.charting.formatter.ValueFormatter
 import com.google.android.material.navigation.NavigationView
+import org.json.JSONArray
+import org.json.JSONException
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
+import kotlin.math.roundToInt
 
 class MainActivity : AppCompatActivity() {
 
@@ -59,6 +72,7 @@ class MainActivity : AppCompatActivity() {
 
         UpdateWeatherInfor()
         startAutoUpdateWeather()
+        setupLineChart()
     }
 
     private fun getCurLocationInDb(): LocationWeatherModel? {
@@ -157,6 +171,159 @@ class MainActivity : AppCompatActivity() {
         container.visibility = View.VISIBLE
     }
 
+    private fun setupLineChart() {
+        Thread {
+            try {
+                val resultAPI =
+                    RequestAPI.getInstance().GetAllDataInCurrentDay(21.0227396, 105.8369637)
+                val forecastday = resultAPI
+                    .getJSONObject("forecast")
+                    .getJSONArray("forecastday")
+                    .getJSONObject(0)
+                    .getJSONArray("hour")
+                runOnUiThread {
+                    try {
+                        setupLineChartInUI(forecastday)
+                    } catch (e: JSONException) {
+                        throw RuntimeException(e)
+                    }
+                }
+            } catch (e: java.lang.Exception) {
+                runOnUiThread {
+                    Toast.makeText(
+                        this@MainActivity,
+                        e.message.toString(),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+                e.printStackTrace()
+            }
+        }.start()
+    }
+
+    private fun setupLineChartInUI(array: JSONArray) {
+        try {
+            val arrInfo: MutableList<DataHourWeatherModel> =
+                ArrayList<DataHourWeatherModel>()
+            val profile = ArrayList<Entry>()
+
+            for (i in 0..<array.length()) {
+                val hourObj = array.getJSONObject(i)
+                val model: DataHourWeatherModel =
+                    DataHourWeatherModel(
+                        hourObj.getLong("time_epoch"),
+                        hourObj.getString("time"),
+                        hourObj.getDouble("temp_c").roundToInt(),
+                        hourObj.getDouble("temp_f").roundToInt(),
+                        hourObj.getInt("is_day") == 1,
+                        "https:" + hourObj.getJSONObject("condition").getString("icon")
+                    )
+                arrInfo.add(model)
+                profile.add(Entry(i.toFloat(), model.tempC.toFloat()))
+            }
+
+            val emojiContainer: LinearLayout = findViewById(R.id.emojiContainer)
+            emojiContainer.removeAllViews()
+            for (url in arrInfo) {
+                val imageView = ImageView(this)
+                val params: LayoutParams = LayoutParams(dpToPx(32), dpToPx(32))
+                params.setMargins(dpToPx(8), 0, dpToPx(8), 0)
+                imageView.layoutParams = params
+                Glide.with(this).load(url.urlIcon).into(imageView)
+                emojiContainer.addView(imageView)
+            }
+//
+//            val count: Int = arrInfo.size;
+//            val iconWidthPx = dpToPx(32)
+//
+//            val emojiContainerWidth = count * iconWidthPx
+//
+//
+//            val params = LayoutParams(
+//                emojiContainerWidth,
+//                LayoutParams.WRAP_CONTENT
+//            )
+//            emojiContainer.layoutParams = params
+
+
+            val dataSet = LineDataSet(profile, "Nhiệt độ (°C)")
+
+            dataSet.valueFormatter = object : ValueFormatter() {
+                override fun getPointLabel(entry: Entry?): String {
+                    return if (entry != null) "${entry.y.roundToInt()}°C" else ""
+                }
+            }
+
+            dataSet.lineWidth = 3f
+            dataSet.circleRadius = 7f
+            dataSet.setCircleColor(Color.WHITE)
+            dataSet.circleHoleColor = Color.parseColor("#199AD8")
+            dataSet.circleHoleRadius = 5f
+            dataSet.color = Color.parseColor("#24D2FF")
+            dataSet.setDrawValues(false)
+            dataSet.setDrawFilled(true)
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+                val drawable = ContextCompat.getDrawable(this, R.drawable.line_chart_fade)
+                dataSet.fillDrawable = drawable
+            } else {
+                dataSet.fillColor = Color.parseColor("#5524D2FF")
+            }
+
+            val lineData = LineData(dataSet)
+            lineData.setDrawValues(true)
+
+            val lineChart = findViewById<LineChart>(R.id.lineChart)
+            lineChart.data = lineData
+
+            lineChart.setBackgroundColor(Color.parseColor("#199AD8"))
+            lineChart.setDrawGridBackground(false)
+            lineChart.description.isEnabled = false
+            lineChart.legend.isEnabled = false
+
+            val yAxis = lineChart.axisLeft
+            yAxis.textColor = Color.WHITE
+            yAxis.textSize = 12f
+            yAxis.gridColor = Color.parseColor("#33FFFFFF")
+            lineChart.axisRight.isEnabled = false
+
+            val xAxis = lineChart.xAxis
+            xAxis.position = XAxis.XAxisPosition.BOTTOM
+            xAxis.textColor = Color.WHITE
+            xAxis.textSize = 12f
+            xAxis.setDrawGridLines(false)
+            xAxis.granularity = 1f
+
+            xAxis.valueFormatter = object : ValueFormatter() {
+                override fun getAxisLabel(value: Float, axis: AxisBase): String {
+                    val i = value.toInt()
+                    if (i >= 0 && i < arrInfo.size) {
+                        val rawTime: String = arrInfo[i].time;
+                        val hour = rawTime.split(" ".toRegex()).dropLastWhile { it.isEmpty() }
+                            .toTypedArray()[1].substring(0, 5)
+                        return hour
+                    }
+                    return ""
+                }
+            }
+
+            lineChart.setExtraOffsets(10f, 20f, 10f, 10f)
+            lineChart.invalidate()
+            lineChart.setScaleEnabled(false)
+            lineChart.setPinchZoom(false)
+            lineChart.isHighlightPerTapEnabled = false
+            lineChart.isDoubleTapToZoomEnabled = false
+            lineChart.isDragEnabled = false
+            lineChart.axisLeft.isEnabled = false
+        } catch (e: java.lang.Exception) {
+            Toast.makeText(this, e.message.toString(), Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    fun dpToPx(dp: Int): Int {
+        return Math.round(dp * resources.displayMetrics.density)
+    }
+
     private fun InitEventNavigationBar() {
         drawerLayout = findViewById(R.id.main)
         navView = findViewById(R.id.nav_view)
@@ -209,12 +376,12 @@ class MainActivity : AppCompatActivity() {
 
         updateRunnable = Runnable {
             UpdateWeatherInfor()
-            handler.postDelayed(updateRunnable, 60_000) // Lặp mỗi 60 giây
+            handler.postDelayed(updateRunnable, 60_000)
         }
 
         handler.postDelayed({
             UpdateWeatherInfor()
-            handler.postDelayed(updateRunnable, 60_000) // Sau đó lặp đều mỗi 60 giây
+            handler.postDelayed(updateRunnable, 60_000)
         }, delayToNextMinute.toLong())
     }
 
@@ -222,7 +389,6 @@ class MainActivity : AppCompatActivity() {
         super.onDestroy()
         handler.removeCallbacks(updateRunnable) // Dừng lặp khi Activity bị huỷ
     }
-
 
     private val NOTIFICATION_PERMISSION_REQUEST_CODE = 1001
     private fun RequestAcceptSendNotification() {
@@ -310,3 +476,13 @@ class MainActivity : AppCompatActivity() {
 //        sendNotification()
 //    }
 }
+
+
+internal class DataHourWeatherModel(
+    var timeEpoch: Long,
+    var time: String,
+    var tempC: Int,
+    var tempF: Int,
+    var isDay: Boolean,
+    var urlIcon: String
+)

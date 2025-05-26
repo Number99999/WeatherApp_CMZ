@@ -179,15 +179,12 @@
                         android:textColor="@android:color/white" />
                 </LinearLayout>
 
-                <!--                <Button-->
-                <!--                    android:id="@+id/button2"-->
-                <!--                    android:layout_width="wrap_content"-->
-                <!--                    android:layout_height="wrap_content"-->
-                <!--                    android:layout_gravity="center_horizontal"-->
-                <!--                    android:text="change activity"-->
-                <!--                    app:layout_constraintEnd_toEndOf="parent"-->
-                <!--                    app:layout_constraintStart_toStartOf="parent"-->
-                <!--                    app:layout_constraintTop_toTopOf="parent" />-->
+                <include
+                    layout="@layout/chart_card"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="12dp" />
             </LinearLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
@@ -199,6 +196,7 @@
         android:background="#99000000"
         android:gravity="center"
         android:visibility="gone" />
+
 
     <!--    nav luôn đặt dưới cùng để lấy event-->
     <com.google.android.material.navigation.NavigationView

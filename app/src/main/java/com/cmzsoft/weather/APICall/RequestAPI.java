@@ -37,6 +37,36 @@ public class RequestAPI {
                     response.append(line);
                 }
                 in.close();
+                return new JSONObject(response.toString());
+            } else {
+                System.out.println("Lỗi khi gọi API. Mã lỗi: " + responseCode);
+            }
+            conn.disconnect();
+            return null;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public JSONObject GetAllDataInCurrentDay(double lat, double lon) {
+        String urlString = "https://api.weatherapi.com/v1/forecast.json?key=" + apiKey +
+                "&q=" + lat + "," + lon + "&days=1&aqi=yes&alerts=yes";
+        try {
+            URL url = new URL(urlString);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("GET");
+
+            int responseCode = conn.getResponseCode();
+            if (responseCode == HttpURLConnection.HTTP_OK) {
+                BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                StringBuilder response = new StringBuilder();
+                String line;
+
+                while ((line = in.readLine()) != null) {
+                    response.append(line);
+                }
+                in.close();
                 // Parse response to JSONObject
                 return new JSONObject(response.toString());
             } else {
