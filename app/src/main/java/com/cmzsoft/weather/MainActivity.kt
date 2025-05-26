@@ -1,26 +1,32 @@
 package com.cmzsoft.weather
 
+import android.Manifest
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Canvas
 import android.graphics.Color
+import android.graphics.DashPathEffect
+import android.graphics.Paint
+import android.location.Location
 import android.os.Build
 import android.os.Bundle
 import android.view.Gravity
 import android.view.View
 import android.widget.Button
 import android.widget.FrameLayout
+import android.widget.HorizontalScrollView
 import android.widget.ImageView
 import android.widget.LinearLayout
-import android.widget.LinearLayout.LayoutParams
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
@@ -32,6 +38,7 @@ import com.bumptech.glide.Glide
 import com.cmzsoft.weather.APICall.RequestAPI
 import com.cmzsoft.weather.DatabaService.DatabaseService
 import com.cmzsoft.weather.Model.LocationWeatherModel
+import com.github.mikephil.charting.animation.ChartAnimator
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.AxisBase
 import com.github.mikephil.charting.components.XAxis
@@ -39,6 +46,9 @@ import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.ValueFormatter
+import com.github.mikephil.charting.renderer.LineChartRenderer
+import com.github.mikephil.charting.utils.ViewPortHandler
+import com.google.android.gms.location.LocationServices
 import com.google.android.material.navigation.NavigationView
 import org.json.JSONArray
 import org.json.JSONException
@@ -55,6 +65,11 @@ class MainActivity : AppCompatActivity() {
     private val handler = android.os.Handler()
     private lateinit var updateRunnable: Runnable
 
+
+    private var isScrollingEmoji = false
+    private var isScrollingChart = false
+
+    private var distance2Emoji = 0;
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -203,120 +218,159 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupLineChartInUI(array: JSONArray) {
         try {
-            val arrInfo: MutableList<DataHourWeatherModel> =
-                ArrayList<DataHourWeatherModel>()
-            val profile = ArrayList<Entry>()
-
-            for (i in 0..<array.length()) {
-                val hourObj = array.getJSONObject(i)
-                val model: DataHourWeatherModel =
-                    DataHourWeatherModel(
-                        hourObj.getLong("time_epoch"),
-                        hourObj.getString("time"),
-                        hourObj.getDouble("temp_c").roundToInt(),
-                        hourObj.getDouble("temp_f").roundToInt(),
-                        hourObj.getInt("is_day") == 1,
-                        "https:" + hourObj.getJSONObject("condition").getString("icon")
-                    )
-                arrInfo.add(model)
-                profile.add(Entry(i.toFloat(), model.tempC.toFloat()))
-            }
-
-            val emojiContainer: LinearLayout = findViewById(R.id.emojiContainer)
-            emojiContainer.removeAllViews()
-            for (url in arrInfo) {
-                val imageView = ImageView(this)
-                val params: LayoutParams = LayoutParams(dpToPx(32), dpToPx(32))
-                params.setMargins(dpToPx(8), 0, dpToPx(8), 0)
-                imageView.layoutParams = params
-                Glide.with(this).load(url.urlIcon).into(imageView)
-                emojiContainer.addView(imageView)
-            }
-//
-//            val count: Int = arrInfo.size;
-//            val iconWidthPx = dpToPx(32)
-//
-//            val emojiContainerWidth = count * iconWidthPx
-//
-//
-//            val params = LayoutParams(
-//                emojiContainerWidth,
-//                LayoutParams.WRAP_CONTENT
-//            )
-//            emojiContainer.layoutParams = params
-
-
-            val dataSet = LineDataSet(profile, "Nhiệt độ (°C)")
-
-            dataSet.valueFormatter = object : ValueFormatter() {
-                override fun getPointLabel(entry: Entry?): String {
-                    return if (entry != null) "${entry.y.roundToInt()}°C" else ""
-                }
-            }
-
-            dataSet.lineWidth = 3f
-            dataSet.circleRadius = 7f
-            dataSet.setCircleColor(Color.WHITE)
-            dataSet.circleHoleColor = Color.parseColor("#199AD8")
-            dataSet.circleHoleRadius = 5f
-            dataSet.color = Color.parseColor("#24D2FF")
-            dataSet.setDrawValues(false)
-            dataSet.setDrawFilled(true)
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-                val drawable = ContextCompat.getDrawable(this, R.drawable.line_chart_fade)
-                dataSet.fillDrawable = drawable
-            } else {
-                dataSet.fillColor = Color.parseColor("#5524D2FF")
-            }
-
-            val lineData = LineData(dataSet)
-            lineData.setDrawValues(true)
-
-            val lineChart = findViewById<LineChart>(R.id.lineChart)
-            lineChart.data = lineData
-
-            lineChart.setBackgroundColor(Color.parseColor("#199AD8"))
-            lineChart.setDrawGridBackground(false)
-            lineChart.description.isEnabled = false
-            lineChart.legend.isEnabled = false
-
-            val yAxis = lineChart.axisLeft
-            yAxis.textColor = Color.WHITE
-            yAxis.textSize = 12f
-            yAxis.gridColor = Color.parseColor("#33FFFFFF")
-            lineChart.axisRight.isEnabled = false
-
-            val xAxis = lineChart.xAxis
-            xAxis.position = XAxis.XAxisPosition.BOTTOM
-            xAxis.textColor = Color.WHITE
-            xAxis.textSize = 12f
-            xAxis.setDrawGridLines(false)
-            xAxis.granularity = 1f
-
-            xAxis.valueFormatter = object : ValueFormatter() {
-                override fun getAxisLabel(value: Float, axis: AxisBase): String {
-                    val i = value.toInt()
-                    if (i >= 0 && i < arrInfo.size) {
-                        val rawTime: String = arrInfo[i].time;
-                        val hour = rawTime.split(" ".toRegex()).dropLastWhile { it.isEmpty() }
-                            .toTypedArray()[1].substring(0, 5)
-                        return hour
-                    }
-                    return ""
-                }
-            }
-
-            lineChart.setExtraOffsets(10f, 20f, 10f, 10f)
-            lineChart.invalidate()
-            lineChart.setScaleEnabled(false)
-            lineChart.setPinchZoom(false)
-            lineChart.isHighlightPerTapEnabled = false
-            lineChart.isDoubleTapToZoomEnabled = false
-            lineChart.isDragEnabled = false
-            lineChart.axisLeft.isEnabled = false
-        } catch (e: java.lang.Exception) {
+            val arrInfo = parseWeatherData(array)
+            setupEmojiAndChart(arrInfo)
+        } catch (e: Exception) {
             Toast.makeText(this, e.message.toString(), Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    // 1. Parse data từ JSON → List<DataHourWeatherModel>
+    private fun parseWeatherData(array: JSONArray): List<DataHourWeatherModel> {
+        val arrInfo = mutableListOf<DataHourWeatherModel>()
+        for (i in 0 until array.length()) {
+            val hourObj = array.getJSONObject(i)
+            arrInfo.add(
+                DataHourWeatherModel(
+                    hourObj.getLong("time_epoch"),
+                    hourObj.getString("time"),
+                    hourObj.getDouble("temp_c").roundToInt(),
+                    hourObj.getDouble("temp_f").roundToInt(),
+                    hourObj.getInt("is_day") == 1,
+                    "https:" + hourObj.getJSONObject("condition").getString("icon")
+                )
+            )
+        }
+        return arrInfo
+    }
+
+    private fun setupEmojiAndChart(arrInfo: List<DataHourWeatherModel>) {
+        val iconWidthPx = dpToPx(32)
+        val iconMarginPx = dpToPx(7)
+        val totalWidth = arrInfo.size * (iconWidthPx + iconMarginPx * 2)
+
+        distance2Emoji = iconWidthPx + 2 * iconMarginPx
+
+        setupEmojiIcons(arrInfo, iconWidthPx, iconMarginPx, totalWidth)
+        setupChart(arrInfo, totalWidth)
+        setupScrollSync()
+    }
+
+    // 1. Tạo emoji
+    private fun setupEmojiIcons(
+        arrInfo: List<DataHourWeatherModel>,
+        iconWidthPx: Int,
+        iconMarginPx: Int,
+        totalWidth: Int
+    ) {
+        val emojiContainer = findViewById<LinearLayout>(R.id.emojiContainer)
+        emojiContainer.removeAllViews()
+        for (model in arrInfo) {
+            val imageView = ImageView(this)
+            val params = LinearLayout.LayoutParams(iconWidthPx, iconWidthPx)
+            params.setMargins(iconMarginPx, 0, iconMarginPx, 0)
+            imageView.layoutParams = params
+            Glide.with(this).load(model.urlIcon).into(imageView)
+            emojiContainer.addView(imageView)
+        }
+        emojiContainer.layoutParams.width = totalWidth
+        emojiContainer.requestLayout()
+    }
+
+    private fun setupChart(arrInfo: List<DataHourWeatherModel>, totalWidth: Int) {
+        val entries = ArrayList<Entry>()
+        arrInfo.forEachIndexed { i, model ->
+            entries.add(Entry(i.toFloat(), model.tempC.toFloat()))
+        }
+        val dataSet = createLineDataSet(entries)
+        val lineChart = findViewById<LineChart>(R.id.lineChart)
+        lineChart.layoutParams.width = totalWidth
+        lineChart.requestLayout()
+        lineChart.data = LineData(dataSet)
+        setupChartStyle(lineChart, arrInfo)
+        lineChart.invalidate()
+    }
+
+    private fun setupChartStyle(lineChart: LineChart, arrInfo: List<DataHourWeatherModel>) {
+        lineChart.setBackgroundColor(Color.parseColor("#199AD8"))
+        lineChart.setDrawGridBackground(false)
+        lineChart.description.isEnabled = false
+        lineChart.legend.isEnabled = false
+
+        val yAxis = lineChart.axisLeft
+        yAxis.textColor = Color.WHITE
+        yAxis.textSize = 12f
+        yAxis.gridColor = Color.parseColor("#33FFFFFF")
+        lineChart.axisRight.isEnabled = false
+        lineChart.axisLeft.isEnabled = false
+
+        val xAxis = lineChart.xAxis
+        xAxis.position = XAxis.XAxisPosition.BOTTOM
+        xAxis.textColor = Color.WHITE
+        xAxis.textSize = 12f
+        xAxis.granularity = 1f
+        xAxis.valueFormatter = object : ValueFormatter() {
+            override fun getAxisLabel(value: Float, axis: AxisBase): String {
+                val i = value.toInt()
+                return if (i in arrInfo.indices) {
+                    arrInfo[i].time.split(" ")[1].substring(0, 5)
+                } else ""
+            }
+        }
+        xAxis.setDrawGridLines(false)
+
+        lineChart.renderer =
+            CustomLineChartRenderer(lineChart, lineChart.animator, lineChart.viewPortHandler)
+        lineChart.setExtraOffsets(10f, 20f, 10f, 10f)
+        lineChart.setScaleEnabled(false)
+        lineChart.setPinchZoom(false)
+        lineChart.isHighlightPerTapEnabled = false
+        lineChart.isDoubleTapToZoomEnabled = false
+        lineChart.isDragEnabled = false
+
+        val params = lineChart.layoutParams
+        val emojiContainer = findViewById<LinearLayout>(R.id.emojiContainer)
+        params.width = emojiContainer.width
+        lineChart.layoutParams = params
+        lineChart.requestLayout()
+    }
+
+    private fun createLineDataSet(entries: List<Entry>): LineDataSet {
+        return LineDataSet(entries, "Nhiệt độ (°C)").apply {
+            lineWidth = 3f
+            circleRadius = 7f
+            setCircleColor(Color.WHITE)
+            circleHoleColor = Color.parseColor("#199AD8")
+            circleHoleRadius = 5f
+            color = Color.parseColor("#24D2FF")
+            setDrawValues(false)
+            setDrawFilled(true)
+            fillDrawable = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2)
+                ContextCompat.getDrawable(this@MainActivity, R.drawable.line_chart_fade)
+            else null
+            fillColor = Color.parseColor("#5524D2FF")
+        }
+    }
+
+    private fun setupScrollSync() {
+        val emojiScrollView = findViewById<HorizontalScrollView>(R.id.emoji_scroll)
+        val lineChartScrollView = findViewById<HorizontalScrollView>(R.id.scroll_char)
+        var isScrollingEmoji = false
+        var isScrollingChart = false
+
+        emojiScrollView.setOnScrollChangeListener { _, scrollX, _, _, _ ->
+            if (!isScrollingChart) {
+                isScrollingEmoji = true
+                lineChartScrollView.scrollTo(scrollX, 0)
+                isScrollingEmoji = false
+            }
+        }
+        lineChartScrollView.setOnScrollChangeListener { _, scrollX, _, _, _ ->
+            if (!isScrollingEmoji) {
+                isScrollingChart = true
+                emojiScrollView.scrollTo(scrollX, 0)
+                isScrollingChart = false
+            }
         }
     }
 
@@ -329,7 +383,6 @@ class MainActivity : AppCompatActivity() {
         navView = findViewById(R.id.nav_view)
 
         val toolbar: Toolbar = findViewById(R.id.toolbar)
-//        setSupportActionBar(toolbar)
 
         toggle = ActionBarDrawerToggle(
             this,
@@ -436,6 +489,35 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun getLastLocation() {
+        val fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+
+            return
+        }
+        fusedLocationClient.lastLocation
+            .addOnSuccessListener { location: Location? ->
+                if (location != null) {
+                    val latitude = location.latitude
+                    val longitude = location.longitude
+                    Toast.makeText(this, "Lat: $latitude, Lon: $longitude", Toast.LENGTH_SHORT)
+                        .show()
+                } else {
+                    Toast.makeText(this, "Không lấy được vị trí!", Toast.LENGTH_SHORT).show()
+                }
+            }
+            .addOnFailureListener {
+                Toast.makeText(this, "Lỗi lấy vị trí!", Toast.LENGTH_SHORT).show()
+            }
+    }
+
     private fun sendNotification() {
 
         return
@@ -470,11 +552,43 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    // same enable
+// same enable
 //    override fun onResume() {
 //        super.onResume()
 //        sendNotification()
 //    }
+}
+
+class CustomLineChartRenderer(
+    chart: LineChart,
+    animator: ChartAnimator,
+    viewPortHandler: ViewPortHandler
+) : LineChartRenderer(chart, animator, viewPortHandler) {
+
+    override fun drawExtras(c: Canvas) {
+        super.drawExtras(c)
+        val paint = Paint().apply {
+            color = Color.WHITE
+            strokeWidth = 1.5f
+            alpha = 180
+            style = Paint.Style.STROKE
+            isAntiAlias = true
+            pathEffect = DashPathEffect(floatArrayOf(10f, 10f), 0f)
+        }
+        val dataSets = mChart.lineData.dataSets
+        for (dataSet in dataSets) {
+            for (i in 0 until dataSet.entryCount) {
+                val entry = dataSet.getEntryForIndex(i)
+                val pos = mChart.getTransformer(dataSet.axisDependency)
+                    .getPixelForValues(entry.x, entry.y)
+                c.drawLine(
+                    pos.x.toFloat(), pos.y.toFloat(),
+                    pos.x.toFloat(), mViewPortHandler.contentBottom(),
+                    paint
+                )
+            }
+        }
+    }
 }
 
 

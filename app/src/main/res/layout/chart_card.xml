@@ -55,21 +55,25 @@
 
             <!-- LineChart nằm phía trên -->
             <HorizontalScrollView
-                android:layout_width="match_parent"
+                android:id="@+id/scroll_char"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:scrollbars="none"
                 android:fillViewport="true">
 
                 <com.github.mikephil.charting.charts.LineChart
                     android:id="@+id/lineChart"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="180dp"
-                    android:minWidth="1000dp" />
+                    android:minWidth="1000dp"/>
             </HorizontalScrollView>
 
-            <!-- Emoji/Icon nằm phía dưới LineChart -->
+            <!-- Emoji/Icon nằm phía dưới LineChart, phải cùng chiều rộng -->
             <HorizontalScrollView
-                android:layout_width="match_parent"
+                android:id="@+id/emoji_scroll"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:scrollbars="none"
                 android:fillViewport="true">
 
                 <LinearLayout
