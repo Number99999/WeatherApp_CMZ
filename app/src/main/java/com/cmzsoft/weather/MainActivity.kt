@@ -4,7 +4,6 @@ import android.Manifest
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Canvas
 import android.graphics.Color
@@ -23,14 +22,11 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
-import androidx.core.view.GravityCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.drawerlayout.widget.DrawerLayout
@@ -49,7 +45,6 @@ import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.renderer.LineChartRenderer
 import com.github.mikephil.charting.utils.ViewPortHandler
 import com.google.android.gms.location.LocationServices
-import com.google.android.material.navigation.NavigationView
 import org.json.JSONArray
 import org.json.JSONException
 import java.text.SimpleDateFormat
@@ -60,14 +55,10 @@ import kotlin.math.roundToInt
 class MainActivity : AppCompatActivity() {
 
     private lateinit var drawerLayout: DrawerLayout
-    private lateinit var navView: NavigationView
-    private lateinit var toggle: ActionBarDrawerToggle
     private val handler = android.os.Handler()
     private lateinit var updateRunnable: Runnable
-
-
-    private var isScrollingEmoji = false
-    private var isScrollingChart = false
+    private lateinit var navContainer: FrameLayout
+    private lateinit var navPanel: View
 
     private var distance2Emoji = 0;
 
@@ -88,6 +79,29 @@ class MainActivity : AppCompatActivity() {
         UpdateWeatherInfor()
         startAutoUpdateWeather()
         setupLineChart()
+        initEventNavBar()
+    }
+
+    private fun initEventNavBar() {
+        navContainer = findViewById(R.id.frame_nav_bar)
+        navPanel = findViewById(R.id.nav_panel)
+
+
+//        val toolbar = findViewById<MaterialToolbar>(R.id.toolbar)
+//        val toggle = ActionBarDrawerToggle(
+//            this, drawerLayout, toolbar,
+//            R.string.navigation_drawer_open, R.string.navigation_drawer_close
+//        )
+//        toggle.syncState()
+//        toolbar.setOnClickListener {
+//            showCustomNav()
+//        }
+        findViewById<ImageView>(R.id.img_show_nav).setOnClickListener {
+            showCustomNav()
+        }
+        navContainer.setOnClickListener {
+            hideCustomNav()
+        }
     }
 
     private fun getCurLocationInDb(): LocationWeatherModel? {
@@ -109,7 +123,7 @@ class MainActivity : AppCompatActivity() {
             runOnUiThread {
                 val txtDegree = findViewById<TextView>(R.id.temperature)
                 val tempC = result.getJSONObject("current").getDouble("temp_c")
-                txtDegree.text = tempC.toString() + "℃"
+                txtDegree.text = tempC.roundToInt().toString() + "℃"
 
                 UpdateCurrentTime()
 
@@ -403,47 +417,49 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun InitEventNavigationBar() {
-        drawerLayout = findViewById(R.id.main)
-        navView = findViewById(R.id.nav_view)
-
-        val toolbar: Toolbar = findViewById(R.id.toolbar)
-
-        toggle = ActionBarDrawerToggle(
-            this,
-            drawerLayout,
-            toolbar,
-            R.string.navigation_drawer_open,
-            R.string.navigation_drawer_close
-        )
-
-        drawerLayout.addDrawerListener(toggle)
-        toggle.syncState()
-
-        navView.setNavigationItemSelectedListener { menuItem ->
-            when (menuItem.itemId) {
-                R.id.nav_location -> {
-                    Toast.makeText(this, "Quản lý vị trí", Toast.LENGTH_SHORT).show()
-                }
-
-                R.id.nav_settings -> {
-                    showSettingsDialog();
-                }
-
-                R.id.nav_establish -> {
-                    val changePage = Intent(this, activity_setting_scene::class.java);
-                    startActivity(changePage);
-                }
-
-                R.id.nav_choose_theme -> {
-                    val changePage = Intent(this, SettingTheme::class.java);
-                    startActivity(changePage);
-                }
-
-                else -> {}
-            }
-            drawerLayout.closeDrawer(GravityCompat.START)
-            true
-        }
+//        drawerLayout = findViewById(R.id.main)
+//        navView = findViewById(R.id.nav_view)
+//
+//        val toolbar: Toolbar = findViewById(R.id.toolbar)
+//
+//        toggle = ActionBarDrawerToggle(
+//            this,
+//            drawerLayout,
+//            toolbar,
+//            R.string.navigation_drawer_open,
+//            R.string.navigation_drawer_close
+//        )
+//        toggle.drawerArrowDrawable.color = Color.WHITE
+//
+//
+//        drawerLayout.addDrawerListener(toggle)
+//        toggle.syncState()
+//
+//        navView.setNavigationItemSelectedListener { menuItem ->
+//            when (menuItem.itemId) {
+//                R.id.nav_location -> {
+//                    Toast.makeText(this, "Quản lý vị trí", Toast.LENGTH_SHORT).show()
+//                }
+////
+////                R.id.nav_settings -> {
+////                    showSettingsDialog();
+////                }
+//
+//                R.id.nav_establish -> {
+//                    val changePage = Intent(this, activity_setting_scene::class.java);
+//                    startActivity(changePage);
+//                }
+//
+//                R.id.nav_choose_theme -> {
+//                    val changePage = Intent(this, SettingTheme::class.java);
+//                    startActivity(changePage);
+//                }
+//
+//                else -> {}
+//            }
+//            drawerLayout.closeDrawer(GravityCompat.START)
+//            true
+//        }
     }
 
     private fun startAutoUpdateWeather() {
@@ -575,6 +591,26 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun showCustomNav() {
+        navContainer.visibility = View.VISIBLE
+        navPanel.post {
+            navPanel.translationX = -navPanel.width.toFloat()
+            navPanel.animate()
+                .translationX(0f)
+                .setDuration(300)
+                .start()
+        }
+    }
+
+    private fun hideCustomNav() {
+        navPanel.animate()
+            .translationX(-navPanel.width.toFloat())
+            .setDuration(300)
+            .withEndAction {
+                navContainer.visibility = View.GONE
+            }
+            .start()
+    }
 
 // same enable
 //    override fun onResume() {

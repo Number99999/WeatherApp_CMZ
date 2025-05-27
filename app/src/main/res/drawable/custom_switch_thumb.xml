@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Khi bật (checked) -->
+    <item android:state_checked="true">
+        <shape android:shape="oval">
+            <solid android:color="#00e7ff"/> <!-- Xanh sáng, giống ảnh -->
+        </shape>
+    </item>
+    <!-- Khi tắt (unchecked) -->
+    <item>
+        <shape android:shape="oval">
+            <solid android:color="#dde6ee"/> <!-- Xám nhạt, giống ảnh -->
+        </shape>
+    </item>
+</selector>

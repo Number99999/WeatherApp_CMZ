@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Khi bật (checked) -->
+    <item android:state_checked="true">
+        <shape android:shape="rectangle">
+            <corners android:radius="16dp"/> <!-- Làm tròn mạnh cho ra oval -->
+            <solid android:color="#13bdca"/> <!-- Xanh cyan -->
+        </shape>
+    </item>
+    <!-- Khi tắt (unchecked) -->
+    <item>
+        <shape android:shape="rectangle">
+            <corners android:radius="16dp"/>
+            <solid android:color="#0d4061"/> <!-- Xanh đậm, giống ảnh -->
+        </shape>
+    </item>
+</selector>
