@@ -17,11 +17,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Weather"
         tools:targetApi="31">
+        <activity
+            android:name=".ActivityLocationManager"
+            android:exported="false" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyAE_6F6J92mVoin5BvwysIpafryT0gUyRs" />
-
 
         <activity
             android:name=".ActivityRequestLocation"
@@ -36,7 +38,7 @@
             android:name=".SettingTheme"
             android:exported="false" />
         <activity
-            android:name=".TestLineChart"
+            android:name=".ActivitySettingNotification"
             android:exported="false" />
         <activity
             android:name=".activity_setting_scene"

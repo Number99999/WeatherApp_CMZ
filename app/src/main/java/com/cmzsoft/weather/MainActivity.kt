@@ -4,6 +4,7 @@ import android.Manifest
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Canvas
 import android.graphics.Color
@@ -86,21 +87,33 @@ class MainActivity : AppCompatActivity() {
         navContainer = findViewById(R.id.frame_nav_bar)
         navPanel = findViewById(R.id.nav_panel)
 
-
-//        val toolbar = findViewById<MaterialToolbar>(R.id.toolbar)
-//        val toggle = ActionBarDrawerToggle(
-//            this, drawerLayout, toolbar,
-//            R.string.navigation_drawer_open, R.string.navigation_drawer_close
-//        )
-//        toggle.syncState()
-//        toolbar.setOnClickListener {
-//            showCustomNav()
-//        }
         findViewById<ImageView>(R.id.img_show_nav).setOnClickListener {
             showCustomNav()
         }
         navContainer.setOnClickListener {
             hideCustomNav()
+        }
+
+        initEventBtnInNavBar()
+
+    }
+
+    private fun initEventBtnInNavBar() {
+        val nav_establish = findViewById<LinearLayout>(R.id.nav_establish)
+        nav_establish.setOnClickListener {
+            val changePage = Intent(this, activity_setting_scene::class.java);
+            startActivity(changePage);
+        }
+
+        val nav_setting = findViewById<LinearLayout>(R.id.nav_setting)
+        nav_setting.setOnClickListener {
+            showSettingsDialog()
+        }
+
+        val nav_notification = findViewById<LinearLayout>(R.id.nav_notification)
+        nav_notification.setOnClickListener {
+            val changePage = Intent(this, ActivitySettingNotification::class.java)
+            startActivity(changePage)
         }
     }
 

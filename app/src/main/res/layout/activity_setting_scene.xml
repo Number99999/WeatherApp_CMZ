@@ -170,7 +170,6 @@
                     android:background="@drawable/establish_bg_item"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
-                    android:paddingStart="16dp"
                     android:paddingEnd="16dp">
 
                     <ImageView
