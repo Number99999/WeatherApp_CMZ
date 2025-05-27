@@ -245,18 +245,17 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupEmojiAndChart(arrInfo: List<DataHourWeatherModel>) {
-        val iconWidthPx = dpToPx(32)
-        val iconMarginPx = dpToPx(7)
+        val iconWidthPx = dpToPx(30)
+        val iconMarginPx = dpToPx(6)
         val totalWidth = arrInfo.size * (iconWidthPx + iconMarginPx * 2)
 
-        distance2Emoji = iconWidthPx + 2 * iconMarginPx
+        distance2Emoji = iconWidthPx + iconMarginPx
 
         setupEmojiIcons(arrInfo, iconWidthPx, iconMarginPx, totalWidth)
         setupChart(arrInfo, totalWidth)
         setupScrollSync()
     }
 
-    // 1. Tạo emoji
     private fun setupEmojiIcons(
         arrInfo: List<DataHourWeatherModel>,
         iconWidthPx: Int,
@@ -284,22 +283,32 @@ class MainActivity : AppCompatActivity() {
         }
         val dataSet = createLineDataSet(entries)
         val lineChart = findViewById<LineChart>(R.id.lineChart)
-        lineChart.layoutParams.width = totalWidth
+        dataSet.valueTextColor = Color.WHITE
+
         lineChart.requestLayout()
         lineChart.data = LineData(dataSet)
         setupChartStyle(lineChart, arrInfo)
+
         lineChart.invalidate()
+        val emojiContainer = findViewById<LinearLayout>(R.id.emojiContainer)
+        emojiContainer.post {
+            val params = lineChart.layoutParams
+            params.width = emojiContainer.width
+            lineChart.layoutParams = params
+            lineChart.data = LineData(dataSet)
+            setupChartStyle(lineChart, arrInfo)
+            lineChart.invalidate()
+        }
     }
 
     private fun setupChartStyle(lineChart: LineChart, arrInfo: List<DataHourWeatherModel>) {
-        lineChart.setBackgroundColor(Color.parseColor("#199AD8"))
         lineChart.setDrawGridBackground(false)
         lineChart.description.isEnabled = false
         lineChart.legend.isEnabled = false
 
         val yAxis = lineChart.axisLeft
         yAxis.textColor = Color.WHITE
-        yAxis.textSize = 12f
+        yAxis.textSize = 15f
         yAxis.gridColor = Color.parseColor("#33FFFFFF")
         lineChart.axisRight.isEnabled = false
         lineChart.axisLeft.isEnabled = false
@@ -309,6 +318,7 @@ class MainActivity : AppCompatActivity() {
         xAxis.textColor = Color.WHITE
         xAxis.textSize = 12f
         xAxis.granularity = 1f
+        xAxis.setLabelCount(arrInfo.size, true)
         xAxis.valueFormatter = object : ValueFormatter() {
             override fun getAxisLabel(value: Float, axis: AxisBase): String {
                 val i = value.toInt()
@@ -333,10 +343,24 @@ class MainActivity : AppCompatActivity() {
         params.width = emojiContainer.width
         lineChart.layoutParams = params
         lineChart.requestLayout()
+
+        val data = lineChart.data
+        data?.dataSets?.forEach { set ->
+            (set as? LineDataSet)?.setDrawValues(true)
+            (set as? LineDataSet)?.valueFormatter = object : ValueFormatter() {
+                override fun getPointLabel(entry: Entry?): String {
+                    return entry?.y?.roundToInt()?.toString() + "°C"
+                }
+            }
+        }
+
     }
+
 
     private fun createLineDataSet(entries: List<Entry>): LineDataSet {
         return LineDataSet(entries, "Nhiệt độ (°C)").apply {
+            valueTextSize = 15f
+            valueTextColor = Color.WHITE
             lineWidth = 3f
             circleRadius = 7f
             setCircleColor(Color.WHITE)
