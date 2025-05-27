@@ -3,13 +3,13 @@
     <!-- Khi bật (checked) -->
     <item android:state_checked="true">
         <shape android:shape="oval">
-            <solid android:color="#00e7ff"/> <!-- Xanh sáng, giống ảnh -->
+            <solid android:color="#00e7ff" /> <!-- Xanh sáng, giống ảnh -->
         </shape>
     </item>
     <!-- Khi tắt (unchecked) -->
-    <item>
+    <item android:state_checked="false">
         <shape android:shape="oval">
-            <solid android:color="#dde6ee"/> <!-- Xám nhạt, giống ảnh -->
+            <solid android:color="#dde6ee" /> <!-- Xám nhạt, giống ảnh -->
         </shape>
     </item>
 </selector>

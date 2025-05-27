@@ -21,11 +21,12 @@
 
             <ImageButton
                 android:id="@+id/backButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="30dp"
+                android:layout_height="40dp"
                 android:layout_alignParentStart="true"
                 android:layout_centerVertical="true"
                 android:background="@android:color/transparent"
+                android:scaleType="fitCenter"
                 android:src="@drawable/icon_back" />
 
             <TextView
@@ -50,114 +51,92 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="30dp"
-                android:text="Pro cao cấp"
-                android:textColor="#fefa72" />
+                android:alpha="0.7"
+                android:gravity="center_vertical"
+                android:text="Nâng cấp VIP" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/establish_bg_item">
+                android:layout_height="80dp"
+                android:background="@drawable/establish_bg_item"
+                android:padding="8dp">
 
-                <TextView
-                    android:id="@+id/tvUpgrade"
+                <ImageView
+                    android:id="@+id/imgVip"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:src="@drawable/icon_vip"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <LinearLayout
+                    android:id="@+id/leftTextBlock"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
-                    android:layout_marginTop="10dp"
                     android:layout_marginEnd="10dp"
-                    android:text="Nâng cấp lên phiên bản VIP"
-                    android:textColor="@android:color/white"
-                    android:textSize="24sp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toStartOf="@id/tvPrice"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toTopOf="@+id/tvOneTime" />
+                    android:orientation="vertical"
+                    app:layout_constraintBottom_toBottomOf="@id/imgVip"
+                    app:layout_constraintEnd_toStartOf="@id/tvPriceBlock"
+                    app:layout_constraintStart_toEndOf="@id/imgVip"
+                    app:layout_constraintTop_toTopOf="@id/imgVip">
 
-                <TextView
-                    android:id="@+id/tvOneTime"
+                    <TextView
+                        android:id="@+id/tvUpgrade"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Nâng cấp phiên bản VIP"
+                        android:textColor="@android:color/white"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tvOneTime"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:alpha="0.8"
+                        android:text="Mua một lần"
+                        android:textColor="@android:color/white"
+                        android:textSize="14sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/tvPriceBlock"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginTop="4dp"
-                    android:alpha="0.7"
-                    android:text="Mua một lần"
-                    android:textColor="@android:color/white"
-                    android:textSize="16sp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tvUpgrade" />
-
-                <TextView
-                    android:id="@+id/tvPrice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="10dp"
-                    android:text="199,000 đ/năm"
-                    android:textColor="#fefa72"
-                    android:textSize="18sp"
+                    android:layout_marginEnd="16dp"
+                    android:gravity="center|end"
+                    android:orientation="vertical"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/tvUpgrade"
-                    app:layout_constraintBottom_toBottomOf="@id/tvUpgrade"
-                    app:layout_constraintVertical_bias="0.5"/>
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <TextView
+                        android:id="@+id/tvPrice"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="199,000 đ"
+                        android:textColor="#FFE155"
+                        android:textSize="24sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tvForever"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="/ Mãi Mãi"
+                        android:textColor="#FFE155"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
             </androidx.constraintlayout.widget.ConstraintLayout>
-        </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/widgetLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/updateLayout">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="30dp"
-                android:alpha="0.7"
-                android:text="Công tắc điện" />
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/establish_bg_item">
-
-                <!--                <Button-->
-                <!--                    android:id="@+id/buyVipBtn"-->
-                <!--                    android:layout_width="match_parent"-->
-                <!--                    android:layout_height="80dp"-->
-                <!--                    android:layout_marginStart="0dp"-->
-                <!--                    android:layout_marginEnd="0dp"-->
-                <!--                    android:background="@drawable/" />-->
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="50dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginTop="10dp"
-                    android:text="Widget"
-                    android:textSize="20sp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="25dp"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginTop="40dp"
-                    android:alpha="0.7"
-                    android:text="Mua một lần"
-                    android:textColor="@android:color/white"
-                    android:textSize="16sp" />
-
-<!--                <Switch-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_alignParentEnd="true"-->
-<!--                    android:layout_marginTop="25dp"-->
-<!--                    android:layout_marginEnd="10dp"-->
-<!--                    android:gravity="center_vertical"-->
-<!--                    android:textColor="#fefa72"-->
-<!--                    android:textSize="18sp" />-->
-
-            </RelativeLayout>
         </LinearLayout>
 
         <LinearLayout
@@ -168,13 +147,13 @@
             android:orientation="vertical"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/widgetLayout">
+            app:layout_constraintTop_toBottomOf="@id/updateLayout">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="20dp"
                 android:alpha="0.7"
-                android:text="Công tắc điện" />
+                android:text="Cài đặt" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -184,21 +163,20 @@
                 android:orientation="vertical"
                 android:padding="16dp">
 
-                <!-- Nhiệt độ -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="56dp"
-                    android:background="?attr/selectableItemBackground"
+                    android:layout_marginTop="0dp"
+                    android:background="@drawable/establish_bg_item"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp">
 
-                    <!-- ImageView commented out -->
-                    <!-- <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@drawable/ic_temperature" /> -->
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:src="@drawable/icon_temp" />
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -222,16 +200,14 @@
                             android:textSize="12sp" />
                     </LinearLayout>
 
-                    <ToggleButton
-                        android:id="@+id/toggleTemperature"
+                    <androidx.appcompat.widget.SwitchCompat
+                        android:id="@+id/switchTemperature"
                         android:layout_width="56dp"
                         android:layout_height="wrap_content"
-                        android:textColor="@android:color/white"
-                        android:textOff="C"
-                        android:textOn="F" />
+                        android:thumb="@drawable/custom_switch_thumb"
+                        android:track="@drawable/custom_switch_track" />
                 </LinearLayout>
 
-                <!-- Lượng mưa -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="56dp"
@@ -239,14 +215,12 @@
                     android:background="?attr/selectableItemBackground"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
-                    android:paddingStart="16dp"
                     android:paddingEnd="16dp">
 
-                    <!-- ImageView commented out -->
-                    <!-- <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@drawable/ic_rain" /> -->
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:src="@drawable/icon_rainfall" />
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -270,15 +244,8 @@
                             android:textSize="12sp" />
                     </LinearLayout>
 
-                    <!-- Spinner commented out -->
-                    <!-- <Spinner
-                        android:id="@+id/spinnerRain"
-                        android:layout_width="72dp"
-                        android:layout_height="wrap_content"
-                        android:backgroundTint="@color/blue_700" /> -->
                 </LinearLayout>
 
-                <!-- Khả năng hiển thị -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="56dp"
@@ -286,14 +253,13 @@
                     android:background="?attr/selectableItemBackground"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
-                    android:paddingStart="16dp"
+
                     android:paddingEnd="16dp">
 
-                    <!-- ImageView commented out -->
-                    <!-- <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@drawable/ic_visibility" /> -->
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:src="@drawable/icon_foresight" />
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -317,15 +283,8 @@
                             android:textSize="12sp" />
                     </LinearLayout>
 
-                    <!-- Spinner commented out -->
-                    <!-- <Spinner
-                        android:id="@+id/spinnerVisibility"
-                        android:layout_width="72dp"
-                        android:layout_height="wrap_content"
-                        android:backgroundTint="@color/blue_700" /> -->
                 </LinearLayout>
 
-                <!-- Tốc độ gió -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="56dp"
@@ -333,14 +292,12 @@
                     android:background="?attr/selectableItemBackground"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
-                    android:paddingStart="16dp"
                     android:paddingEnd="16dp">
 
-                    <!-- ImageView commented out -->
-                    <!-- <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@drawable/ic_wind" /> -->
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:src="@drawable/icon_wind_speed" />
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -364,15 +321,8 @@
                             android:textSize="12sp" />
                     </LinearLayout>
 
-                    <!-- Spinner commented out -->
-                    <!-- <Spinner
-                        android:id="@+id/spinnerWind"
-                        android:layout_width="72dp"
-                        android:layout_height="wrap_content"
-                        android:backgroundTint="@color/blue_700" /> -->
                 </LinearLayout>
 
-                <!-- Áp suất -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="56dp"
@@ -380,14 +330,12 @@
                     android:background="?attr/selectableItemBackground"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
-                    android:paddingStart="16dp"
                     android:paddingEnd="16dp">
 
-                    <!-- ImageView commented out -->
-                    <!-- <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@drawable/ic_pressure" /> -->
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:src="@drawable/icon_atm" />
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -421,7 +369,6 @@
             </LinearLayout>
         </LinearLayout>
 
-        <!-- Container nhóm Ngày & Thời gian -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -453,7 +400,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/unitSettingsContainer">
 
-                <!-- Sử dụng định dạng 24h -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="56dp"
@@ -461,14 +407,12 @@
                     android:background="?attr/selectableItemBackground"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
-                    android:paddingStart="16dp"
                     android:paddingEnd="16dp">
 
-                    <!-- ImageView commented out -->
-                    <!-- <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@drawable/ic_clock" /> -->
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:src="@drawable/icon_clock" />
 
                     <TextView
                         android:layout_width="0dp"
@@ -478,15 +422,8 @@
                         android:text="Sử dụng định dạng 24h"
                         android:textColor="@android:color/white"
                         android:textSize="16sp" />
-
-<!--                    <Switch-->
-<!--                        android:id="@+id/switch24h"-->
-<!--                        android:layout_width="wrap_content"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:checked="true" />-->
                 </LinearLayout>
 
-                <!-- Định dạng ngày -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="56dp"
@@ -494,14 +431,12 @@
                     android:background="?attr/selectableItemBackground"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
-                    android:paddingStart="16dp"
                     android:paddingEnd="16dp">
 
-                    <!-- ImageView commented out -->
-                    <!-- <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@drawable/ic_calendar" /> -->
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:src="@drawable/icon_calendar" />
 
                     <TextView
                         android:layout_width="0dp"
@@ -512,12 +447,6 @@
                         android:textColor="@android:color/white"
                         android:textSize="16sp" />
 
-                    <!-- Spinner commented out -->
-                    <!-- <Spinner
-                        android:id="@+id/spinnerDateFormat"
-                        android:layout_width="96dp"
-                        android:layout_height="wrap_content"
-                        android:backgroundTint="@color/blue_700" /> -->
                 </LinearLayout>
             </LinearLayout>
 
@@ -535,23 +464,66 @@
                     android:layout_width="wrap_content"
                     android:layout_height="20dp"
                     android:alpha="0.7"
-                    android:text="Thông báo" />
+                    android:text="Chất lượng không khí" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:background="@drawable/establish_bg_item"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:padding="16dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/unitSettingsContainer">
 
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="56dp"
+                        android:layout_marginTop="8dp"
+                        android:background="?attr/selectableItemBackground"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingEnd="16dp">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="45dp"
-                        android:text="Tin nhắn"
-                        android:textColor="@android:color/white"
-                        android:textSize="16sp" />
+                        <ImageView
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:src="@drawable/icon_data" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingStart="12dp"
+                            android:text="Nguồn dữ liệu"
+                            android:textColor="@android:color/white"
+                            android:textSize="16sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="56dp"
+                        android:layout_marginTop="8dp"
+                        android:background="?attr/selectableItemBackground"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingEnd="16dp">
+
+                        <ImageView
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:src="@drawable/icon_certificate" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:paddingStart="12dp"
+                            android:text="Tiêu chuẩn"
+                            android:textColor="@android:color/white"
+                            android:textSize="16sp" />
+
+                    </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
