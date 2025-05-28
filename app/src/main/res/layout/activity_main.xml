@@ -212,9 +212,24 @@
             </LinearLayout>
         </ScrollView>
 
-        <!-- Overlay dialog (ẩn mặc định) -->
         <FrameLayout
             android:id="@+id/container_dialog_setting"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#99000000"
+            android:gravity="center"
+            android:visibility="gone" />
+
+        <FrameLayout
+            android:id="@+id/container_dialog_remove_ads"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#99000000"
+            android:gravity="center"
+            android:visibility="gone" />
+
+        <FrameLayout
+            android:id="@+id/container_vote_app"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="#99000000"

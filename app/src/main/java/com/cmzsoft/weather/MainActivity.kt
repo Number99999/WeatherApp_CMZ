@@ -28,8 +28,6 @@ import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import com.bumptech.glide.Glide
 import com.cmzsoft.weather.APICall.RequestAPI
@@ -67,11 +65,11 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_main)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
+//        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+//            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+//            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+//            insets
+//        }
 
         InitEventNavigationBar();
         createNotificationChannel(this)
@@ -105,14 +103,33 @@ class MainActivity : AppCompatActivity() {
             startActivity(changePage);
         }
 
-        val nav_setting = findViewById<LinearLayout>(R.id.nav_setting)
-        nav_setting.setOnClickListener {
-            showSettingsDialog()
+        findViewById<LinearLayout>(R.id.nav_notification).setOnClickListener {
+            val changePage = Intent(this, ActivitySettingNotification::class.java)
+            startActivity(changePage)
         }
 
-        val nav_notification = findViewById<LinearLayout>(R.id.nav_notification)
-        nav_notification.setOnClickListener {
-            val changePage = Intent(this, ActivitySettingNotification::class.java)
+        findViewById<LinearLayout>(R.id.nav_location).setOnClickListener {
+            val changePage = Intent(this, ActivityLocationManager::class.java)
+            startActivity(changePage)
+        }
+
+        findViewById<LinearLayout>(R.id.nav_setting).setOnClickListener {
+            showSettingsDialog()
+            hideCustomNav()
+        }
+
+        findViewById<LinearLayout>(R.id.nav_remove_ads).setOnClickListener {
+            hideCustomNav()
+            showRemoveAdsDialog()
+        }
+
+        findViewById<LinearLayout>(R.id.nav_rate_us).setOnClickListener {
+            showVoteApp()
+            hideCustomNav()
+        }
+
+        findViewById<LinearLayout>(R.id.nav_feedback).setOnClickListener {
+            val changePage = Intent(this, ActivityFeedback::class.java)
             startActivity(changePage)
         }
     }
@@ -206,6 +223,57 @@ class MainActivity : AppCompatActivity() {
 
             val btnDone = dialogView.findViewById<Button>(R.id.btn_done)
             btnDone.setOnClickListener {
+                container.visibility = View.GONE
+                container.removeAllViews()
+            }
+        }
+        container.visibility = View.VISIBLE
+    }
+
+    private fun showRemoveAdsDialog() {
+        val container = findViewById<FrameLayout>(R.id.container_dialog_remove_ads)
+        if (container.childCount == 0) {
+            val dialogView = layoutInflater.inflate(R.layout.dialog_remove_ads, container, false)
+            val params = FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT
+            )
+            params.gravity = Gravity.CENTER
+            dialogView.layoutParams = params
+
+            container.addView(dialogView)
+            dialogView.findViewById<ImageView>(R.id.btn_back)?.setOnClickListener {
+                container.visibility = View.GONE
+                container.removeAllViews()
+            }
+            dialogView.findViewById<Button>(R.id.btn_accept_buy)?.setOnClickListener {
+                container.visibility = View.GONE
+                container.removeAllViews()
+            }
+            dialogView.findViewById<Button>(R.id.btn_cancel)?.setOnClickListener {
+                container.visibility = View.GONE
+                container.removeAllViews()
+            }
+        }
+        container.visibility = View.VISIBLE
+    }
+
+    private fun showVoteApp() {
+        val container = findViewById<FrameLayout>(R.id.container_vote_app)
+        if (container.childCount == 0) {
+            val dialogView = layoutInflater.inflate(R.layout.dialog_vote_app, container, false)
+            val params = FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT
+            )
+            params.gravity = Gravity.CENTER
+
+            dialogView.layoutParams = params
+
+            container.addView(dialogView)
+            dialogView.findViewById<ImageView>(R.id.btn_back)?.setOnClickListener {
+                container.visibility = View.GONE
+                container.removeAllViews()
+            }
+            dialogView.findViewById<Button>(R.id.btn_accept_vote)?.setOnClickListener {
                 container.visibility = View.GONE
                 container.removeAllViews()
             }

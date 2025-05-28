@@ -22,6 +22,7 @@
             android:layout_height="40dp"
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
+            android:layout_marginStart="15dp"
             android:background="@android:color/transparent"
             android:scaleType="fitCenter"
             android:src="@drawable/icon_back" />
@@ -31,7 +32,7 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:gravity="center"
-            android:text="Thiết lập"
+            android:text="Quản lý vị trí"
             android:textColor="@android:color/white"
             android:textSize="24sp" />
     </RelativeLayout>
@@ -50,20 +51,31 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <RelativeLayout
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="#00518a"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
                 android:paddingTop="15dp"
                 android:paddingBottom="15dp">
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:maxLines="1"
                     android:paddingStart="20dp"
                     android:paddingEnd="20dp"
-                    android:text="Tính năng phát hiện tự động, đang hoat động không ổn định"></TextView>
-            </RelativeLayout>
+                    android:text="Tính năng phát hiện tự động, đang hoạt động không ổn định"
+                    android:textColor="#fff" />
+
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_marginEnd="20dp"
+                    android:src="@drawable/icon_btn_close_x" />
+            </LinearLayout>
 
             <include
                 layout="@layout/card_location"

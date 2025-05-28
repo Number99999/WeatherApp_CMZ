@@ -18,6 +18,12 @@
         android:theme="@style/Theme.Weather"
         tools:targetApi="31">
         <activity
+            android:name=".ActivityCustomLayout"
+            android:exported="false" />
+        <activity
+            android:name=".ActivityFeedback"
+            android:exported="false" />
+        <activity
             android:name=".ActivityLocationManager"
             android:exported="false" />
 
