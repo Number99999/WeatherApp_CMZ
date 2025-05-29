@@ -24,8 +24,8 @@
             android:layout_height="40dp"
             android:background="@android:color/white"
             android:gravity="center_vertical|start"
-            android:text="hello"
             android:paddingStart="12dp"
+            android:text="hello"
             android:textColor="#2A2A2A"
             android:textSize="16sp" />
 

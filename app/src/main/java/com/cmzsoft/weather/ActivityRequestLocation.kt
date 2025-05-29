@@ -52,8 +52,6 @@ class ActivityRequestLocation : AppCompatActivity() {
 
     private fun InitEventButtonAcceptLocation() {
         val btn = findViewById<Button>(R.id.btn_accept)
-        val firstView = findViewById<ScrollView>(R.id.request_location_1)
-        val secondView = findViewById<ScrollView>(R.id.request_location_2)
 
         btn.setOnClickListener {
 //            firstView?.visibility = View.GONE
@@ -67,7 +65,7 @@ class ActivityRequestLocation : AppCompatActivity() {
     private fun InitEventButtonManual() {
         val btn = findViewById<Button>(R.id.btn_manual_search)
         btn.setOnClickListener {
-            val changePage = Intent(this, MainActivity::class.java);
+            val changePage = Intent(this, ActivityCustomLayout::class.java);
 //            val changePage = Intent(this, ActivityChooseLocationWithMap::class.java);
             startActivity(changePage);
         }
