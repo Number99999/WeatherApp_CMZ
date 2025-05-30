@@ -5,7 +5,6 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.widget.Button
-import android.widget.ScrollView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -65,8 +64,7 @@ class ActivityRequestLocation : AppCompatActivity() {
     private fun InitEventButtonManual() {
         val btn = findViewById<Button>(R.id.btn_manual_search)
         btn.setOnClickListener {
-            val changePage = Intent(this, ActivityCustomLayout::class.java);
-//            val changePage = Intent(this, ActivityChooseLocationWithMap::class.java);
+            val changePage = Intent(this, MainActivity::class.java);
             startActivity(changePage);
         }
     }

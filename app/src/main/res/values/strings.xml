@@ -4,31 +4,27 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="underline_policy"><u>Chính sách quyền riêng tư</u></string>
+    <string name="txt_view_detail"><u>Thêm chi tiết</u></string>
     <string-array name="temp_units">
         <item>°C</item>
         <item>°F</item>
     </string-array>
-
     <string-array name="rain_units">
         <item>mm</item>
         <item>inch</item>
     </string-array>
-
     <string-array name="distance_units">
         <item>km</item>
         <item>mile</item>
     </string-array>
-
     <string-array name="wind_units">
         <item>km/h</item>
         <item>mph</item>
     </string-array>
-
     <string-array name="pressure_units">
         <item>mmHg</item>
         <item>hPa</item>
     </string-array>
-
     <string-array name="time_format">
         <item>24 giờ</item>
         <item>12 giờ</item>

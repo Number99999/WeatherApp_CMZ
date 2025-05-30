@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.cmzsoft.weather.CustomAdapter.CustomLayoutAdapter
 
 class ActivityCustomLayout : AppCompatActivity() {
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -21,52 +20,33 @@ class ActivityCustomLayout : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-
-        testAdapter()
+        setupRecycleView()
         findViewById<ImageButton>(R.id.backButton).setOnClickListener {
             finish()
         }
     }
 
-    private fun testAdapter() {
+    private fun setupRecycleView() {
         val recyclerView = findViewById<RecyclerView>(R.id.recyclerView)
-        val dataList = listOf(
-            WeatherItem(
-                "15:00",
-                R.drawable.cloudy,
-                "37°C",
-                "NDN, 6.9mph",
-                R.drawable.cloudy_sunny,
-                "5%"
-            ),
-            WeatherItem(
-                "15:00",
-                R.drawable.cloudy,
-                "37°C",
-                "NDN, 6.9mph",
-                R.drawable.cloudy_sunny,
-                "5%"
-            ),
-            WeatherItem(
-                "15:00",
-                R.drawable.cloudy,
-                "37°C",
-                "NDN, 6.9mph",
-                R.drawable.cloudy_sunny,
-                "5%"
-            ),
+        val data = listOf(
+            CustomLayoutItem("Dự báo theo giờ", R.drawable.icon_chart),
+            CustomLayoutItem("Dự báo hàng ngày", R.drawable.icon_chart),
+            CustomLayoutItem("Lượng mưa", R.drawable.icon_rainfall),
+            CustomLayoutItem("Gió", R.drawable.windy),
+            CustomLayoutItem("Chất lượng không khí", R.drawable.icon_air_quality),
+            CustomLayoutItem("Chi tiết", R.drawable.icon_detail),
+            CustomLayoutItem("Nhiếp ảnh", R.drawable.icon_camera),
+            CustomLayoutItem("Dị ứng", R.drawable.icon_allergy),
+            CustomLayoutItem("Bản đồ", R.drawable.icon_map),
+            CustomLayoutItem("Bản đồ", R.drawable.icon_map)
         )
-        val adapter = CustomLayoutAdapter(dataList)
+        val adapter = CustomLayoutAdapter(data)
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(this)
     }
 }
 
-data class WeatherItem(
-    val time: String,
-    val iconRes: Int,
-    val degree: String,
-    val wind: String,
-    val rainIconRes: Int,
-    val rainfallRate: String
+data class CustomLayoutItem(
+    val title: String,
+    val icon: Int,
 )

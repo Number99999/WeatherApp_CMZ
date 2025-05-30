@@ -4,9 +4,7 @@
     android:id="@+id/chartCard"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="8dp"
     app:cardBackgroundColor="#1794D2"
-    app:cardCornerRadius="18dp"
     app:cardElevation="4dp">
 
     <LinearLayout
@@ -15,74 +13,61 @@
         android:orientation="vertical"
         android:padding="10dp">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingBottom="4dp">
-
-            <TextView
-                android:id="@+id/chartTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="GIÓ (MPH)"
-                android:textColor="#FFFFFF"
-                android:textSize="15sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/chartType"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:text="Hằng ngày ▼"
-                android:textColor="#B8E4FB"
-                android:textSize="13sp" />
-        </RelativeLayout>
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="10dp">
 
-            <!-- RelativeLayout chứa tiêu đề như của bạn -->
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingBottom="4dp">
-                <!-- TextView tiêu đề và loại biểu đồ -->
-            </RelativeLayout>
+                android:paddingBottom="4dp"></RelativeLayout>
 
-            <!-- LineChart nằm phía trên -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rc_title_chart"
+                android:layout_width="wrap_content"
+                android:layout_height="80dp"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager">
+
+            </androidx.recyclerview.widget.RecyclerView>
+
             <HorizontalScrollView
                 android:id="@+id/scroll_char"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:scrollbars="none"
-                android:fillViewport="true">
+                android:fillViewport="true"
+                android:scrollbars="none">
 
                 <com.github.mikephil.charting.charts.LineChart
                     android:id="@+id/lineChart"
                     android:layout_width="0dp"
-                    android:layout_height="180dp"
-                    android:minWidth="1000dp"/>
+                    android:layout_height="140dp"
+                    android:minWidth="1400dp" />
             </HorizontalScrollView>
 
-            <!-- Emoji/Icon nằm phía dưới LineChart, phải cùng chiều rộng -->
             <HorizontalScrollView
                 android:id="@+id/emoji_scroll"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:scrollbars="none"
-                android:fillViewport="true">
+                android:fillViewport="true"
+                android:scrollbars="none">
 
                 <LinearLayout
                     android:id="@+id/emojiContainer"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="-8dp"
-                    android:orientation="horizontal"/>
+                    android:orientation="horizontal" />
             </HorizontalScrollView>
+
+            <TextView
+                android:id="@+id/txt_view_detail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_marginEnd="10dp"
+                android:text="@string/txt_view_detail" />
         </LinearLayout>
     </LinearLayout>
 

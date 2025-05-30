@@ -59,6 +59,8 @@ dependencies {
     implementation("androidx.fragment:fragment-ktx:1.4.1")
     implementation("com.github.bumptech.glide:glide:4.16.0")
     implementation("com.google.code.gson:gson:2.10.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.0")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.4.0")
     implementation(libs.play.services.maps)
     implementation(libs.protolite.well.known.types)
     testImplementation(libs.junit)
