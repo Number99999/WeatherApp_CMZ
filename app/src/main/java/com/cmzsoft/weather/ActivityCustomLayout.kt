@@ -38,11 +38,11 @@ class ActivityCustomLayout : AppCompatActivity() {
             CustomLayoutItem("Nhiếp ảnh", R.drawable.icon_camera),
             CustomLayoutItem("Dị ứng", R.drawable.icon_allergy),
             CustomLayoutItem("Bản đồ", R.drawable.icon_map),
-            CustomLayoutItem("Bản đồ", R.drawable.icon_map)
         )
         val adapter = CustomLayoutAdapter(data)
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(this)
+        adapter.notifyDataSetChanged()
     }
 }
 

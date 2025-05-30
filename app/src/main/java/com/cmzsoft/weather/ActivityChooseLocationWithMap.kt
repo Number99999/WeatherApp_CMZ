@@ -95,7 +95,6 @@ class ActivityChooseLocationWithMap : AppCompatActivity(), OnMapReadyCallback {
                 } catch (e: IOException) {
                     e.printStackTrace()
                 }
-
                 return true
             }
 

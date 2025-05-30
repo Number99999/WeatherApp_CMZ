@@ -33,8 +33,8 @@ class CustomLayoutAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = items[position]
 
-//        holder.imgIcon.setImageResource(item.icon)
-//        holder.txtTitle.text = item.title
+        holder.imgIcon.setImageResource(item.icon)
+        holder.txtTitle.text = item.title
         // holder.btnArrow.setOnClickListener { ... }
     }
 }
