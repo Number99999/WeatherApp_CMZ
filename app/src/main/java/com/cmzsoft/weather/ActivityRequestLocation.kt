@@ -12,11 +12,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.cmzsoft.weather.Model.FakeGlobal
+import com.cmzsoft.weather.Model.PermissionModel
 
 class ActivityRequestLocation : AppCompatActivity() {
-    private val FINE_PERMISSION_CODE = 1
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -57,6 +56,7 @@ class ActivityRequestLocation : AppCompatActivity() {
 //            secondView?.visibility = View.VISIBLE
 //            val changePage = Intent(this, ActivityChooseLocationWithMap::class.java);
 //            startActivity(changePage);
+            FakeGlobal.getInstance().userAcceptRequestLocation = true;
             requestPermissionLocation()
         }
     }
@@ -64,7 +64,9 @@ class ActivityRequestLocation : AppCompatActivity() {
     private fun InitEventButtonManual() {
         val btn = findViewById<Button>(R.id.btn_manual_search)
         btn.setOnClickListener {
-            val changePage = Intent(this, MainActivity::class.java);
+            FakeGlobal.getInstance().userAcceptRequestLocation = false;
+            val changePage = Intent(this, ActivityChooseLocationWithMap::class.java);
+
             startActivity(changePage);
         }
     }
@@ -88,47 +90,44 @@ class ActivityRequestLocation : AppCompatActivity() {
     private fun InitEventDontAccept() {
         val btn = findViewById<Button>(R.id.btn_dont_accept)
         btn.setOnClickListener {
-            val changePage = Intent(this, MainActivity::class.java);
+            val changePage = Intent(this, ActivityChooseLocationWithMap::class.java);
             startActivity(changePage);
         }
     }
 
     private fun requestPermissionLocation() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-            != PackageManager.PERMISSION_GRANTED
+        if (ActivityCompat.checkSelfPermission(
+                this, Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
         ) {
-            Toast.makeText(this, "ehehe", Toast.LENGTH_SHORT).show()
             ActivityCompat.requestPermissions(
                 this,
                 arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-                FINE_PERMISSION_CODE
+                PermissionModel.REQUEST_LOCATION
             )
             return
         } else {
             val changePage = Intent(this, MainActivity::class.java);
+            changePage.putExtra("FROM_REQUEST_LOCATION", true);
             startActivity(changePage);
         }
 
     }
 
     override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
+        requestCode: Int, permissions: Array<out String>, grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == FINE_PERMISSION_CODE) {
+        if (requestCode == PermissionModel.REQUEST_LOCATION) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 val changePage = Intent(this, MainActivity::class.java);
+                changePage.putExtra("FROM_REQUEST_LOCATION", true);
                 startActivity(changePage);
             } else {
                 Toast.makeText(
-                    this,
-                    "Cần cấp quyền vị trí để sử dụng tính năng này!",
-                    Toast.LENGTH_SHORT
+                    this, "Cần cấp quyền vị trí để sử dụng tính năng này!", Toast.LENGTH_SHORT
                 ).show()
             }
         }
     }
-
 }

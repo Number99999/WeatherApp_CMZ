@@ -35,7 +35,7 @@
                 android:src="@drawable/icon_show_nav_bar" />
 
             <ImageView
-                android:id="@+id/imgWide"
+                android:id="@+id/add_location"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_alignParentEnd="true"
@@ -48,7 +48,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="30dp"
                 android:layout_centerVertical="true"
-                android:layout_toStartOf="@id/imgWide"
+                android:layout_toStartOf="@id/add_location"
                 android:layout_toEndOf="@id/img_show_nav"
                 android:gravity="center"
                 android:text="Hà Nội"
@@ -80,6 +80,7 @@
                     android:layout_height="96dp"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="8dp"
+                    android:scaleType="fitCenter"
                     android:src="@drawable/sunny" />
 
                 <RelativeLayout
@@ -227,7 +228,8 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
                         android:layout_marginBottom="20dp"
-                        android:padding="10dp" />
+                        android:padding="10dp"
+                        android:visibility="gone" />
                 </LinearLayout>
             </LinearLayout>
         </ScrollView>
@@ -268,5 +270,4 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
     </FrameLayout>
-
 </androidx.drawerlayout.widget.DrawerLayout>

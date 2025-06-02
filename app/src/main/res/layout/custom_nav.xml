@@ -141,7 +141,10 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:thumb="@drawable/custom_switch_thumb"
-                        android:track="@drawable/custom_switch_track" />
+                        android:track="@drawable/custom_switch_track"
+                        app:thumbTint="@null"
+                        app:trackTint="@null" />
+
                 </LinearLayout>
 
                 <LinearLayout
@@ -171,7 +174,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:thumb="@drawable/custom_switch_thumb"
-                        android:track="@drawable/custom_switch_track" />
+                        android:track="@drawable/custom_switch_track"
+                        app:thumbTint="@null"
+                        app:trackTint="@null" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -201,7 +206,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:thumb="@drawable/custom_switch_thumb"
-                        android:track="@drawable/custom_switch_track" />
+                        android:track="@drawable/custom_switch_track"
+                        app:thumbTint="@null"
+                        app:trackTint="@null" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -223,29 +230,6 @@
                         android:layout_marginStart="16dp"
                         android:layout_weight="1"
                         android:text="Thiết lập"
-                        android:textColor="#FFF"
-                        android:textSize="16sp" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/nav_setting"
-                    android:layout_width="match_parent"
-                    android:layout_height="48dp"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:padding="8dp">
-
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@drawable/icon_setting_nav_bar" />
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:layout_weight="1"
-                        android:text="Cài đặt"
                         android:textColor="#FFF"
                         android:textSize="16sp" />
                 </LinearLayout>

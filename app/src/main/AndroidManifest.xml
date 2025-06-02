@@ -58,6 +58,9 @@
         <activity
             android:name=".ActivityWeatherPerHour"
             android:exported="false" />
+        <activity
+            android:name=".ActivityBigCountry"
+            android:exported="false" />
     </application>
 
 </manifest>

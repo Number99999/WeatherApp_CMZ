@@ -3,9 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/background_blue_2"
     android:layout_marginTop="10dp"
     android:layout_marginEnd="10dp"
+    android:background="@drawable/background_blue_2"
     android:paddingTop="5dp"
     android:paddingBottom="5dp">
 
@@ -26,11 +26,15 @@
         android:text="Tình trạng hiện tại"
         android:textSize="16dp" />
 
-    <Switch
+    <androidx.appcompat.widget.SwitchCompat
         android:id="@+id/switch_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingEnd="20dp" />
+        android:paddingEnd="20dp"
+        android:thumb="@drawable/custom_switch_thumb"
+        android:track="@drawable/custom_switch_track"
+        app:thumbTint="@null"
+        app:trackTint="@null" />
 
     <ImageView
         android:id="@+id/img_drag"

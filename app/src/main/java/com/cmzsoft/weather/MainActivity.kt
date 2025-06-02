@@ -39,9 +39,11 @@ import com.cmzsoft.weather.APICall.RequestAPI
 import com.cmzsoft.weather.CustomAdapter.TitleChartDegreeAdapter
 import com.cmzsoft.weather.DatabaService.DatabaseService
 import com.cmzsoft.weather.Model.DataHourWeatherModel
+import com.cmzsoft.weather.Model.FakeGlobal
 import com.cmzsoft.weather.Model.LocationWeatherModel
 import com.cmzsoft.weather.Model.NightDayTempModel
 import com.cmzsoft.weather.Model.TitleChartItemModel
+import com.cmzsoft.weather.Utils.WeatherUtil
 import com.github.mikephil.charting.animation.ChartAnimator
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.data.Entry
@@ -52,10 +54,10 @@ import com.github.mikephil.charting.renderer.LineChartRenderer
 import com.github.mikephil.charting.utils.ViewPortHandler
 import com.google.android.gms.location.LocationServices
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.json.JSONArray
-import org.json.JSONException
 import org.json.JSONObject
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -69,20 +71,17 @@ class MainActivity : AppCompatActivity() {
     private lateinit var updateRunnable: Runnable
     private lateinit var navContainer: FrameLayout
     private lateinit var navPanel: View
-
-    private var distance2Emoji = 0;
-
+    private var updateWeatherJob: Job? = null;
     private var curLocation: String = "Hanoi"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_main)
-//        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-//            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-//            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-//            insets
-//        }
+
+        if (intent.getBooleanExtra("FROM_REQUEST_LOCATION", false)) {
+            this.showSettingsDialog();
+        }
 
         createNotificationChannel(this)
         RequestAcceptSendNotification();
@@ -92,6 +91,11 @@ class MainActivity : AppCompatActivity() {
         setupLineChart()
         initEventNavBar()
         setupLineChartDayNight()
+
+        findViewById<ImageView>(R.id.add_location).setOnClickListener {
+            val intent = Intent(this, ActivityBigCountry::class.java);
+            startActivity(intent)
+        }
     }
 
     private fun initEventNavBar() {
@@ -125,11 +129,6 @@ class MainActivity : AppCompatActivity() {
             startActivity(changePage)
         }
 
-        findViewById<LinearLayout>(R.id.nav_setting).setOnClickListener {
-            showSettingsDialog()
-            hideCustomNav()
-        }
-
         findViewById<LinearLayout>(R.id.nav_remove_ads).setOnClickListener {
             hideCustomNav()
             showRemoveAdsDialog()
@@ -160,58 +159,67 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun UpdateWeatherInfor() {
-        lifecycleScope.launch {
+        updateWeatherJob?.cancel();
+        updateWeatherJob = lifecycleScope.launch {
             val requestAPI = RequestAPI.getInstance()
-            var location = "21.0285, 105.8542"
-            val curLocationInDb = withContext(Dispatchers.IO) {
-                getCurLocationInDb()
-            }
+//            val curLocationInDb = withContext(Dispatchers.IO) {
+//                getCurLocationInDb()
+//            }
 
-            if (curLocationInDb != null) {
-                location =
-                    curLocationInDb.latitude.toString() + "," + curLocationInDb.longitude.toString()
-            }
+//            if (curLocationInDb != null) {
+//                location = "${curLocationInDb.latitude},${curLocationInDb.longitude}"
+//
+//            }
 
             val result = withContext(Dispatchers.IO) {
-                requestAPI.CallAPI(location)
+                requestAPI.CallAPI(curLocation)
             }
-
             updateDataOnMainInfo(result)
         }
     }
 
     private fun updateDataOnMainInfo(result: JSONObject) {
-        val txtDegree = findViewById<TextView>(R.id.temperature)
-        val tempC = result.getJSONObject("current").getDouble("temp_c")
-        txtDegree.text = tempC.roundToInt().toString() + "℃"
+        try {
+            val txtDegree = findViewById<TextView>(R.id.temperature)
+            val tempC = result.getJSONObject("current").getDouble("temp_c")
+            txtDegree.text = tempC.roundToInt().toString() + "℃"
 
-        UpdateCurrentTime()
+            UpdateCurrentTime()
 
-        val txtWeatherStatus = findViewById<TextView>(R.id.weatherStatus)
-        val current = result.getJSONObject("current").getJSONObject("condition").getString("text")
-        txtWeatherStatus.text = current
+            val txtWeatherStatus = findViewById<TextView>(R.id.weatherStatus)
+            val current =
+                result.getJSONObject("current").getJSONObject("condition").getString("text")
+            txtWeatherStatus.text = current
 
-        val imgWeatherIcon = findViewById<ImageView>(R.id.weatherIcon)
-        val imgUrl =
-            "https:" + result.getJSONObject("current").getJSONObject("condition").getString("icon")
+            val imgWeatherIcon = findViewById<ImageView>(R.id.weatherIcon)
+            val imgUrl = "https:" + result.getJSONObject("current").getJSONObject("condition")
+                .getString("icon")
 
-        val windDir = result.getJSONObject("current").getString("wind_dir")
+            val windDir = result.getJSONObject("current").getString("wind_dir")
 
-        val txtWindKph = findViewById<TextView>(R.id.wind_kph)
-        var wind_kph = result.getJSONObject("current").getString("wind_kph")
-        txtWindKph.text = "Hướng gió\n " + windDir + " - " + wind_kph + "km/h"
+            val txtWindKph = findViewById<TextView>(R.id.wind_kph)
+            var wind_kph = result.getJSONObject("current").getString("wind_kph")
+            txtWindKph.text = "Hướng gió\n " + windDir + " - " + wind_kph + "km/h"
 
-        val uv = result.getJSONObject("current").getDouble("uv")
-        val txtUv = findViewById<TextView>(R.id.txt_uv)
-        txtUv.text = "UV: " + uv
+            val uv = result.getJSONObject("current").getDouble("uv")
+            val txtUv = findViewById<TextView>(R.id.txt_uv)
+            txtUv.text = "UV: " + uv
 
-        val humidity = result.getJSONObject("current").getDouble("humidity")
-        findViewById<TextView>(R.id.txt_humidity).text = "Độ ẩm\n $humidity%"
+            val humidity = result.getJSONObject("current").getDouble("humidity")
+            findViewById<TextView>(R.id.txt_humidity).text = "Độ ẩm\n $humidity%"
 
-        val feelsLike = result.getJSONObject("current").getDouble("feelslike_c")
-        findViewById<TextView>(R.id.txt_feel_like).text = "Môi trường: $feelsLike℃"
+            val feelsLike = result.getJSONObject("current").getDouble("feelslike_c")
+            findViewById<TextView>(R.id.txt_feel_like).text = "Môi trường: $feelsLike℃"
 
-        Glide.with(this).load(imgUrl).into(imgWeatherIcon)
+            Glide.with(this).load(imgUrl).into(imgWeatherIcon)
+
+            if (FakeGlobal.getInstance()?.curLocation?.title != null) {
+                val txtCity = findViewById<TextView>(R.id.cityName);
+                txtCity.text = FakeGlobal.getInstance().curLocation.title;
+            }
+        } catch (e: Exception) {
+            Toast.makeText(this@MainActivity, e.message.toString(), Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun setupLineChartDayNight() {
@@ -284,6 +292,8 @@ class MainActivity : AppCompatActivity() {
 
         this.setUpDayTempChart(listData)
         this.setUpNightTempChart(listData)
+        this.setupRecycleNight(listData)
+        this.setupRecycleDay(listData)
     }
 
     private fun setUpDayTempChart(dataModel: List<NightDayTempModel>) {
@@ -353,6 +363,51 @@ class MainActivity : AppCompatActivity() {
             setPinchZoom(false)
             setScaleEnabled(false)
             invalidate()
+        }
+    }
+
+    private fun setupRecycleDay(dataModel: List<NightDayTempModel>) {
+        val containerView = findViewById<LinearLayout>(R.id.container_day)
+        for (i in 0 until containerView.childCount) {
+            val parentView = containerView.getChildAt(i)
+            if (parentView is ViewGroup) {
+                val textView = parentView.getChildAt(0)
+                if (textView is TextView) {
+                    textView.text = WeatherUtil.getDayOfWeek(dataModel[i].date);
+                }
+                if (parentView.getChildAt(2) is ViewGroup) {
+                    val t = (parentView.getChildAt(2) as ViewGroup).getChildAt(1);
+                    if (t is TextView) t.text = (dataModel[i].rainDay).toString() + "%";
+                }
+
+                if (parentView.getChildAt(3) is ViewGroup) {
+                    val t = (parentView.getChildAt(3) as ViewGroup).getChildAt(1);
+                    if (t is TextView) t.text =
+                        (dataModel[i].tempDay.roundToInt()).toString() + "°C";
+                }
+            }
+        }
+    }
+
+    private fun setupRecycleNight(dataModel: List<NightDayTempModel>) {
+        val containerView = findViewById<LinearLayout>(R.id.container_night)
+        for (i in 0 until containerView.childCount) {
+            val parentView = containerView.getChildAt(i)
+            if (parentView is ViewGroup) {
+                if (parentView.getChildAt(0) is ViewGroup) {
+                    val t = (parentView.getChildAt(0) as ViewGroup).getChildAt(1)
+                    if (t is TextView) {
+                        t.text = dataModel[i].tempNight.roundToInt().toString() + "°C";
+                    }
+                }
+
+                if (parentView.getChildAt(2) is ViewGroup) {
+                    val t = (parentView.getChildAt(2) as ViewGroup).getChildAt(1)
+                    if (t is TextView) {
+                        t.text = dataModel[i].rainNight.toString() + "%";
+                    }
+                }
+            }
         }
     }
 
@@ -455,7 +510,6 @@ class MainActivity : AppCompatActivity() {
             val change = Intent(this, ActivityWeatherPerHour::class.java)
             startActivity(change)
         }
-
         lifecycleScope.launch {
             try {
                 val resultAPI = withContext(Dispatchers.IO) {
@@ -472,17 +526,12 @@ class MainActivity : AppCompatActivity() {
                 for (i in 0 until forecastday2.length()) {
                     forecastday1.put(forecastday2.get(i))
                 }
-
-                try {
-                    setupLineChartInUI(forecastday1)
-                } catch (e: JSONException) {
-                    throw RuntimeException(e)
-                }
+                setupLineChartInUI(forecastday1)
             } catch (e: Exception) {
+                Toast.makeText(this@MainActivity, e.message, Toast.LENGTH_SHORT).show()
                 e.printStackTrace()
             }
         }
-
     }
 
     private fun setupLineChartInUI(array: JSONArray) {
@@ -495,6 +544,7 @@ class MainActivity : AppCompatActivity() {
 
         } catch (e: Exception) {
             Toast.makeText(this, e.message.toString(), Toast.LENGTH_SHORT).show()
+            e.printStackTrace()
         }
     }
 
@@ -530,67 +580,76 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupChart(arrInfo: List<DataHourWeatherModel>) {
-        val entries = ArrayList<Entry>()
-        arrInfo.forEachIndexed { i, model ->
-            entries.add(Entry(i.toFloat(), model.tempC.toFloat()))
+        try {
+            val entries = ArrayList<Entry>()
+            arrInfo.forEachIndexed { i, model ->
+                entries.add(Entry(i.toFloat(), model.tempC.toFloat()))
+            }
+            val dataSet = createLineDataSet(entries)
+            val lineChart = findViewById<LineChart>(R.id.lineChart)
+            dataSet.valueTextColor = Color.WHITE
+            dataSet.mode = LineDataSet.Mode.CUBIC_BEZIER
+            dataSet.setDrawCircles(false)
+            dataSet.color = Color.parseColor("#f6ce1e")
+
+            lineChart.requestLayout()
+            lineChart.data = LineData(dataSet)
+            setupChartStyle(lineChart, arrInfo)
+
+            lineChart.invalidate()
+        } catch (e: Exception) {
+            Toast.makeText(this@MainActivity, e.message, Toast.LENGTH_SHORT).show()
+            e.printStackTrace()
         }
-        val dataSet = createLineDataSet(entries)
-        val lineChart = findViewById<LineChart>(R.id.lineChart)
-        dataSet.valueTextColor = Color.WHITE
-        dataSet.mode = LineDataSet.Mode.CUBIC_BEZIER
-        dataSet.setDrawCircles(false)
-        dataSet.color = Color.parseColor("#f6ce1e")
-
-        lineChart.requestLayout()
-        lineChart.data = LineData(dataSet)
-        setupChartStyle(lineChart, arrInfo)
-
-        lineChart.invalidate()
     }
 
     private fun setupChartStyle(lineChart: LineChart, arrInfo: List<DataHourWeatherModel>) {
-        lineChart.setDrawGridBackground(false)
-        lineChart.description.isEnabled = false
-        lineChart.legend.isEnabled = false
-        lineChart.axisRight.isEnabled = false
-        lineChart.axisRight.setDrawGridLines(false)
+        try {
+            lineChart.setDrawGridBackground(false)
+            lineChart.description.isEnabled = false
+            lineChart.legend.isEnabled = false
+            lineChart.axisRight.isEnabled = false
+            lineChart.axisRight.setDrawGridLines(false)
 
-        val yAxis = lineChart.axisLeft
-        yAxis.textColor = Color.WHITE
-        yAxis.textSize = 15f
-        yAxis.setDrawGridLines(false)
+            val yAxis = lineChart.axisLeft
+            yAxis.textColor = Color.WHITE
+            yAxis.textSize = 15f
+            yAxis.setDrawGridLines(false)
 
-        yAxis.isEnabled = false
+            yAxis.isEnabled = false
 
-        val xAxis = lineChart.xAxis
-        xAxis.setDrawLabels(false)
-        xAxis.setDrawGridLines(false)
+            val xAxis = lineChart.xAxis
+            xAxis.setDrawLabels(false)
+            xAxis.setDrawGridLines(false)
 
-        lineChart.renderer =
-            CustomLineChartRenderer(lineChart, lineChart.animator, lineChart.viewPortHandler)
-        lineChart.setExtraOffsets(10f, 20f, 10f, 10f)
-        lineChart.setScaleEnabled(false)
-        lineChart.setPinchZoom(false)
-        lineChart.isHighlightPerTapEnabled = false
-        lineChart.isDoubleTapToZoomEnabled = false
-        lineChart.isDragEnabled = false
+            lineChart.renderer =
+                CustomLineChartRenderer(lineChart, lineChart.animator, lineChart.viewPortHandler)
+            lineChart.setExtraOffsets(10f, 20f, 10f, 10f)
+            lineChart.isHighlightPerTapEnabled = false
+            lineChart.isDoubleTapToZoomEnabled = false
+            lineChart.isDragEnabled = false
 
-        val params = lineChart.layoutParams
-        val emojiContainer = findViewById<LinearLayout>(R.id.emojiContainer)
-        params.width = emojiContainer.width
-        lineChart.layoutParams = params
-        lineChart.requestLayout()
+            val params = lineChart.layoutParams
+            val emojiContainer = findViewById<LinearLayout>(R.id.emojiContainer)
+            params.width = emojiContainer.width
+            lineChart.layoutParams = params
+            lineChart.requestLayout()
 
-        val data = lineChart.data
-        data?.dataSets?.forEach { set ->
-            (set as? LineDataSet)?.setDrawValues(true)
-            (set as? LineDataSet)?.valueFormatter = object : ValueFormatter() {
-                override fun getPointLabel(entry: Entry?): String {
-                    return entry?.y?.roundToInt()?.toString() + "°C"
+            val data = lineChart.data
+            data?.dataSets?.forEach { set ->
+                (set as LineDataSet).setDrawValues(true)
+                (set as LineDataSet).valueFormatter = object : ValueFormatter() {
+                    override fun getPointLabel(entry: Entry?): String {
+                        if (entry != null) {
+                            return entry.y.roundToInt().toString() + "°C"
+                        } else return ""
+                    }
                 }
             }
+        } catch (e: Exception) {
+            Toast.makeText(this@MainActivity, e.message, Toast.LENGTH_SHORT).show()
+            e.printStackTrace()
         }
-
     }
 
 
@@ -790,9 +849,6 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupTitleChartDegree(arr: List<DataHourWeatherModel>) {
         val rc_view = findViewById<RecyclerView>(R.id.rc_title_chart)
-        val params = rc_view.layoutParams as ViewGroup.MarginLayoutParams
-//        params.width = dpToPx(1400)
-//        rc_view.layoutParams = params
         val listData = mutableListOf<TitleChartItemModel>()
         for (item in arr) {
             listData.add(
@@ -822,6 +878,15 @@ class MainActivity : AppCompatActivity() {
                 outRect.right = if (position == itemCount - 1) 8 else 0
             }
         })
+    }
+
+    override fun onResume() {
+        if (FakeGlobal.getInstance().curLocation != null) {
+            curLocation =
+                FakeGlobal.getInstance().curLocation.latLng.latitude.toString() + "," + FakeGlobal.getInstance().curLocation.latLng.longitude.toString()
+            this.UpdateWeatherInfor()
+        }
+        super.onResume()
     }
 
 // same enable

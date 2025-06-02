@@ -92,7 +92,11 @@
 
                 <Switch
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:thumb="@drawable/custom_switch_thumb"
+                    android:track="@drawable/custom_switch_track"
+                    app:thumbTint="@null"
+                    app:trackTint="@null" />
             </LinearLayout>
 
             <LinearLayout
@@ -126,7 +130,11 @@
 
                 <Switch
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:thumb="@drawable/custom_switch_thumb"
+                    android:track="@drawable/custom_switch_track"
+                    app:thumbTint="@null"
+                    app:trackTint="@null" />
             </LinearLayout>
 
             <LinearLayout
@@ -150,17 +158,14 @@
                     android:text="Thời tiết hàng ngày"
                     android:textColor="@android:color/white"
                     android:textSize="16sp" />
-
-
-                <!--                <androidx.appcompat.widget.SwitchCompat-->
-                <!--                    android:layout_width="56dp"-->
-                <!--                    android:layout_height="wrap_content"-->
-                <!--                    android:thumb="@drawable/custom_switch_thumb"-->
-                <!--                    android:track="@drawable/custom_switch_track" />-->
-
+                
                 <Switch
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:thumb="@drawable/custom_switch_thumb"
+                    android:track="@drawable/custom_switch_track"
+                    app:thumbTint="@null"
+                    app:trackTint="@null" />
             </LinearLayout>
 
 
