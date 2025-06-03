@@ -142,6 +142,7 @@
                         android:layout_height="wrap_content"
                         android:thumb="@drawable/custom_switch_thumb"
                         android:track="@drawable/custom_switch_track"
+                        android:checked="true"
                         app:thumbTint="@null"
                         app:trackTint="@null" />
 
@@ -175,6 +176,8 @@
                         android:layout_height="wrap_content"
                         android:thumb="@drawable/custom_switch_thumb"
                         android:track="@drawable/custom_switch_track"
+                        android:checked="true"
+
                         app:thumbTint="@null"
                         app:trackTint="@null" />
                 </LinearLayout>
@@ -207,6 +210,8 @@
                         android:layout_height="wrap_content"
                         android:thumb="@drawable/custom_switch_thumb"
                         android:track="@drawable/custom_switch_track"
+                        android:checked="true"
+
                         app:thumbTint="@null"
                         app:trackTint="@null" />
                 </LinearLayout>
