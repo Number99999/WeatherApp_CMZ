@@ -27,7 +27,7 @@
             android:layout_height="30dp"
             android:layout_gravity="center"
             android:layout_marginTop="4dp"
-            android:src="@drawable/sunny" />
+            android:src="@drawable/status_sunny" />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -40,6 +40,7 @@
                 android:layout_width="13dp"
                 android:layout_height="13dp"
                 android:scaleType="fitCenter"
+                android:layout_gravity="center"
                 android:src="@drawable/icon_rainfall" />
 
             <TextView

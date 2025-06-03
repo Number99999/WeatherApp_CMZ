@@ -6,5 +6,5 @@ class DataHourWeatherModel(
     var tempC: Int,
     var tempF: Int,
     var isDay: Boolean,
-    var urlIcon: String
+    var urlIcon: Int
 )

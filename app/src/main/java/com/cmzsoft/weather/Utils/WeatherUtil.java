@@ -47,4 +47,47 @@ public class WeatherUtil {
         }
         return "";
     }
+
+    public static String getWeatherIconName(int code, boolean isDay) {
+        switch (code) {
+            // Trời quang đãng
+            case 1000:
+                return isDay ? "day_partly_cloudy.png" : "night_clear_moon.png";
+
+            // Nhiều mây (Partly cloudy)
+            case 1003:
+                return isDay ? "day_partly_cloudy.png" : "night_partly_cloudy.png";
+
+            // Đêm có mây ít
+            case 1006:
+                return isDay ? "day_partly_cloudy.png" : "night_few_clouds.png";
+
+            // Trăng tròn
+            case 1009:
+                return isDay ? "day_partly_cloudy.png" : "night_full_moon.png";
+
+            // Mưa đêm
+            case 1063:
+            case 1150:
+            case 1153:
+            case 1180:
+            case 1183:
+            case 1240:
+            case 1243:
+                return isDay ? "day_partly_cloudy.png" : "rain.png";
+
+            // Dông tố, sấm sét
+            case 1087:
+            case 1273:
+            case 1276:
+            case 1279:
+            case 1282:
+                return isDay ? "day_partly_cloudy.png" : "night_thunderstorm.png";
+        }
+
+        // fallback (icon mặc định)
+        return isDay ? "day_partly_cloudy.png" : "night_clear_moon.png";
+    }
+
+
 }

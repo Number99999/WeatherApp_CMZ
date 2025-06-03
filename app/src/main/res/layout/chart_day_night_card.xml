@@ -36,8 +36,8 @@
                         android:textSize="12sp" />
 
                     <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
                         android:src="@drawable/sunny" />
 
                     <LinearLayout
@@ -93,8 +93,8 @@
                         android:textSize="12sp" />
 
                     <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
                         android:src="@drawable/sunny" />
 
                     <LinearLayout
@@ -105,6 +105,7 @@
                         <ImageView
                             android:layout_width="10dp"
                             android:layout_height="10dp"
+                            android:layout_gravity="center"
                             android:src="@drawable/icon_rainfall" />
 
                         <TextView
@@ -149,8 +150,8 @@
                         android:textSize="12sp" />
 
                     <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
                         android:src="@drawable/sunny" />
 
                     <LinearLayout
@@ -161,6 +162,7 @@
                         <ImageView
                             android:layout_width="10dp"
                             android:layout_height="10dp"
+                            android:layout_gravity="center"
                             android:src="@drawable/icon_rainfall" />
 
                         <TextView
@@ -205,8 +207,8 @@
                         android:textSize="12sp" />
 
                     <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
                         android:src="@drawable/sunny" />
 
                     <LinearLayout
@@ -217,6 +219,7 @@
                         <ImageView
                             android:layout_width="10dp"
                             android:layout_height="10dp"
+                            android:layout_gravity="center"
                             android:src="@drawable/icon_rainfall" />
 
                         <TextView
@@ -261,8 +264,8 @@
                         android:textSize="12sp" />
 
                     <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
                         android:src="@drawable/sunny" />
 
                     <LinearLayout
@@ -273,6 +276,7 @@
                         <ImageView
                             android:layout_width="10dp"
                             android:layout_height="10dp"
+                            android:layout_gravity="center"
                             android:src="@drawable/icon_rainfall" />
 
                         <TextView
@@ -317,8 +321,8 @@
                         android:textSize="12sp" />
 
                     <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
                         android:src="@drawable/sunny" />
 
                     <LinearLayout
@@ -329,6 +333,7 @@
                         <ImageView
                             android:layout_width="10dp"
                             android:layout_height="10dp"
+                            android:layout_gravity="center"
                             android:src="@drawable/icon_rainfall" />
 
                         <TextView
@@ -373,8 +378,8 @@
                         android:textSize="12sp" />
 
                     <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
                         android:src="@drawable/sunny" />
 
                     <LinearLayout
@@ -385,6 +390,7 @@
                         <ImageView
                             android:layout_width="10dp"
                             android:layout_height="10dp"
+                            android:layout_gravity="center"
                             android:src="@drawable/icon_rainfall" />
 
                         <TextView
@@ -413,6 +419,7 @@
                             android:text="15°C" />
                     </LinearLayout>
                 </LinearLayout>
+
             </LinearLayout>
         </ScrollView>
 
@@ -420,10 +427,7 @@
             android:id="@+id/chart_temp_at_day"
             android:layout_width="500dp"
             android:layout_height="70dp"
-            android:layout_marginStart="20dp">
-
-
-        </com.github.mikephil.charting.charts.LineChart>
+            android:layout_marginStart="20dp" />
 
         <com.github.mikephil.charting.charts.LineChart
             android:id="@+id/chart_temp_at_night"
@@ -472,8 +476,8 @@
                     </LinearLayout>
 
                     <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
                         android:src="@drawable/sunny" />
 
                     <LinearLayout
@@ -491,8 +495,6 @@
                             android:layout_height="wrap_content"
                             android:text="25%" />
                     </LinearLayout>
-
-
                 </LinearLayout>
 
                 <LinearLayout
@@ -523,8 +525,8 @@
                     </LinearLayout>
 
                     <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
                         android:src="@drawable/sunny" />
 
                     <LinearLayout
@@ -542,8 +544,6 @@
                             android:layout_height="wrap_content"
                             android:text="25%" />
                     </LinearLayout>
-
-
                 </LinearLayout>
 
                 <LinearLayout
@@ -574,8 +574,8 @@
                     </LinearLayout>
 
                     <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
                         android:src="@drawable/sunny" />
 
                     <LinearLayout
@@ -593,8 +593,6 @@
                             android:layout_height="wrap_content"
                             android:text="25%" />
                     </LinearLayout>
-
-
                 </LinearLayout>
 
                 <LinearLayout
@@ -625,8 +623,8 @@
                     </LinearLayout>
 
                     <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
                         android:src="@drawable/sunny" />
 
                     <LinearLayout
@@ -644,8 +642,6 @@
                             android:layout_height="wrap_content"
                             android:text="25%" />
                     </LinearLayout>
-
-
                 </LinearLayout>
 
                 <LinearLayout
@@ -676,8 +672,8 @@
                     </LinearLayout>
 
                     <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
                         android:src="@drawable/sunny" />
 
                     <LinearLayout
@@ -695,8 +691,6 @@
                             android:layout_height="wrap_content"
                             android:text="25%" />
                     </LinearLayout>
-
-
                 </LinearLayout>
 
                 <LinearLayout
@@ -727,8 +721,8 @@
                     </LinearLayout>
 
                     <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
                         android:src="@drawable/sunny" />
 
                     <LinearLayout
@@ -746,8 +740,6 @@
                             android:layout_height="wrap_content"
                             android:text="25%" />
                     </LinearLayout>
-
-
                 </LinearLayout>
 
                 <LinearLayout
@@ -778,8 +770,8 @@
                     </LinearLayout>
 
                     <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
                         android:src="@drawable/sunny" />
 
                     <LinearLayout
@@ -797,8 +789,6 @@
                             android:layout_height="wrap_content"
                             android:text="25%" />
                     </LinearLayout>
-
-
                 </LinearLayout>
 
             </LinearLayout>

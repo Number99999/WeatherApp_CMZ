@@ -6,9 +6,9 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.cmzsoft.weather.Model.TitleChartItemModel
 import com.cmzsoft.weather.R
+import com.cmzsoft.weather.Utils.WeatherUtil
 
 class TitleChartDegreeAdapter(
     private val items: List<TitleChartItemModel>
@@ -31,11 +31,20 @@ class TitleChartDegreeAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = items[position]
-        if (item.weatherIconUrl != null)
-            Glide.with(holder.icon_status_weather.context)
-                .load(item.weatherIconUrl)
-                .into(holder.icon_status_weather)
         holder.txt_time.text = item.time
-        holder.txt_rainfall_rate.text = item.rainPercent.toString() + "%"
+        holder.txt_rainfall_rate.text = "${item.rainPercent}%"
+
+        val iconName = WeatherUtil.getWeatherIconName(
+            item.weatherIconUrl,
+            item.isDay
+        )
+        val drawableName = "status_" + iconName.removeSuffix(".png")
+        val context = holder.itemView.context
+        val resId = context.resources.getIdentifier(drawableName, "drawable", context.packageName)
+        if (resId != 0) {
+            holder.icon_status_weather.setImageResource(resId)
+        } else {
+            holder.icon_status_weather.setImageResource(R.drawable.status_day_partly_cloudy)
+        }
     }
 }

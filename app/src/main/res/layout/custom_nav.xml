@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="false">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -16,7 +17,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.8" />
+        app:layout_constraintGuide_percent="0.8053528" />
 
     <LinearLayout
         android:id="@+id/nav_panel"
@@ -140,9 +141,9 @@
                         android:id="@+id/switch_notification"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:checked="true"
                         android:thumb="@drawable/custom_switch_thumb"
                         android:track="@drawable/custom_switch_track"
-                        android:checked="true"
                         app:thumbTint="@null"
                         app:trackTint="@null" />
 
@@ -174,9 +175,9 @@
                         android:id="@+id/switch_daily_weather"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:checked="true"
                         android:thumb="@drawable/custom_switch_thumb"
                         android:track="@drawable/custom_switch_track"
-                        android:checked="true"
 
                         app:thumbTint="@null"
                         app:trackTint="@null" />
@@ -208,9 +209,9 @@
                         android:id="@+id/switch_background"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:checked="true"
                         android:thumb="@drawable/custom_switch_thumb"
                         android:track="@drawable/custom_switch_track"
-                        android:checked="true"
 
                         app:thumbTint="@null"
                         app:trackTint="@null" />

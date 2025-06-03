@@ -17,11 +17,14 @@ import android.os.Bundle
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.HorizontalScrollView
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.ScrollView
+import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -30,11 +33,9 @@ import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
-import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.cmzsoft.weather.APICall.RequestAPI
 import com.cmzsoft.weather.CustomAdapter.TitleChartDegreeAdapter
 import com.cmzsoft.weather.DatabaService.DatabaseService
@@ -66,7 +67,6 @@ import kotlin.math.roundToInt
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var drawerLayout: DrawerLayout
     private val handler = android.os.Handler()
     private lateinit var updateRunnable: Runnable
     private lateinit var navContainer: FrameLayout
@@ -91,10 +91,25 @@ class MainActivity : AppCompatActivity() {
         setupLineChart()
         initEventNavBar()
         setupLineChartDayNight()
+        eventScrollMain()
 
         findViewById<ImageView>(R.id.add_location).setOnClickListener {
             val intent = Intent(this, ActivityBigCountry::class.java);
             startActivity(intent)
+        }
+    }
+
+    private fun eventScrollMain() {
+        val scrollView = findViewById<ScrollView>(R.id.mainScroll)
+        val headerView = findViewById<View>(R.id.header_main)
+        scrollView.setOnScrollChangeListener { _, _, scrollY, _, _ ->
+            val headerHeight = headerView.height
+            System.out.println("gfhjkasdgfkjads: " + headerHeight + " fagskjdh" + scrollY);
+            if (scrollY >= headerHeight) {
+                headerView.alpha = 0.65f
+            } else {
+                headerView.alpha = 0f
+            }
         }
     }
 
@@ -162,14 +177,6 @@ class MainActivity : AppCompatActivity() {
         updateWeatherJob?.cancel();
         updateWeatherJob = lifecycleScope.launch {
             val requestAPI = RequestAPI.getInstance()
-//            val curLocationInDb = withContext(Dispatchers.IO) {
-//                getCurLocationInDb()
-//            }
-
-//            if (curLocationInDb != null) {
-//                location = "${curLocationInDb.latitude},${curLocationInDb.longitude}"
-//
-//            }
 
             val result = withContext(Dispatchers.IO) {
                 requestAPI.CallAPI(curLocation)
@@ -192,26 +199,34 @@ class MainActivity : AppCompatActivity() {
             txtWeatherStatus.text = current
 
             val imgWeatherIcon = findViewById<ImageView>(R.id.weatherIcon)
-            val imgUrl = "https:" + result.getJSONObject("current").getJSONObject("condition")
-                .getString("icon")
+            val iconName = WeatherUtil.getWeatherIconName(
+                result.getJSONObject("current").getJSONObject("condition").getInt("code"),
+                result.getJSONObject("current").getInt("is_day") == 1
+            )
+            val drawableName = "status_" + iconName.removeSuffix(".png")
+            val resId = resources.getIdentifier(drawableName, "drawable", packageName)
+            if (resId != 0) {
+                imgWeatherIcon.setImageResource(resId)
+            } else {
+                // fallback icon nếu không tìm thấy
+                imgWeatherIcon.setImageResource(R.drawable.status_sunny)
+            }
 
             val windDir = result.getJSONObject("current").getString("wind_dir")
 
             val txtWindKph = findViewById<TextView>(R.id.wind_kph)
             var wind_kph = result.getJSONObject("current").getString("wind_kph")
-            txtWindKph.text = "Hướng gió\n " + windDir + " - " + wind_kph + "km/h"
+            txtWindKph.text = "Hướng gió\n" + windDir + " - " + wind_kph + "km/h"
 
             val uv = result.getJSONObject("current").getDouble("uv")
             val txtUv = findViewById<TextView>(R.id.txt_uv)
-            txtUv.text = "UV: " + uv
+            txtUv.text = "UV:\n" + uv
 
             val humidity = result.getJSONObject("current").getDouble("humidity")
-            findViewById<TextView>(R.id.txt_humidity).text = "Độ ẩm\n $humidity%"
+            findViewById<TextView>(R.id.txt_humidity).text = "Độ ẩm\n$humidity%"
 
             val feelsLike = result.getJSONObject("current").getDouble("feelslike_c")
-            findViewById<TextView>(R.id.txt_feel_like).text = "Môi trường: $feelsLike℃"
-
-            Glide.with(this).load(imgUrl).into(imgWeatherIcon)
+            findViewById<TextView>(R.id.txt_feel_like).text = "Môi trường:\n$feelsLike℃"
 
             if (FakeGlobal.getInstance()?.curLocation?.title != null) {
                 val txtCity = findViewById<TextView>(R.id.cityName);
@@ -276,7 +291,7 @@ class MainActivity : AppCompatActivity() {
             val rainNight = nightHours.maxOfOrNull { it.optInt("chance_of_rain", 0) } ?: 0
             val tempDay = dayHours.maxOfOrNull { it.optDouble("temp_c", 0.0) }?.toFloat() ?: 0f
             val tempNight = nightHours.maxOfOrNull { it.optDouble("temp_c", 0.0) }?.toFloat() ?: 0f
-            val urlIcon = "https:" + condition.getString("icon")
+            val urlIcon = condition.getInt("code")
 
             val m = NightDayTempModel(
                 date = dayObj.getString("date"),
@@ -284,7 +299,7 @@ class MainActivity : AppCompatActivity() {
                 rainNight = rainNight,
                 tempDay = tempDay,
                 tempNight = tempNight,
-                urlIcon = urlIcon
+                iconID = urlIcon
             )
             listData.add(m)
         }
@@ -375,10 +390,26 @@ class MainActivity : AppCompatActivity() {
                 if (textView is TextView) {
                     textView.text = WeatherUtil.getDayOfWeek(dataModel[i].date);
                 }
+
+                if (parentView.getChildAt(1) is ImageView) {
+                    val iconName = WeatherUtil.getWeatherIconName(
+                        dataModel.get(i).iconID, true
+                    )
+                    val drawableName = "status_" + iconName.removeSuffix(".png")
+                    val resId = resources.getIdentifier(drawableName, "drawable", packageName)
+                    if (resId != 0) {
+                        (parentView.getChildAt(1) as ImageView).setImageResource(resId)
+                    } else {
+                        // fallback icon nếu không tìm thấy
+                        (parentView.getChildAt(1) as ImageView).setImageResource(R.drawable.status_sunny)
+                    }
+                }
+
                 if (parentView.getChildAt(2) is ViewGroup) {
                     val t = (parentView.getChildAt(2) as ViewGroup).getChildAt(1);
                     if (t is TextView) t.text = (dataModel[i].rainDay).toString() + "%";
                 }
+
 
                 if (parentView.getChildAt(3) is ViewGroup) {
                     val t = (parentView.getChildAt(3) as ViewGroup).getChildAt(1);
@@ -398,6 +429,19 @@ class MainActivity : AppCompatActivity() {
                     val t = (parentView.getChildAt(0) as ViewGroup).getChildAt(1)
                     if (t is TextView) {
                         t.text = dataModel[i].tempNight.roundToInt().toString() + "°C";
+                    }
+                }
+
+                if (parentView.getChildAt(1) is ImageView) {
+                    val iconName = WeatherUtil.getWeatherIconName(
+                        dataModel.get(i).iconID, false
+                    )
+                    val drawableName = "status_" + iconName.removeSuffix(".png")
+                    val resId = resources.getIdentifier(drawableName, "drawable", packageName)
+                    if (resId != 0) {
+                        (parentView.getChildAt(1) as ImageView).setImageResource(resId)
+                    } else {
+                        (parentView.getChildAt(1) as ImageView).setImageResource(R.drawable.status_sunny)
                     }
                 }
 
@@ -452,6 +496,14 @@ class MainActivity : AppCompatActivity() {
             }
         }
         container.visibility = View.VISIBLE
+        setupAdapterSettingDialog(R.id.spinner_temp, listOf("C", "F"))
+        setupAdapterSettingDialog(R.id.spinner_rain_fall, listOf("mm", "cm", "m"))
+        setupAdapterSettingDialog(R.id.spinner_visibility, listOf("km", "Dặm"))
+        setupAdapterSettingDialog(R.id.spinner_wind_speed, listOf("m/s", "km/h", "mph"))
+        setupAdapterSettingDialog(R.id.spinner_atm, listOf("Pa", "hPa", "mbar", "Bar", "atm"))
+        setupAdapterSettingDialog(
+            R.id.spinner_time_format, listOf("dd/MM/yyyy", "MM/dd/yyyy", "yyyy/MM/dd")
+        )
     }
 
     private fun showRemoveAdsDialog() {
@@ -522,7 +574,6 @@ class MainActivity : AppCompatActivity() {
                 val forecastday2 =
                     resultAPI.getJSONObject("forecast").getJSONArray("forecastday").getJSONObject(1)
                         .getJSONArray("hour")
-
                 for (i in 0 until forecastday2.length()) {
                     forecastday1.put(forecastday2.get(i))
                 }
@@ -538,7 +589,6 @@ class MainActivity : AppCompatActivity() {
         try {
             val arrInfo = parseWeatherData(array)
             setupTitleChartDegree(arrInfo)
-
             setupChart(arrInfo)
             setupScrollSync()
 
@@ -557,25 +607,31 @@ class MainActivity : AppCompatActivity() {
         calendar.set(Calendar.MILLISECOND, 0)
 
         val nowEpoch = calendar.timeInMillis / 1000   // epoch giây làm tròn xuống giờ
-        val next24hEpoch = nowEpoch + 23 * 3600        // 24 giờ sau
+        val next24hEpoch = nowEpoch + 23 * 3600      // 24 giờ sau
 
+        val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
+        System.out.println("ehehe: $nowEpoch $next24hEpoch");
         for (i in 0 until array.length()) {
             val hourObj = array.getJSONObject(i)
-            val timeEpoch = hourObj.getLong("time_epoch")
+            val timeString = hourObj.getString("time") // Ví dụ: "2025-06-03 15:00"
+
+            val date = sdf.parse(timeString)
+            val timeEpoch = date?.time?.div(1000) ?: continue // null thì bỏ qua
+
+            System.out.println("weather: " + timeEpoch + " " + (timeEpoch in nowEpoch..next24hEpoch))
             if (timeEpoch in nowEpoch..next24hEpoch) {
                 arrInfo.add(
                     DataHourWeatherModel(
                         timeEpoch,
-                        hourObj.getString("time"),
+                        timeString,
                         hourObj.getDouble("temp_c").roundToInt(),
                         hourObj.getDouble("temp_f").roundToInt(),
                         hourObj.getInt("is_day") == 1,
-                        "https:" + hourObj.getJSONObject("condition").getString("icon")
+                        hourObj.getJSONObject("condition").getInt("code")
                     )
                 )
             }
         }
-
         return arrInfo
     }
 
@@ -747,6 +803,14 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun setupAdapterSettingDialog(spinnerId: Int, items: List<String>) {
+        val spinner: Spinner = findViewById(spinnerId)
+        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, items)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spinner.adapter = adapter
+    }
+
+
     override fun onRequestPermissionsResult(
         requestCode: Int, permissions: Array<String>, grantResults: IntArray
     ) {
@@ -853,7 +917,11 @@ class MainActivity : AppCompatActivity() {
         for (item in arr) {
             listData.add(
                 TitleChartItemModel(
-                    item.time.substring(item.time.length - 5), null, item.urlIcon, item.tempC
+                    item.time.substring(item.time.length - 5),
+                    null,
+                    item.urlIcon,
+                    item.isDay,
+                    item.tempC
                 )
             )
         }
@@ -888,12 +956,6 @@ class MainActivity : AppCompatActivity() {
         }
         super.onResume()
     }
-
-// same enable
-//    override fun onResume() {
-//        super.onResume()
-//        sendNotification()
-//    }
 }
 
 class CustomLineChartRenderer(

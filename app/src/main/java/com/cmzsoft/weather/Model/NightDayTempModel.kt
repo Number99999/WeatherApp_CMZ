@@ -6,5 +6,5 @@ class NightDayTempModel(
     val rainNight: Int,
     val tempDay: Float,
     val tempNight: Float,
-    val urlIcon:String
+    val iconID: Int
 )
