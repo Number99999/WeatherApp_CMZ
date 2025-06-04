@@ -100,13 +100,6 @@
                     android:layout_marginEnd="20dp"
                     android:src="@drawable/icon_star_vote" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="Mua một lần"
-                    android:textColor="#fb7d16" />
-
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

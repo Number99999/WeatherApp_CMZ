@@ -5,7 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/bg_app"
-    android:fitsSystemWindows="false">
+    android:backgroundTint="@null"
+    android:fitsSystemWindows="false"
+    app:backgroundTint="@null">
 
     <ScrollView
         android:id="@+id/mainScroll"
@@ -32,7 +34,7 @@
                 android:scaleType="fitCenter"
                 android:src="@drawable/status_sunny_cloud" />
 
-            <RelativeLayout
+            <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:id="@+id/tempContainer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -43,12 +45,37 @@
                     android:id="@+id/temperature"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:gravity="center"
-                    android:text="35°C"
-                    android:textColor="@android:color/white"
-                    android:textSize="68sp" />
-            </RelativeLayout>
+                    android:text="35"
+                    android:textColor="#FFFFFF"
+                    android:textSize="48sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    app:layout_constraintStart_toEndOf="@id/temperature"
+                    app:layout_constraintTop_toTopOf="@id/temperature">
+
+                    <TextView
+                        android:id="@+id/degreeSymbol"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:text="°"
+                        android:textColor="#FFFFFF"
+                        android:textSize="48sp" />
+
+                    <ImageView
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:layout_marginStart="2dp"
+                        android:layout_marginTop="35dp"
+                        android:src="@drawable/char_c" />
+                </RelativeLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <TextView
                 android:id="@+id/weatherStatus"
@@ -245,56 +272,82 @@
         </LinearLayout>
     </ScrollView>
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <RelativeLayout
-            android:id="@+id/header_main"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:alpha="0"
-            android:background="#000000" />
-
-        <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:title=""
-            android:titleTextColor="@android:color/white" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-        <ImageView
-            android:id="@+id/img_show_nav"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="20dp"
-            android:src="@drawable/icon_show_nav_bar" />
+            <RelativeLayout
+                android:id="@+id/bg_relative"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:alpha="0"
+                android:background="#000000" />
 
-        <ImageView
-            android:id="@+id/add_location"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:layout_marginEnd="20dp"
-            android:src="@drawable/icon_plus" />
+            <RelativeLayout
+                android:id="@+id/header_main"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#00000000"
+                android:paddingBottom="10dp">
 
-        <TextView
-            android:id="@+id/cityName"
-            android:layout_width="wrap_content"
-            android:layout_height="30dp"
-            android:layout_centerVertical="true"
-            android:layout_toStartOf="@id/add_location"
-            android:layout_toEndOf="@id/img_show_nav"
-            android:gravity="center"
-            android:text="Hà Nội"
-            android:textColor="@android:color/white"
-            android:textSize="24sp" />
-    </RelativeLayout>
+                <LinearLayout
+                    android:id="@+id/contain_header"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:id="@+id/img_statusbar"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+
+                        <ImageView
+                            android:id="@+id/img_show_nav"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_marginStart="20dp"
+                            android:src="@drawable/icon_show_nav_bar" />
+
+                        <TextView
+                            android:id="@+id/cityName"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="Hà Nội"
+                            android:textColor="@android:color/white"
+                            android:textSize="24sp" />
+
+                        <ImageView
+                            android:id="@+id/add_location"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_marginEnd="20dp"
+                            android:src="@drawable/icon_plus" />
+                    </LinearLayout>
+                </LinearLayout>
+            </RelativeLayout>
+        </RelativeLayout>
+
+    </LinearLayout>
 
     <FrameLayout
         android:id="@+id/container_dialog_setting"

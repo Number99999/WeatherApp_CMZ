@@ -38,7 +38,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:gravity="center"
-                android:text="Phản hồi và vị trí"
+                android:text="Phản hồi và gợi ý"
                 android:textColor="@android:color/white"
                 android:textSize="24sp" />
         </RelativeLayout>

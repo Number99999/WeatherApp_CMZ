@@ -74,9 +74,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="30dp"
-                android:background="@drawable/background_button_green"
+                android:background="@drawable/background_btn_blue"
                 android:text="Cho phép"
-                android:textSize="20sp" />
+                android:textSize="20sp"
+                app:backgroundTint="@null" />
 
             <Button
                 android:id="@+id/btn_manual_search"
@@ -85,7 +86,8 @@
                 android:layout_marginBottom="10dp"
                 android:background="@drawable/background_button_black"
                 android:text="Tìm kiếm thủ công"
-                android:textSize="20sp" />
+                android:textSize="20sp"
+                app:backgroundTint="@null" />
         </LinearLayout>
     </ScrollView>
 

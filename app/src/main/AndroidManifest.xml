@@ -18,6 +18,9 @@
         android:theme="@style/Theme.Weather"
         tools:targetApi="31">
         <activity
+            android:name=".ActivityChooseLocation"
+            android:exported="false" />
+        <activity
             android:name=".ActivityCustomLayout"
             android:exported="false" />
         <activity
@@ -41,9 +44,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".SettingTheme"
-            android:exported="false" />
-        <activity
             android:name=".ActivitySettingNotification"
             android:exported="false" />
         <activity
@@ -57,9 +57,6 @@
             android:exported="false" />
         <activity
             android:name=".ActivityWeatherPerHour"
-            android:exported="false" />
-        <activity
-            android:name=".ActivityBigCountry"
             android:exported="false" />
     </application>
 

@@ -23,6 +23,7 @@ import android.widget.FrameLayout
 import android.widget.HorizontalScrollView
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.RelativeLayout
 import android.widget.ScrollView
 import android.widget.Spinner
 import android.widget.TextView
@@ -92,25 +93,41 @@ class MainActivity : AppCompatActivity() {
         initEventNavBar()
         setupLineChartDayNight()
         eventScrollMain()
-
+        setupHeaderWithStatusBar()
         findViewById<ImageView>(R.id.add_location).setOnClickListener {
-            val intent = Intent(this, ActivityBigCountry::class.java);
+            val intent = Intent(this, ActivityChooseLocation::class.java);
             startActivity(intent)
         }
     }
 
     private fun eventScrollMain() {
         val scrollView = findViewById<ScrollView>(R.id.mainScroll)
-        val headerView = findViewById<View>(R.id.header_main)
+        val headerView = findViewById<RelativeLayout>(R.id.header_main)
         scrollView.setOnScrollChangeListener { _, _, scrollY, _, _ ->
             val headerHeight = headerView.height
-            System.out.println("gfhjkasdgfkjads: " + headerHeight + " fagskjdh" + scrollY);
             if (scrollY >= headerHeight) {
-                headerView.alpha = 0.65f
+                headerView.setBackgroundColor(Color.parseColor("#B3000000"))
             } else {
-                headerView.alpha = 0f
+                headerView.setBackgroundColor(Color.parseColor("#00000000"))
             }
         }
+    }
+
+    private fun setupHeaderWithStatusBar() {
+        val heightBar = getStatusBarHeight()
+        val img_statusbar = findViewById<ImageView>(R.id.img_statusbar)
+        val imgLayout = img_statusbar.layoutParams
+        imgLayout.height = heightBar
+        img_statusbar.layoutParams = imgLayout
+    }
+
+    fun getStatusBarHeight(): Int {
+        var result = 0
+        val resourceId = resources.getIdentifier("status_bar_height", "dimen", "android")
+        if (resourceId > 0) {
+            result = resources.getDimensionPixelSize(resourceId)
+        }
+        return result
     }
 
     private fun initEventNavBar() {
@@ -189,7 +206,7 @@ class MainActivity : AppCompatActivity() {
         try {
             val txtDegree = findViewById<TextView>(R.id.temperature)
             val tempC = result.getJSONObject("current").getDouble("temp_c")
-            txtDegree.text = tempC.roundToInt().toString() + "℃"
+            txtDegree.text = tempC.roundToInt().toString()
 
             UpdateCurrentTime()
 
@@ -500,9 +517,11 @@ class MainActivity : AppCompatActivity() {
         setupAdapterSettingDialog(R.id.spinner_rain_fall, listOf("mm", "cm", "m"))
         setupAdapterSettingDialog(R.id.spinner_visibility, listOf("km", "Dặm"))
         setupAdapterSettingDialog(R.id.spinner_wind_speed, listOf("m/s", "km/h", "mph"))
-        setupAdapterSettingDialog(R.id.spinner_atm, listOf("Pa", "hPa", "mbar", "Bar", "atm"))
         setupAdapterSettingDialog(
-            R.id.spinner_time_format, listOf("dd/MM/yyyy", "MM/dd/yyyy", "yyyy/MM/dd")
+            R.id.spinner_atm, listOf("mmHg", "hPa", "mbar", "Bar", "atm")
+        )
+        setupAdapterSettingDialog(
+            R.id.spinner_time_format, listOf("12 giờ", "24 giờ")
         )
     }
 
@@ -659,7 +678,9 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun setupChartStyle(lineChart: LineChart, arrInfo: List<DataHourWeatherModel>) {
+    private fun setupChartStyle(
+        lineChart: LineChart, arrInfo: List<DataHourWeatherModel>
+    ) {
         try {
             lineChart.setDrawGridBackground(false)
             lineChart.description.isEnabled = false
@@ -678,8 +699,9 @@ class MainActivity : AppCompatActivity() {
             xAxis.setDrawLabels(false)
             xAxis.setDrawGridLines(false)
 
-            lineChart.renderer =
-                CustomLineChartRenderer(lineChart, lineChart.animator, lineChart.viewPortHandler)
+            lineChart.renderer = CustomLineChartRenderer(
+                lineChart, lineChart.animator, lineChart.viewPortHandler
+            )
             lineChart.setExtraOffsets(10f, 20f, 10f, 10f)
             lineChart.isHighlightPerTapEnabled = false
             lineChart.isDoubleTapToZoomEnabled = false
@@ -803,7 +825,9 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun setupAdapterSettingDialog(spinnerId: Int, items: List<String>) {
+    private fun setupAdapterSettingDialog(
+        spinnerId: Int, items: List<String>
+    ) {
         val spinner: Spinner = findViewById(spinnerId)
         val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, items)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
@@ -819,13 +843,17 @@ class MainActivity : AppCompatActivity() {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 sendNotification()
             } else {
-                Toast.makeText(this, "Quyền thông báo bị từ chối", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    this, "Quyền thông báo bị từ chối", Toast.LENGTH_SHORT
+                ).show()
             }
         }
     }
 
     private val CHANNEL_ID = "cmz.soft.weather"
+
     private val CHANNEL_NAME = "My Channel"
+
     private val CHANNEL_DESCRIPTION = "Channel for app notifications"
 
     fun createNotificationChannel(context: Context) {
@@ -989,5 +1017,3 @@ class CustomLineChartRenderer(
         }
     }
 }
-
-
