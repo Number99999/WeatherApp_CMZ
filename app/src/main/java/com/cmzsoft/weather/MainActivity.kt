@@ -17,7 +17,6 @@ import android.os.Bundle
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.HorizontalScrollView
@@ -25,7 +24,6 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.ScrollView
-import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -405,7 +403,15 @@ class MainActivity : AppCompatActivity() {
             if (parentView is ViewGroup) {
                 val textView = parentView.getChildAt(0)
                 if (textView is TextView) {
-                    textView.text = WeatherUtil.getDayOfWeek(dataModel[i].date);
+                    val d = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+                    val calendar =
+                        Calendar.getInstance().apply { time = d.parse(dataModel[i].date) }
+
+                    val day = calendar.get(Calendar.DAY_OF_MONTH)
+                    val month = calendar.get(Calendar.MONTH) + 1
+                    val dayOfWeek = WeatherUtil.getDayOfWeek(dataModel[i].date)
+
+                    textView.text = "$dayOfWeek\n$day/$month"
                 }
 
                 if (parentView.getChildAt(1) is ImageView) {
@@ -513,15 +519,15 @@ class MainActivity : AppCompatActivity() {
             }
         }
         container.visibility = View.VISIBLE
-        setupAdapterSettingDialog(R.id.spinner_temp, listOf("C", "F"))
-        setupAdapterSettingDialog(R.id.spinner_rain_fall, listOf("mm", "cm", "m"))
-        setupAdapterSettingDialog(R.id.spinner_visibility, listOf("km", "Dặm"))
-        setupAdapterSettingDialog(R.id.spinner_wind_speed, listOf("m/s", "km/h", "mph"))
+        setupAdapterSettingDialog(R.id.fake_spinner_temp, listOf("C", "F"))
+        setupAdapterSettingDialog(R.id.fake_spinner_rain, listOf("mm", "cm", "m"))
+        setupAdapterSettingDialog(R.id.fake_spinner_visibility, listOf("km", "Dặm"))
+        setupAdapterSettingDialog(R.id.fake_spinner_wind_speed, listOf("m/s", "km/h", "mph"))
         setupAdapterSettingDialog(
-            R.id.spinner_atm, listOf("mmHg", "hPa", "mbar", "Bar", "atm")
+            R.id.fake_spinner_atm, listOf("mmHg", "hPa", "mbar", "Bar", "atm")
         )
         setupAdapterSettingDialog(
-            R.id.spinner_time_format, listOf("12 giờ", "24 giờ")
+            R.id.fake_spinner_date_form, listOf("12 giờ", "24 giờ")
         )
     }
 
@@ -586,7 +592,6 @@ class MainActivity : AppCompatActivity() {
                 val resultAPI = withContext(Dispatchers.IO) {
                     RequestAPI.getInstance().GetAllDataInCurrentDay(21.0227396, 105.8369637)
                 }
-
                 val forecastday1 =
                     resultAPI.getJSONObject("forecast").getJSONArray("forecastday").getJSONObject(0)
                         .getJSONArray("hour")
@@ -662,6 +667,17 @@ class MainActivity : AppCompatActivity() {
             }
             val dataSet = createLineDataSet(entries)
             val lineChart = findViewById<LineChart>(R.id.lineChart)
+
+            val yAxis = lineChart.axisLeft
+            yAxis.setDrawGridLines(false)
+            yAxis.setDrawZeroLine(false)
+
+            val xAxis = lineChart.xAxis
+            xAxis.setDrawGridLines(false)
+
+            lineChart.axisLeft.setDrawGridLines(false)
+            lineChart.axisRight.setDrawGridLines(false)
+
             dataSet.valueTextColor = Color.WHITE
             dataSet.mode = LineDataSet.Mode.CUBIC_BEZIER
             dataSet.setDrawCircles(false)
@@ -707,10 +723,10 @@ class MainActivity : AppCompatActivity() {
             lineChart.isDoubleTapToZoomEnabled = false
             lineChart.isDragEnabled = false
 
-            val params = lineChart.layoutParams
-            val emojiContainer = findViewById<LinearLayout>(R.id.emojiContainer)
-            params.width = emojiContainer.width
-            lineChart.layoutParams = params
+//            val params = lineChart.layoutParams
+//            val emojiContainer = findViewById<LinearLayout>(R.id.emojiContainer)
+//            params.width = emojiContainer.width
+//            lineChart.layoutParams = params
             lineChart.requestLayout()
 
             val data = lineChart.data
@@ -828,12 +844,15 @@ class MainActivity : AppCompatActivity() {
     private fun setupAdapterSettingDialog(
         spinnerId: Int, items: List<String>
     ) {
-        val spinner: Spinner = findViewById(spinnerId)
-        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, items)
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        spinner.adapter = adapter
+        val spinner: TextView = findViewById(spinnerId)
+        spinner.text = items.get(0);
+        var i = 1;
+        (spinner.parent as View).setOnClickListener {
+            if (i >= items.size) i = 0;
+            spinner.text = items.get(i);
+            i++;
+        }
     }
-
 
     override fun onRequestPermissionsResult(
         requestCode: Int, permissions: Array<String>, grantResults: IntArray
@@ -893,9 +912,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun sendNotification() {
-
         return
-
         val builder = NotificationCompat.Builder(this, CHANNEL_ID)
             .setSmallIcon(R.drawable.icon_correct_location).setContentTitle("Thông báo từ Weath")
             .setContentText("test 1 2 3 1 2 3").setPriority(NotificationCompat.PRIORITY_DEFAULT)
@@ -958,7 +975,6 @@ class MainActivity : AppCompatActivity() {
         rc_view.adapter = adapter
         rc_view.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
 
-        val recyclerViewWidth = 1400
         val itemCount = listData.size
 
         val spacing = 10

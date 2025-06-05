@@ -199,36 +199,28 @@
                     </LinearLayout>
 
                     <RelativeLayout
-                        android:layout_width="100dp"
-                        android:layout_height="50dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="35dp"
                         android:gravity="center_vertical">
 
-                        <Spinner
-                            android:id="@+id/spinner_temp"
-                            android:layout_width="100dp"
-                            android:layout_height="40dp"
-                            android:layout_centerVertical="true"
-                            android:layout_gravity="center"
-                            android:background="@drawable/custom_spinner"
-                            android:gravity="center"
-                            android:popupBackground="@drawable/custom_spinner"
-                            android:spinnerMode="dropdown" />
-
                         <LinearLayout
-                            android:layout_width="100dp"
-                            android:layout_height="match_parent">
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/custom_spinner">
 
                             <TextView
-                                android:layout_width="70dp"
+                                android:id="@+id/fake_spinner_temp"
+                                android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
                                 android:layout_centerHorizontal="true"
                                 android:gravity="center"
-                                android:text="" />
+                                android:paddingStart="15dp"
+                                android:paddingEnd="15dp"
+                                android:text="C" />
 
                             <RelativeLayout
                                 android:layout_width="30dp"
-                                android:layout_height="40dp"
-                                android:layout_marginTop="5dp"
+                                android:layout_height="match_parent"
                                 android:background="@drawable/background_select_item_spinner"
                                 android:gravity="center">
 
@@ -282,38 +274,50 @@
                             android:textSize="12sp" />
                     </LinearLayout>
 
-                    <RelativeLayout
-                        android:layout_width="100dp"
-                        android:layout_height="50dp"
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="35dp"
+                        android:background="@drawable/custom_spinner"
                         android:gravity="center_vertical">
 
-                        <Spinner
-                            android:id="@+id/spinner_rain"
-                            android:layout_width="100dp"
-                            android:layout_height="40dp"
-                            android:layout_centerVertical="true"
-                            android:layout_gravity="center"
-                            android:background="@drawable/custom_spinner"
-                            android:gravity="center"
-                            android:popupBackground="@drawable/custom_spinner"
-                            android:spinnerMode="dropdown" />
-
                         <RelativeLayout
-                            android:layout_width="30dp"
-                            android:layout_height="40dp"
-                            android:layout_alignParentRight="true"
-                            android:layout_marginTop="5dp"
-                            android:background="@drawable/background_select_item_spinner"
-                            android:gravity="center">
+                            android:layout_width="wrap_content"
+                            android:layout_height="35dp"
+                            android:gravity="center_vertical">
 
-                            <ImageView
-                                android:layout_width="20dp"
-                                android:layout_height="20dp"
-                                android:layout_centerVertical="true"
-                                android:layout_gravity="center"
-                                android:src="@drawable/icon_change_spinner" />
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:background="@drawable/custom_spinner">
+
+                                <TextView
+                                    android:id="@+id/fake_spinner_rain"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    android:layout_centerHorizontal="true"
+                                    android:gravity="center"
+                                    android:paddingStart="15dp"
+                                    android:paddingEnd="15dp"
+                                    android:text="C" />
+
+                                <RelativeLayout
+                                    android:layout_width="30dp"
+                                    android:layout_height="match_parent"
+                                    android:background="@drawable/background_select_item_spinner"
+                                    android:gravity="center">
+
+                                    <ImageView
+                                        android:layout_width="20dp"
+                                        android:layout_height="20dp"
+                                        android:layout_alignParentEnd="true"
+                                        android:layout_centerVertical="true"
+                                        android:layout_gravity="center"
+                                        android:layout_marginEnd="0dp"
+                                        android:src="@drawable/icon_change_spinner" />
+                                </RelativeLayout>
+                            </LinearLayout>
                         </RelativeLayout>
-                    </RelativeLayout>
+                    </LinearLayout>
                 </LinearLayout>
 
                 <LinearLayout
@@ -323,7 +327,6 @@
                     android:background="?attr/selectableItemBackground"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
-
                     android:paddingEnd="16dp">
 
                     <ImageView
@@ -354,37 +357,41 @@
                     </LinearLayout>
 
                     <RelativeLayout
-                        android:layout_width="100dp"
-                        android:layout_height="50dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="35dp"
                         android:gravity="center_vertical">
 
-                        <Spinner
-                            android:id="@+id/spinner_visibility"
-                            android:layout_width="100dp"
-                            android:layout_height="40dp"
-                            android:layout_centerVertical="true"
-                            android:layout_gravity="center"
-                            android:background="@drawable/custom_spinner"
-                            android:gravity="center"
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/custom_spinner">
 
-                            android:popupBackground="@drawable/custom_spinner"
-                            android:spinnerMode="dropdown" />
+                            <TextView
+                                android:id="@+id/fake_spinner_visibility"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_centerHorizontal="true"
+                                android:gravity="center"
+                                android:paddingStart="15dp"
+                                android:paddingEnd="15dp"
+                                android:text="km" />
 
-                        <RelativeLayout
-                            android:layout_width="30dp"
-                            android:layout_height="40dp"
-                            android:layout_alignParentRight="true"
-                            android:layout_marginTop="5dp"
-                            android:background="@drawable/background_select_item_spinner"
-                            android:gravity="center">
+                            <RelativeLayout
+                                android:layout_width="30dp"
+                                android:layout_height="match_parent"
+                                android:background="@drawable/background_select_item_spinner"
+                                android:gravity="center">
 
-                            <ImageView
-                                android:layout_width="20dp"
-                                android:layout_height="20dp"
-                                android:layout_centerVertical="true"
-                                android:layout_gravity="center"
-                                android:src="@drawable/icon_change_spinner" />
-                        </RelativeLayout>
+                                <ImageView
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
+                                    android:layout_alignParentEnd="true"
+                                    android:layout_centerVertical="true"
+                                    android:layout_gravity="center"
+                                    android:layout_marginEnd="0dp"
+                                    android:src="@drawable/icon_change_spinner" />
+                            </RelativeLayout>
+                        </LinearLayout>
                     </RelativeLayout>
                 </LinearLayout>
 
@@ -425,36 +432,41 @@
                     </LinearLayout>
 
                     <RelativeLayout
-                        android:layout_width="100dp"
-                        android:layout_height="50dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="35dp"
                         android:gravity="center_vertical">
 
-                        <Spinner
-                            android:id="@+id/spinner_wind_speed"
-                            android:layout_width="100dp"
-                            android:layout_height="40dp"
-                            android:layout_centerVertical="true"
-                            android:layout_gravity="center"
-                            android:background="@drawable/custom_spinner"
-                            android:gravity="center"
-                            android:popupBackground="@drawable/custom_spinner"
-                            android:spinnerMode="dropdown" />
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/custom_spinner">
 
-                        <RelativeLayout
-                            android:layout_width="30dp"
-                            android:layout_height="40dp"
-                            android:layout_alignParentRight="true"
-                            android:layout_marginTop="5dp"
-                            android:background="@drawable/background_select_item_spinner"
-                            android:gravity="center">
+                            <TextView
+                                android:id="@+id/fake_spinner_wind_speed"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_centerHorizontal="true"
+                                android:gravity="center"
+                                android:paddingStart="15dp"
+                                android:paddingEnd="15dp"
+                                android:text="mph" />
 
-                            <ImageView
-                                android:layout_width="20dp"
-                                android:layout_height="20dp"
-                                android:layout_centerVertical="true"
-                                android:layout_gravity="center"
-                                android:src="@drawable/icon_change_spinner" />
-                        </RelativeLayout>
+                            <RelativeLayout
+                                android:layout_width="30dp"
+                                android:layout_height="match_parent"
+                                android:background="@drawable/background_select_item_spinner"
+                                android:gravity="center">
+
+                                <ImageView
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
+                                    android:layout_alignParentEnd="true"
+                                    android:layout_centerVertical="true"
+                                    android:layout_gravity="center"
+                                    android:layout_marginEnd="0dp"
+                                    android:src="@drawable/icon_change_spinner" />
+                            </RelativeLayout>
+                        </LinearLayout>
                     </RelativeLayout>
                 </LinearLayout>
 
@@ -496,36 +508,41 @@
                     </LinearLayout>
 
                     <RelativeLayout
-                        android:layout_width="100dp"
-                        android:layout_height="50dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="35dp"
                         android:gravity="center_vertical">
 
-                        <Spinner
-                            android:id="@+id/spinner_atm"
-                            android:layout_width="100dp"
-                            android:layout_height="40dp"
-                            android:layout_centerVertical="true"
-                            android:layout_gravity="center"
-                            android:background="@drawable/custom_spinner"
-                            android:gravity="center"
-                            android:popupBackground="@drawable/custom_spinner"
-                            android:spinnerMode="dropdown" />
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/custom_spinner">
 
-                        <RelativeLayout
-                            android:layout_width="30dp"
-                            android:layout_height="40dp"
-                            android:layout_alignParentRight="true"
-                            android:layout_marginTop="5dp"
-                            android:background="@drawable/background_select_item_spinner"
-                            android:gravity="center">
+                            <TextView
+                                android:id="@+id/fake_spinner_atm"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_centerHorizontal="true"
+                                android:gravity="center"
+                                android:paddingStart="15dp"
+                                android:paddingEnd="15dp"
+                                android:text="C" />
 
-                            <ImageView
-                                android:layout_width="20dp"
-                                android:layout_height="20dp"
-                                android:layout_centerVertical="true"
-                                android:layout_gravity="center"
-                                android:src="@drawable/icon_change_spinner" />
-                        </RelativeLayout>
+                            <RelativeLayout
+                                android:layout_width="30dp"
+                                android:layout_height="match_parent"
+                                android:background="@drawable/background_select_item_spinner"
+                                android:gravity="center">
+
+                                <ImageView
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
+                                    android:layout_alignParentEnd="true"
+                                    android:layout_centerVertical="true"
+                                    android:layout_gravity="center"
+                                    android:layout_marginEnd="0dp"
+                                    android:src="@drawable/icon_change_spinner" />
+                            </RelativeLayout>
+                        </LinearLayout>
                     </RelativeLayout>
                 </LinearLayout>
             </LinearLayout>
@@ -620,36 +637,41 @@
                         android:textSize="16sp" />
 
                     <RelativeLayout
-                        android:layout_width="130dp"
-                        android:layout_height="50dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="35dp"
                         android:gravity="center_vertical">
 
-                        <Spinner
-                            android:id="@+id/spinner_date_format"
-                            android:layout_width="match_parent"
-                            android:layout_height="40dp"
-                            android:layout_centerVertical="true"
-                            android:layout_gravity="center"
-                            android:background="@drawable/custom_spinner"
-                            android:gravity="center"
-                            android:popupBackground="@drawable/custom_spinner"
-                            android:spinnerMode="dropdown" />
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/custom_spinner">
 
-                        <RelativeLayout
-                            android:layout_width="30dp"
-                            android:layout_height="40dp"
-                            android:layout_alignParentRight="true"
-                            android:layout_marginTop="5dp"
-                            android:background="@drawable/background_select_item_spinner"
-                            android:gravity="center">
+                            <TextView
+                                android:id="@+id/fake_spinner_date_form"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_centerHorizontal="true"
+                                android:gravity="center"
+                                android:paddingStart="15dp"
+                                android:paddingEnd="15dp"
+                                android:text="C" />
 
-                            <ImageView
-                                android:layout_width="20dp"
-                                android:layout_height="20dp"
-                                android:layout_centerVertical="true"
-                                android:layout_gravity="center"
-                                android:src="@drawable/icon_change_spinner" />
-                        </RelativeLayout>
+                            <RelativeLayout
+                                android:layout_width="30dp"
+                                android:layout_height="match_parent"
+                                android:background="@drawable/background_select_item_spinner"
+                                android:gravity="center">
+
+                                <ImageView
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
+                                    android:layout_alignParentEnd="true"
+                                    android:layout_centerVertical="true"
+                                    android:layout_gravity="center"
+                                    android:layout_marginEnd="0dp"
+                                    android:src="@drawable/icon_change_spinner" />
+                            </RelativeLayout>
+                        </LinearLayout>
                     </RelativeLayout>
                 </LinearLayout>
 

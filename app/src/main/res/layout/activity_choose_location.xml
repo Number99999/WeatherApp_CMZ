@@ -115,11 +115,45 @@
                     android:src="@drawable/icon_map_search" />
             </FrameLayout>
 
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_weight="1"
+                android:background="#00518a"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp">
+
+                <TextView
+                    android:id="@+id/txt_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="marquee"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:maxLines="1"
+                    android:paddingStart="@dimen/padding_16dp"
+                    android:paddingEnd="@dimen/padding_16dp"
+                    android:scrollHorizontally="true"
+                    android:singleLine="true"
+                    android:text="Vị trí thực tế của bạn, kết nối internet tốt sẽ giúp xác định chính xác vị trí"
+                    android:textColor="#fff" />
+
+                <ImageButton
+                    android:layout_width="@dimen/padding_16dp"
+                    android:layout_height="@dimen/padding_16dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginEnd="15dp"
+                    android:adjustViewBounds="true"
+                    android:src="@drawable/icon_btn_close_x" />
+            </RelativeLayout>
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerViewCity"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="@dimen/margin_16dp"
                 android:layout_weight="1" />
         </LinearLayout>
     </LinearLayout>

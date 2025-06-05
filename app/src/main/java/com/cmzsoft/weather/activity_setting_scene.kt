@@ -2,9 +2,9 @@ package com.cmzsoft.weather
 
 
 import android.os.Bundle
-import android.widget.ArrayAdapter
+import android.view.View
 import android.widget.ImageButton
-import android.widget.Spinner
+import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -38,50 +38,74 @@ class activity_setting_scene : AppCompatActivity() {
     }
 
     private fun setupSpinnerTemp() {
-        val spinner: Spinner = findViewById(R.id.spinner_temp)
+        val spinner: TextView = findViewById(R.id.fake_spinner_temp)
         val items = listOf("C", "F")
-        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, items)
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        spinner.adapter = adapter
+        spinner.text = items.get(0);
+        var i = 1;
+        (spinner.parent as View).setOnClickListener {
+            if (i >= items.size) i = 0;
+            spinner.text = items.get(i);
+            i++;
+        }
     }
 
     private fun setupSpinnerRainfall() {
-        val spinner: Spinner = findViewById(R.id.spinner_rain)
-        val items = listOf("mm", "cm", "m")
-        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, items)
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        spinner.adapter = adapter
+        val spinner: TextView = findViewById(R.id.fake_spinner_rain)
+        val items = listOf("mm", "cm", "im")
+        spinner.text = items.get(0);
+        var i = 1;
+        (spinner.parent as View).setOnClickListener {
+            if (i >= items.size) i = 0;
+            spinner.text = items.get(i);
+            i++;
+        }
     }
 
     private fun setupSpinnerVisibility() {
-        val spinner: Spinner = findViewById(R.id.spinner_visibility)
-        val items = listOf("km", "Dặm")
-        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, items)
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        spinner.adapter = adapter
+        val spinner: TextView = findViewById(R.id.fake_spinner_visibility)
+        val items = listOf("km", "mile", "m")
+        spinner.text = items.get(0);
+        var i = 1;
+        (spinner.parent as View).setOnClickListener {
+            if (i >= items.size) i = 0;
+            spinner.text = items.get(i);
+            i++;
+        }
     }
 
     private fun setupSpinnerWindSpeed() {
-        val spinner: Spinner = findViewById(R.id.spinner_wind_speed)
-        val items = listOf("m/s", "km/h", "mph")
-        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, items)
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        spinner.adapter = adapter
+        val spinner: TextView = findViewById(R.id.fake_spinner_wind_speed)
+        val items = listOf("mph", "km/h", "mi/h", "m/s")
+        spinner.text = items.get(0);
+        var i = 1;
+        (spinner.parent as View).setOnClickListener {
+            if (i >= items.size) i = 0;
+            spinner.text = items.get(i);
+            i++;
+        }
     }
 
     private fun setupSpinnerAtm() {
-        val spinner: Spinner = findViewById(R.id.spinner_atm)
-        val items = listOf("Pa", "hPa", "mbar", "Bar", "atm")
-        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, items)
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        spinner.adapter = adapter
+        val spinner: TextView = findViewById(R.id.fake_spinner_atm)
+        val items = listOf("mmHg", "inHg", "psi", "bar", "mBar", "hPa", "atm")
+        spinner.text = items.get(0);
+        var i = 1;
+        (spinner.parent as View).setOnClickListener {
+            if (i >= items.size) i = 0;
+            spinner.text = items.get(i);
+            i++;
+        }
     }
 
     private fun setupSpinnerDateForm() {
-        val spinner: Spinner = findViewById(R.id.spinner_date_format)
-        val items = listOf("dd/MM/yyyy", "MM/dd/yyyy", "yyyy/MM/dd")
-        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, items)
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        spinner.adapter = adapter
+        val spinner: TextView = findViewById(R.id.fake_spinner_date_form)
+        val items = listOf("24 giờ", "12 giờ")
+        spinner.text = items.get(0);
+        var i = 1;
+        (spinner.parent as View).setOnClickListener {
+            if (i >= items.size) i = 0;
+            spinner.text = items.get(i);
+            i++;
+        }
     }
 }

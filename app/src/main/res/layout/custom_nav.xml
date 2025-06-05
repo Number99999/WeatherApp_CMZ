@@ -12,21 +12,13 @@
         android:alpha="0.75"
         android:background="#000000" />
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineRight"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.8053528" />
-
     <LinearLayout
         android:id="@+id/nav_panel"
-        android:layout_width="0dp"
+        android:layout_width="@dimen/widget_size_230"
         android:layout_height="match_parent"
         android:background="#B3000000"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@id/guidelineRight"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="MissingConstraints">
@@ -178,7 +170,6 @@
                         android:checked="true"
                         android:thumb="@drawable/custom_switch_thumb"
                         android:track="@drawable/custom_switch_track"
-
                         app:thumbTint="@null"
                         app:trackTint="@null" />
                 </LinearLayout>
@@ -212,7 +203,6 @@
                         android:checked="true"
                         android:thumb="@drawable/custom_switch_thumb"
                         android:track="@drawable/custom_switch_track"
-
                         app:thumbTint="@null"
                         app:trackTint="@null" />
                 </LinearLayout>
