@@ -11,6 +11,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.SearchView
 import android.widget.Toast
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.lifecycleScope
@@ -45,7 +46,7 @@ class ActivityChooseLocation : AppCompatActivity(), OnMapReadyCallback {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_choose_location)
-
+        enableEdgeToEdge()
         searchViewCity = findViewById(R.id.search_view_city)
         searchViewCity.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
@@ -91,7 +92,7 @@ class ActivityChooseLocation : AppCompatActivity(), OnMapReadyCallback {
                 currentMarker?.remove()
                 currentMarker = myMap.addMarker(MarkerOptions().position(latLng).title(location))
                 myMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10f))
-
+                println("outtttttttttttttttt >>>>>>>>>>>>> ${(addressList.toString())}")
                 setUIRecycleViewMap(addressList)
                 setUIRecycleViewCity(addressList)
             } else {
@@ -138,6 +139,8 @@ class ActivityChooseLocation : AppCompatActivity(), OnMapReadyCallback {
                         currentMarker =
                             myMap.addMarker(MarkerOptions().position(latLng).title(location))
                         myMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10f))
+
+                        println("outtttttttttt >>>>>>>>> ${(addressList.toString())}")
                     } else {
                         Toast.makeText(
                             this@ActivityChooseLocation,
@@ -275,6 +278,7 @@ class ActivityChooseLocation : AppCompatActivity(), OnMapReadyCallback {
 
     private fun setEvent() {
         myMap.uiSettings.isZoomControlsEnabled = true
+        searchViewMap.isIconified = false
         searchViewMap.setOnClickListener {
             if (searchViewMap.isIconified) {
                 searchViewMap.isIconified = false
@@ -282,6 +286,7 @@ class ActivityChooseLocation : AppCompatActivity(), OnMapReadyCallback {
             }
         }
 
+        searchViewCity.isIconified = false
         searchViewCity.setOnClickListener {
             if (searchViewCity.isIconified) {
                 searchViewCity.isIconified = false

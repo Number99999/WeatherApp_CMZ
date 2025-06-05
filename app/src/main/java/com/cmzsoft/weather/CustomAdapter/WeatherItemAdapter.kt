@@ -7,11 +7,11 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.cmzsoft.weather.Model.DataWeatherPerHourModel
 import com.cmzsoft.weather.R
-import com.cmzsoft.weather.WeatherItem
 
 class WeatherItemAdapter(
-    private val items: List<WeatherItem>
+    private val items: List<DataWeatherPerHourModel>
 ) : RecyclerView.Adapter<WeatherItemAdapter.ViewHolder>() {
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -37,10 +37,6 @@ class WeatherItemAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = items[position]
         holder.txtTime.text = item.time
-        holder.imgIcon.setImageResource(item.iconRes)
-        holder.txtDegree.text = item.degree
-        holder.txtWind.text = item.wind
-        holder.imgRainIcon.setImageResource(item.rainIconRes)
-        holder.txtRainRate.text = item.rainfallRate
+
     }
 }

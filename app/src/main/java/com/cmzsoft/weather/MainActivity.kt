@@ -197,6 +197,7 @@ class MainActivity : AppCompatActivity() {
                 requestAPI.CallAPI(curLocation)
             }
             updateDataOnMainInfo(result)
+            setIsRainInNextTwoHours()
         }
     }
 
@@ -909,6 +910,13 @@ class MainActivity : AppCompatActivity() {
         }.addOnFailureListener {
             Toast.makeText(this, "Lỗi lấy vị trí!", Toast.LENGTH_SHORT).show()
         }
+    }
+
+    private fun setIsRainInNextTwoHours() {
+        val result = RequestAPI.getInstance().GetWeatherForNext120Minutes(curLocation)
+        val txt = findViewById<TextView>(R.id.txt_noti_rain)
+        if (result == true) txt.text = "Có mưa trong 120 phút";
+        else txt.text = "Không có mưa trong 120 phút";
     }
 
     private fun sendNotification() {

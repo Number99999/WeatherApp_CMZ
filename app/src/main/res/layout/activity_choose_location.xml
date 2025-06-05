@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#0063a8"
-    android:fitsSystemWindows="false"
+    android:fitsSystemWindows="true"
     app:backgroundTint="@null">
 
     <LinearLayout
@@ -24,6 +24,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_8dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 

@@ -53,9 +53,6 @@
             android:name=".MainActivity"
             android:exported="false" />
         <activity
-            android:name=".ActivityChooseLocationWithMap"
-            android:exported="false" />
-        <activity
             android:name=".ActivityWeatherPerHour"
             android:exported="false" />
     </application>

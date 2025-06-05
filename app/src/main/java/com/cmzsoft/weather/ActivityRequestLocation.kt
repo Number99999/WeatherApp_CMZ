@@ -90,7 +90,7 @@ class ActivityRequestLocation : AppCompatActivity() {
     private fun InitEventDontAccept() {
         val btn = findViewById<Button>(R.id.btn_dont_accept)
         btn.setOnClickListener {
-            val changePage = Intent(this, ActivityChooseLocationWithMap::class.java);
+            val changePage = Intent(this, ActivityChooseLocation::class.java);
             startActivity(changePage);
         }
     }
