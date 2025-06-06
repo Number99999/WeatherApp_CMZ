@@ -38,8 +38,7 @@
                 android:id="@+id/tempContainer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="8dp">
+                android:layout_gravity="center_horizontal">
 
                 <TextView
                     android:id="@+id/temperature"
@@ -47,7 +46,7 @@
                     android:layout_height="wrap_content"
                     android:text="35"
                     android:textColor="#FFFFFF"
-                    android:textSize="60sp"
+                    android:textSize="80sp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -63,19 +62,18 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentStart="true"
-                        android:layout_marginTop="5dp"
+                        android:layout_marginTop="@dimen/widget_size_10"
                         android:text="°"
                         android:textColor="#FFFFFF"
-                        android:textSize="48sp" />
+                        android:textSize="50sp" />
 
                     <ImageView
-                        android:layout_width="15dp"
-                        android:layout_height="15dp"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
                         android:layout_marginStart="2dp"
-                        android:layout_marginTop="48dp"
+                        android:layout_marginTop="@dimen/widget_size_55"
                         android:src="@drawable/char_c" />
                 </RelativeLayout>
-
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <TextView

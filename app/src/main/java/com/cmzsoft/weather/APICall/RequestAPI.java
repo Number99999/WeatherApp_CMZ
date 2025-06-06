@@ -181,7 +181,7 @@ public class RequestAPI {
 
 
     public JSONObject GetTempInAWeek(String s) {
-        String urlString = "https://api.weatherapi.com/v1/forecast.json?key=" + apiKey + "&q=" + s + "&days=7&aqi=yes&alerts=yes";
+        String urlString = "https://api.weatherapi.com/v1/forecast.json?key=" + apiKey + "&q=" + s + "&days=7&aqi=false&alerts=false";
         try {
             URL url = new URL(urlString);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -197,7 +197,9 @@ public class RequestAPI {
                     response.append(line);
                 }
                 in.close();
-                return new JSONObject(response.toString());
+
+                JSONObject result = new JSONObject(response.toString());
+                return result;
             } else {
                 System.out.println("Lỗi khi gọi API. Mã lỗi: " + responseCode);
             }

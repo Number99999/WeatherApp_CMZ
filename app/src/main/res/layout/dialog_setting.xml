@@ -79,6 +79,7 @@
                         android:text="Nhiệt độ" />
 
                     <TextView
+                        android:id="@+id/txt_temp_model"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:alpha="0.7"
@@ -153,6 +154,7 @@
                         android:text="Lương mưa" />
 
                     <TextView
+                        android:id="@+id/txt_rainfall_model"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:alpha="0.7"
@@ -228,6 +230,7 @@
                         android:text="Khả năng hiển thị" />
 
                     <TextView
+                        android:id="@+id/txt_visibilyty_model"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:alpha="0.7"
@@ -305,6 +308,7 @@
                         android:text="Tốc độ gió" />
 
                     <TextView
+                        android:id="@+id/txt_wind_speed_model"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:alpha="0.7"
@@ -381,6 +385,7 @@
                         android:text="Áp suất" />
 
                     <TextView
+                        android:id="@+id/txt_atm_model"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:alpha="0.7"
@@ -456,6 +461,7 @@
                         android:text="Định dạng thời gian" />
 
                     <TextView
+                        android:id="@+id/txt_time_model"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:alpha="0.7"

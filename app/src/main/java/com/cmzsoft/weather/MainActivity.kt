@@ -259,6 +259,7 @@ class MainActivity : AppCompatActivity() {
             val dataInWeek = withContext(Dispatchers.IO) {
                 requestAPI.GetTempInAWeek(curLocation)
             }
+
             initChartDayNightTemp(dataInWeek)
         }
     }
@@ -268,6 +269,7 @@ class MainActivity : AppCompatActivity() {
 
         val forecastday = data.getJSONObject("forecast").getJSONArray("forecastday")
         val listData = mutableListOf<NightDayTempModel>();
+        println("cmz: ${forecastday.length()} ${listData.size}")
         for (i in 0 until forecastday.length()) {
             val dayObj = forecastday.getJSONObject(i)
             val dayDetail = dayObj.getJSONObject("day")
@@ -275,7 +277,6 @@ class MainActivity : AppCompatActivity() {
             val astro = dayObj.getJSONObject("astro")
             val hourArr = dayObj.getJSONArray("hour")
 
-            // Lấy giờ mặt trời mọc/lặn để phân chia
             fun parseHour(h: String): Int {
                 val sdf = java.text.SimpleDateFormat("hh:mm a", java.util.Locale.ENGLISH)
                 return try {
@@ -400,6 +401,7 @@ class MainActivity : AppCompatActivity() {
     private fun setupRecycleDay(dataModel: List<NightDayTempModel>) {
         val containerView = findViewById<LinearLayout>(R.id.container_day)
         for (i in 0 until containerView.childCount) {
+            if (dataModel.size <= i) continue;
             val parentView = containerView.getChildAt(i)
             if (parentView is ViewGroup) {
                 val textView = parentView.getChildAt(0)
@@ -446,7 +448,9 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupRecycleNight(dataModel: List<NightDayTempModel>) {
         val containerView = findViewById<LinearLayout>(R.id.container_night)
+        println("sizeeeeeeeeeeeee ${dataModel.size}")
         for (i in 0 until containerView.childCount) {
+            if (i >= dataModel.size) continue;
             val parentView = containerView.getChildAt(i)
             if (parentView is ViewGroup) {
                 if (parentView.getChildAt(0) is ViewGroup) {
@@ -520,15 +524,27 @@ class MainActivity : AppCompatActivity() {
             }
         }
         container.visibility = View.VISIBLE
-        setupAdapterSettingDialog(R.id.fake_spinner_temp, listOf("C", "F"))
-        setupAdapterSettingDialog(R.id.fake_spinner_rain, listOf("mm", "cm", "m"))
-        setupAdapterSettingDialog(R.id.fake_spinner_visibility, listOf("km", "Dặm"))
-        setupAdapterSettingDialog(R.id.fake_spinner_wind_speed, listOf("m/s", "km/h", "mph"))
+        setupAdapterSettingDialog(R.id.fake_spinner_temp, listOf("C", "F"), R.id.txt_temp_model)
         setupAdapterSettingDialog(
-            R.id.fake_spinner_atm, listOf("mmHg", "hPa", "mbar", "Bar", "atm")
+            R.id.fake_spinner_rain, listOf("mm", "cm", "in"), R.id.txt_rainfall_model
         )
         setupAdapterSettingDialog(
-            R.id.fake_spinner_date_form, listOf("12 giờ", "24 giờ")
+            R.id.fake_spinner_visibility, listOf("km", "Dặm"), R.id.txt_visibilyty_model
+        )
+        setupAdapterSettingDialog(
+            R.id.fake_spinner_wind_speed,
+            listOf("mph", "kt", "km/h", "mi/h", "m/s"),
+            R.id.txt_wind_speed_model
+        )
+
+        setupAdapterSettingDialog(
+            R.id.fake_spinner_atm,
+            listOf("mmHg", "inHg", "psi", "bar", "mbar", "hpa", "atm"),
+            R.id.txt_atm_model
+        )
+
+        setupAdapterSettingDialog(
+            R.id.fake_spinner_date_form, listOf("12 giờ", "24 giờ"), R.id.txt_time_model
         )
     }
 
@@ -643,7 +659,6 @@ class MainActivity : AppCompatActivity() {
             val date = sdf.parse(timeString)
             val timeEpoch = date?.time?.div(1000) ?: continue // null thì bỏ qua
 
-            System.out.println("weather: " + timeEpoch + " " + (timeEpoch in nowEpoch..next24hEpoch))
             if (timeEpoch in nowEpoch..next24hEpoch) {
                 arrInfo.add(
                     DataHourWeatherModel(
@@ -843,7 +858,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupAdapterSettingDialog(
-        spinnerId: Int, items: List<String>
+        spinnerId: Int, items: List<String>, txtViewId: Int
     ) {
         val spinner: TextView = findViewById(spinnerId)
         spinner.text = items.get(0);
@@ -851,6 +866,7 @@ class MainActivity : AppCompatActivity() {
         (spinner.parent as View).setOnClickListener {
             if (i >= items.size) i = 0;
             spinner.text = items.get(i);
+            findViewById<TextView>(txtViewId).text = items.get(i);
             i++;
         }
     }
