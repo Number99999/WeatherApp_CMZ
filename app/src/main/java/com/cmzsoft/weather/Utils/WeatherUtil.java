@@ -56,7 +56,7 @@ public class WeatherUtil {
 
             // Nhiều mây (Partly cloudy)
             case 1003:
-                return isDay ? "day_partly_cloudy.png" : "night_partly_cloudy.png";
+                return isDay ? "day_partly_cloudy.png" : "night_partly_cloudy_moon.png";
 
             // Đêm có mây ít
             case 1006:

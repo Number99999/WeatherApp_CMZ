@@ -38,27 +38,19 @@ class ActivityWeatherPerHour : AppCompatActivity() {
     private fun setupAdapterData() {
         val recyclerView = findViewById<RecyclerView>(R.id.recyclerView)
 
-        // Sử dụng Coroutine để gọi API bất đồng bộ
         CoroutineScope(Dispatchers.Main).launch {
             try {
-                // Gọi API để lấy dữ liệu
                 val dataList = withContext(Dispatchers.IO) {
                     RequestAPI.getInstance().getWeatherPerHourInNextTwentyFour(
                         "${FakeGlobal.getInstance().curLocation.latLng.latitude},${FakeGlobal.getInstance().curLocation.latLng.longitude}"
                     )
                 }
                 if (dataList.isNotEmpty()) {
-                    val adapter = WeatherItemAdapter(dataList)
-                    recyclerView.adapter = adapter
                     recyclerView.layoutManager = LinearLayoutManager(this@ActivityWeatherPerHour)
-                } else {
-                    // Xử lý khi dataList rỗng
-//                    showError("No weather data available.")
+                    recyclerView.adapter = WeatherItemAdapter(dataList)
                 }
             } catch (e: Exception) {
-                // Xử lý khi có lỗi
                 e.printStackTrace()
-//                showError("Failed to fetch weather data.")
             }
         }
     }

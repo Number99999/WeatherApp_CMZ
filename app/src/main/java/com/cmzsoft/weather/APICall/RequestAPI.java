@@ -10,6 +10,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class RequestAPI {
@@ -129,7 +130,7 @@ public class RequestAPI {
     }
 
     public List<DataWeatherPerHourModel> getWeatherPerHourInNextTwentyFour(String location) {
-        String urlString = "https://api.weatherapi.com/v1/forecast.json?key=" + apiKey + "&q=" + location + "&hours=24&aqi=yes&alerts=yes";
+        String urlString = "https://api.weatherapi.com/v1/forecast.json?key=" + apiKey + "&q=" + location + "&days=2&aqi=yes&alerts=yes";
         List<DataWeatherPerHourModel> weatherList = new ArrayList<>();
 
         try {
@@ -150,23 +151,35 @@ public class RequestAPI {
 
                 JSONObject jsonResponse = new JSONObject(response.toString());
                 JSONArray forecastArray = jsonResponse.getJSONObject("forecast").getJSONArray("forecastday");
-                JSONObject forecastData = forecastArray.getJSONObject(0); // Get today's forecast
-
+                JSONObject forecastData = forecastArray.getJSONObject(0);
+                JSONObject forecastData2 = forecastArray.getJSONObject(1);
                 JSONArray hourArray = forecastData.getJSONArray("hour");
+                JSONArray hourArray2 = forecastData2.getJSONArray("hour");
 
+                Calendar calendar = Calendar.getInstance();
+                calendar.set(Calendar.MINUTE, 0);
+                calendar.set(Calendar.SECOND, 0);
+                calendar.set(Calendar.MILLISECOND, 0);
+                int hour = calendar.get(Calendar.HOUR_OF_DAY);
+
+
+                for (int i = 0; i < hourArray2.length(); i++) {
+                    hourArray.put(hourArray2.getJSONObject(i));
+                }
                 for (int i = 0; i < hourArray.length(); i++) {
-                    JSONObject hourData = hourArray.getJSONObject(i);
-
-                    long timeEpoch = hourData.getLong("time_epoch");
-                    String time = hourData.getString("time");
-                    int tempC = hourData.getInt("temp_c");
-                    boolean isDay = hourData.getBoolean("is_day");
-                    int iconCode = hourData.getJSONObject("condition").getInt("code");
-                    String winDir = hourData.getString("wind_dir");
-                    float winSpeed = (float) hourData.getDouble("wind_kph");
-
-                    DataWeatherPerHourModel weather = new DataWeatherPerHourModel(timeEpoch, time, tempC, isDay, iconCode, winDir, winSpeed);
-                    weatherList.add(weather);
+                    if (i >= hour && i < (hour + 24)) {
+                        JSONObject hourData = hourArray.getJSONObject(i);
+                        long timeEpoch = hourData.getLong("time_epoch");
+                        String time = hourData.getString("time");
+                        int tempC = hourData.getInt("temp_c");
+                        boolean isDay = hourData.getInt("is_day") == 1;
+                        int iconCode = hourData.getJSONObject("condition").getInt("code");
+                        String winDir = hourData.getString("wind_dir");
+                        float winSpeed = (float) hourData.getDouble("wind_kph");
+                        int changeRain = hourData.getInt("will_it_rain") == 1 ? 100 : 0;
+                        DataWeatherPerHourModel weather = new DataWeatherPerHourModel(timeEpoch, time, tempC, isDay, iconCode, winDir, winSpeed, changeRain);
+                        weatherList.add(weather);
+                    }
                 }
             } else {
                 System.out.println("Error calling API. Error code: " + responseCode);

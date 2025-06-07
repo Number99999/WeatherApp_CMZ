@@ -41,6 +41,7 @@
     <dimen name="font_size_34">68sp</dimen>
     <dimen name="font_size_35">70sp</dimen>
     <dimen name="font_size_36">72sp</dimen>
+    <dimen name="font_size_80">160sp</dimen>
     <!--   ******************************Widget******************************* -->
     <dimen name="widget_size_1">2dp</dimen>
     <dimen name="widget_size_2">4dp</dimen>

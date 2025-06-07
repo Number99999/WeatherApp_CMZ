@@ -9,6 +9,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.cmzsoft.weather.Model.DataWeatherPerHourModel
 import com.cmzsoft.weather.R
+import com.cmzsoft.weather.Utils.WeatherUtil
 
 class WeatherItemAdapter(
     private val items: List<DataWeatherPerHourModel>
@@ -36,7 +37,16 @@ class WeatherItemAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = items[position]
-        holder.txtTime.text = item.time
-
+        holder.txtWind.text = "${(item.winDir)}, ${(item.winSpeed.toString())}kph";
+        holder.txtTime.text = item.time.substring(item.time.length - 5)
+        holder.txtDegree.text = "${item.tempC}℃"
+        val nameIcon = "status_${
+            WeatherUtil.getWeatherIconName(item.iconCode, item.isDay).replace(".png", "")
+        }";
+        val context = holder.itemView.context
+        val resId = context.resources.getIdentifier(nameIcon, "drawable", context.packageName)
+        System.out.println("name icon: " + nameIcon + " " + resId)
+        holder.imgIcon.setImageResource(resId)
+        holder.txtRainRate.text = "${item.changeRain}%"
     }
 }

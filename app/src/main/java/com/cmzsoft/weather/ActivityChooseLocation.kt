@@ -92,7 +92,6 @@ class ActivityChooseLocation : AppCompatActivity(), OnMapReadyCallback {
                 currentMarker?.remove()
                 currentMarker = myMap.addMarker(MarkerOptions().position(latLng).title(location))
                 myMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10f))
-                println("outtttttttttttttttt >>>>>>>>>>>>> ${(addressList.toString())}")
                 setUIRecycleViewMap(addressList)
                 setUIRecycleViewCity(addressList)
             } else {
@@ -139,8 +138,6 @@ class ActivityChooseLocation : AppCompatActivity(), OnMapReadyCallback {
                         currentMarker =
                             myMap.addMarker(MarkerOptions().position(latLng).title(location))
                         myMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10f))
-
-                        println("outtttttttttt >>>>>>>>> ${(addressList.toString())}")
                     } else {
                         Toast.makeText(
                             this@ActivityChooseLocation,

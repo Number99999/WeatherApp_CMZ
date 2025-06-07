@@ -7,5 +7,6 @@ data class DataWeatherPerHourModel(
     var isDay: Boolean,
     var iconCode: Int,
     var winDir: String,
-    var winSpeed: Float
+    var winSpeed: Float,
+    var changeRain: Int
 )

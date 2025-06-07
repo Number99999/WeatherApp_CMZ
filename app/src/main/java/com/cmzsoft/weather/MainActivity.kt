@@ -718,18 +718,38 @@ class MainActivity : AppCompatActivity() {
             lineChart.description.isEnabled = false
             lineChart.legend.isEnabled = false
             lineChart.axisRight.isEnabled = false
+            lineChart.xAxis.setDrawGridLines(false)
+            lineChart.axisLeft.setDrawGridLines(false)
             lineChart.axisRight.setDrawGridLines(false)
-
             val yAxis = lineChart.axisLeft
             yAxis.textColor = Color.WHITE
             yAxis.textSize = 15f
             yAxis.setDrawGridLines(false)
 
             yAxis.isEnabled = false
-
             val xAxis = lineChart.xAxis
             xAxis.setDrawLabels(false)
             xAxis.setDrawGridLines(false)
+
+            lineChart.xAxis.setDrawGridLines(false)
+            lineChart.axisLeft.setDrawGridLines(false)
+            lineChart.axisRight.setDrawGridLines(false)
+
+            lineChart.xAxis.setDrawAxisLine(false)
+            lineChart.axisLeft.setDrawAxisLine(false)
+            lineChart.axisRight.setDrawAxisLine(false)
+
+            lineChart.setDrawBorders(false)
+
+            lineChart.axisLeft.removeAllLimitLines()
+            lineChart.axisRight.removeAllLimitLines()
+
+            lineChart.axisLeft.isEnabled = false
+            lineChart.axisRight.isEnabled = false
+
+            lineChart.xAxis.setDrawLabels(false)
+            lineChart.legend.isEnabled = false
+            lineChart.description.isEnabled = false
 
             lineChart.renderer = CustomLineChartRenderer(
                 lineChart, lineChart.animator, lineChart.viewPortHandler
@@ -739,10 +759,6 @@ class MainActivity : AppCompatActivity() {
             lineChart.isDoubleTapToZoomEnabled = false
             lineChart.isDragEnabled = false
 
-//            val params = lineChart.layoutParams
-//            val emojiContainer = findViewById<LinearLayout>(R.id.emojiContainer)
-//            params.width = emojiContainer.width
-//            lineChart.layoutParams = params
             lineChart.requestLayout()
 
             val data = lineChart.data
