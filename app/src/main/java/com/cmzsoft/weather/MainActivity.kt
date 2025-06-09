@@ -38,6 +38,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.cmzsoft.weather.APICall.RequestAPI
 import com.cmzsoft.weather.CustomAdapter.TitleChartDegreeAdapter
 import com.cmzsoft.weather.DatabaService.DatabaseService
+import com.cmzsoft.weather.Manager.AdManager
 import com.cmzsoft.weather.Model.DataHourWeatherModel
 import com.cmzsoft.weather.Model.FakeGlobal
 import com.cmzsoft.weather.Model.LocationWeatherModel
@@ -54,6 +55,7 @@ import com.github.mikephil.charting.renderer.LineChartRenderer
 import com.github.mikephil.charting.utils.ViewPortHandler
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.model.LatLng
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -62,9 +64,14 @@ import org.json.JSONObject
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
+import javax.inject.Inject
 import kotlin.math.roundToInt
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
+    @Inject
+    lateinit var adManager: AdManager
+
 
     private val handler = android.os.Handler()
     private lateinit var updateRunnable: Runnable
@@ -101,6 +108,7 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, ActivityChooseLocation::class.java);
             startActivity(intent)
         }
+        showInterAds()
     }
 
     private fun initValiable() {
@@ -305,17 +313,18 @@ class MainActivity : AppCompatActivity() {
             }
 
             // Max tỉ lệ mưa và max nhiệt độ cho ban ngày và ban đêm
-            val rainDay = if (dayHours.isNotEmpty())
-                dayHours.map { rainProbArr.optDouble(it, 0.0) }.average().toInt()
-            else 0
-            val rainNight = if (nightHours.isNotEmpty())
-                nightHours.map { rainProbArr.optDouble(it, 0.0) }.average().toInt()
-            else 0
+            val rainDay =
+                if (dayHours.isNotEmpty()) dayHours.map { rainProbArr.optDouble(it, 0.0) }.average()
+                    .toInt()
+                else 0
+            val rainNight =
+                if (nightHours.isNotEmpty()) nightHours.map { rainProbArr.optDouble(it, 0.0) }
+                    .average().toInt()
+                else 0
             val tempDay = dayHours.maxOfOrNull { tempArr.optDouble(it, 0.0) }?.toFloat() ?: 0f
             val tempNight = nightHours.maxOfOrNull { tempArr.optDouble(it, 0.0) }?.toFloat() ?: 0f
             val iconID = dayHours.maxByOrNull { tempArr.optDouble(it, 0.0) }
-                ?.let { weatherCodeArr.optInt(it, 0) }
-                ?: 0
+                ?.let { weatherCodeArr.optInt(it, 0) } ?: 0
 
             val m = NightDayTempModel(
                 date = date,
@@ -332,6 +341,33 @@ class MainActivity : AppCompatActivity() {
         this.setUpNightTempChart(listData)
         this.setupRecycleNight(listData)
         this.setupRecycleDay(listData)
+    }
+
+    fun showInterAds() {
+        adManager.showInterstitialAdIfEligible(
+            this,
+            minIntervalMillis = 60_000L,
+            adTag = "Home",
+            onAdClosed = {
+//                dismissAdLoadingDialog()
+            },
+            onAdSkipped = {
+//                dismissAdLoadingDialog()
+            },
+            onAdFailedToShow = {
+//                analyticsHelper.logShowInterstitialFailed(ScreenName.HOME)
+//                dismissAdLoadingDialog()
+            },
+            onAdStartShowing = {
+//                ALog.d("themd", "onAdStartShowing")
+//                showAdLoadingDialog()
+            },
+            onAdImpression = {
+//                analyticsHelper.logShowInterstitial(ScreenName.HOME)
+//                analyticsHelper.logAdImpression(
+//                    "interstitial", BuildConfig.INTERSTITIAL_AD_UNIT_ID
+//                )
+            })
     }
 
 

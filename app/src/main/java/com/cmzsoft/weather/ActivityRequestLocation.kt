@@ -75,11 +75,12 @@ class ActivityRequestLocation : AppCompatActivity() {
         btn.setOnClickListener {
 //            firstView?.visibility = View.GONE
 //            secondView?.visibility = View.VISIBLE
-//            val changePage = Intent(this, ActivityChooseLocationWithMap::class.java);
+//            val changePage = Intent(this, ActivityChooseLocationWithMap::class.java);\
+
 //            startActivity(changePage);
-            showCustomPermissionDialog()
-//            FakeGlobal.getInstance().userAcceptRequestLocation = true;
-//            requestPermissionLocation()
+//            showCustomPermissionDialog()
+            FakeGlobal.getInstance().userAcceptRequestLocation = true;
+            requestPermissionLocation()
         }
     }
 
