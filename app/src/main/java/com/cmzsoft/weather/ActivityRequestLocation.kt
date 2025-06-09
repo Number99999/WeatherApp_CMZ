@@ -8,6 +8,7 @@ import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.view.ViewCompat
@@ -27,6 +28,26 @@ class ActivityRequestLocation : AppCompatActivity() {
         }
 
         InitEventBtn()
+    }
+
+    private val requestPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted: Boolean ->
+        if (isGranted) {
+            Toast.makeText(this, "Đã được cấp quyền vị trí", Toast.LENGTH_SHORT).show()
+        } else {
+            Toast.makeText(this, "Từ chối quyền vị trí", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    fun showCustomPermissionDialog() {
+        PermissionDialogFragment {
+            requestLocationPermission()
+        }.show(supportFragmentManager, "PermissionDialog")
+    }
+
+    fun requestLocationPermission() {
+        requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
     }
 
     private fun InitEventBtn() {
@@ -56,8 +77,9 @@ class ActivityRequestLocation : AppCompatActivity() {
 //            secondView?.visibility = View.VISIBLE
 //            val changePage = Intent(this, ActivityChooseLocationWithMap::class.java);
 //            startActivity(changePage);
-            FakeGlobal.getInstance().userAcceptRequestLocation = true;
-            requestPermissionLocation()
+            showCustomPermissionDialog()
+//            FakeGlobal.getInstance().userAcceptRequestLocation = true;
+//            requestPermissionLocation()
         }
     }
 
@@ -74,8 +96,9 @@ class ActivityRequestLocation : AppCompatActivity() {
     private fun InitEventAcceptAllTime() {
         val btn = findViewById<Button>(R.id.btn_accept_when_use_app)
         btn.setOnClickListener {
-            val changePage = Intent(this, MainActivity::class.java);
-            startActivity(changePage);
+            showCustomPermissionDialog()
+//            val changePage = Intent(this, MainActivity::class.java);
+//            startActivity(changePage);
         }
     }
 
