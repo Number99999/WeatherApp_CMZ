@@ -42,7 +42,8 @@ class ActivityWeatherPerHour : AppCompatActivity() {
             try {
                 val dataList = withContext(Dispatchers.IO) {
                     RequestAPI.getInstance().getWeatherPerHourInNextTwentyFour(
-                        "${FakeGlobal.getInstance().curLocation.latLng.latitude},${FakeGlobal.getInstance().curLocation.latLng.longitude}"
+                        FakeGlobal.getInstance().curLocation.latLng.latitude,
+                        FakeGlobal.getInstance().curLocation.latLng.longitude
                     )
                 }
                 if (dataList.isNotEmpty()) {

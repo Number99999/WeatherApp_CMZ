@@ -1,6 +1,7 @@
 package com.cmzsoft.weather.APICall;
 
 import com.cmzsoft.weather.Model.DataWeatherPerHourModel;
+import com.cmzsoft.weather.Utils.WeatherUtil;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -25,8 +26,8 @@ public class RequestAPI {
         return instance;
     }
 
-    public JSONObject CallAPI(String location) {
-        String urlString = "https://api.weatherapi.com/v1/current.json?key=" + apiKey + "&q=" + location;
+    public JSONObject GetCurrentWeather(double lat, double lon) {
+        String urlString = "https://api.open-meteo.com/v1/forecast?latitude=" + lat + "&longitude=" + lon + "&current_weather=true&hourly=temperature_2m,precipitation,relative_humidity_2m,wind_direction_10m,uv_index,apparent_temperature&timezone=auto";
         try {
             URL url = new URL(urlString);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -37,7 +38,6 @@ public class RequestAPI {
                 BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
                 StringBuilder response = new StringBuilder();
                 String line;
-
                 while ((line = in.readLine()) != null) {
                     response.append(line);
                 }
@@ -55,7 +55,8 @@ public class RequestAPI {
     }
 
     public JSONObject GetAllDataInCurrentDay(double lat, double lon) {
-        String urlString = "https://api.weatherapi.com/v1/forecast.json?key=" + apiKey + "&q=" + lat + "," + lon + "&days=2&aqi=yes&alerts=yes";
+        String urlString = "https://api.open-meteo.com/v1/forecast?latitude=" + lat + "&longitude=" + lon + "&hourly=temperature_2m,precipitation_probability,weathercode,wind_speed_10m,wind_direction_10m&timezone=auto";
+
         try {
             URL url = new URL(urlString);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -83,8 +84,8 @@ public class RequestAPI {
         }
     }
 
-    public boolean GetWeatherForNext120Minutes(String location) {
-        String urlString = "https://api.weatherapi.com/v1/forecast.json?key=" + apiKey + "&q=" + location + "&hours=3&aqi=yes&alerts=yes"; // Requesting forecast for 3 hours
+    public boolean GetWeatherForNext120Minutes(double lat, double lon) {
+        String urlString = "https://api.weatherapi.com/v1/forecast.json?key=" + apiKey + "&q=" + lat + "," + lon + "&hours=3&aqi=yes&alerts=yes"; // Requesting forecast for 3 hours
         try {
             URL url = new URL(urlString);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -129,9 +130,9 @@ public class RequestAPI {
         }
     }
 
-    public List<DataWeatherPerHourModel> getWeatherPerHourInNextTwentyFour(String location) {
-        String urlString = "https://api.weatherapi.com/v1/forecast.json?key=" + apiKey + "&q=" + location + "&days=2&aqi=yes&alerts=yes";
+    public List<DataWeatherPerHourModel> getWeatherPerHourInNextTwentyFour(double lat, double lon) {
         List<DataWeatherPerHourModel> weatherList = new ArrayList<>();
+        String urlString = "https://api.open-meteo.com/v1/forecast?latitude=" + lat + "&longitude=" + lon + "&hourly=temperature_2m,precipitation_probability,weathercode,wind_speed_10m,wind_direction_10m&timezone=auto";
 
         try {
             URL url = new URL(urlString);
@@ -150,36 +151,30 @@ public class RequestAPI {
                 in.close();
 
                 JSONObject jsonResponse = new JSONObject(response.toString());
-                JSONArray forecastArray = jsonResponse.getJSONObject("forecast").getJSONArray("forecastday");
-                JSONObject forecastData = forecastArray.getJSONObject(0);
-                JSONObject forecastData2 = forecastArray.getJSONObject(1);
-                JSONArray hourArray = forecastData.getJSONArray("hour");
-                JSONArray hourArray2 = forecastData2.getJSONArray("hour");
+                JSONObject hourly = jsonResponse.getJSONObject("hourly");
 
                 Calendar calendar = Calendar.getInstance();
-                calendar.set(Calendar.MINUTE, 0);
-                calendar.set(Calendar.SECOND, 0);
-                calendar.set(Calendar.MILLISECOND, 0);
-                int hour = calendar.get(Calendar.HOUR_OF_DAY);
+                int curHour = calendar.get(Calendar.HOUR_OF_DAY);
+                JSONArray timeArr = hourly.getJSONArray("time");
+                JSONArray tempArr = hourly.getJSONArray("temperature_2m");
+                JSONArray rainChangeArr = hourly.getJSONArray("precipitation_probability");
+                JSONArray weatherCodeArr = hourly.getJSONArray("weathercode");
+                JSONArray windSpeedArr = hourly.getJSONArray("wind_speed_10m");
+                JSONArray windDir = hourly.getJSONArray("wind_direction_10m");
+                for (int i = curHour; i < curHour + 24; i++) {
 
 
-                for (int i = 0; i < hourArray2.length(); i++) {
-                    hourArray.put(hourArray2.getJSONObject(i));
-                }
-                for (int i = 0; i < hourArray.length(); i++) {
-                    if (i >= hour && i < (hour + 24)) {
-                        JSONObject hourData = hourArray.getJSONObject(i);
-                        long timeEpoch = hourData.getLong("time_epoch");
-                        String time = hourData.getString("time");
-                        int tempC = hourData.getInt("temp_c");
-                        boolean isDay = hourData.getInt("is_day") == 1;
-                        int iconCode = hourData.getJSONObject("condition").getInt("code");
-                        String winDir = hourData.getString("wind_dir");
-                        float winSpeed = (float) hourData.getDouble("wind_kph");
-                        int changeRain = hourData.getInt("will_it_rain") == 1 ? 100 : 0;
-                        DataWeatherPerHourModel weather = new DataWeatherPerHourModel(timeEpoch, time, tempC, isDay, iconCode, winDir, winSpeed, changeRain);
-                        weatherList.add(weather);
-                    }
+                    long timeEpoch = 0;
+                    String time = timeArr.get(i).toString().substring(timeArr.get(i).toString().length() - 5);
+                    int hour = Integer.parseInt(time.substring(0, 2)); //
+                    boolean isDay = hour >= 6 && hour <= 18;
+                    int tempC = tempArr.getInt(i);
+                    int iconCode = weatherCodeArr.getInt(i);
+                    String winDir = WeatherUtil.degreeToShortDirection(windDir.getInt(i));
+                    float winSpeed = (float) windSpeedArr.getDouble(i);
+                    int changeRain = rainChangeArr.getInt(i);
+                    DataWeatherPerHourModel weather = new DataWeatherPerHourModel(timeEpoch, time, tempC, isDay, iconCode, winDir, winSpeed, changeRain);
+                    weatherList.add(weather);
                 }
             } else {
                 System.out.println("Error calling API. Error code: " + responseCode);
@@ -193,8 +188,8 @@ public class RequestAPI {
     }
 
 
-    public JSONObject GetTempInAWeek(String s) {
-        String urlString = "https://api.weatherapi.com/v1/forecast.json?key=" + apiKey + "&q=" + s + "&days=7&aqi=false&alerts=false";
+    public JSONObject GetTempInAWeek(double lat, double lon) {
+        String urlString = "https://api.open-meteo.com/v1/forecast?latitude=" + lat + "&longitude=" + lon + "&hourly=precipitation_probability,temperature_2m,weathercode&timezone=auto\n";
         try {
             URL url = new URL(urlString);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
