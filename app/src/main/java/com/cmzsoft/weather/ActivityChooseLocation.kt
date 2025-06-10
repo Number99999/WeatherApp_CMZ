@@ -11,6 +11,7 @@ import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.SearchView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -80,7 +81,12 @@ class ActivityChooseLocation : AppCompatActivity(), OnMapReadyCallback {
         initEventOnTypingSearchViewMap()
         SetUpListBigCountry()
 
+        val notificationTextView = findViewById<TextView>(R.id.txt_title)
+        notificationTextView.isSelected = true
 
+        findViewById<ImageView>(R.id.btn_close_title).setOnClickListener {
+            (findViewById<ImageView>(R.id.btn_close_title).parent as View).visibility = View.GONE
+        }
         this.loadNativeAds()
     }
 

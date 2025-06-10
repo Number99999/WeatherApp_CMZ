@@ -85,13 +85,44 @@
                     android:text="Chúng tôi là một nhóm phát triển nhỏ và đã cam kết cung cấp cho bạn nhiều sản phẩm miễn phí và dễ sử dụng hơn. Hi vọng bạn sẽ có những đánh giá tốt 5 sao, đây sẽ là động lực lớn nhất để chúng tôi không ngừng nỗ lực nâng cao chất lượng!"
                     android:textColor="@color/black" />
 
+                <LinearLayout
+                    android:id="@+id/contain_star"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/widget_size_10"
+                    android:orientation="horizontal"
+                    android:paddingStart="@dimen/widget_size_10"
+                    android:paddingEnd="@dimen/widget_size_10">
 
-                <ImageView
-                    android:layout_width="300dp"
-                    android:layout_height="90dp"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginEnd="20dp"
-                    android:src="@drawable/icon_star_vote" />
+                    <ImageView
+                        android:layout_width="@dimen/widget_size_45"
+                        android:layout_height="@dimen/widget_size_45"
+                        android:src="@drawable/star_light" />
+
+                    <ImageView
+                        android:layout_width="@dimen/widget_size_45"
+                        android:layout_height="@dimen/widget_size_45"
+                        android:layout_marginStart="@dimen/widget_size_10"
+                        android:src="@drawable/star_light" />
+
+                    <ImageView
+                        android:layout_width="@dimen/widget_size_45"
+                        android:layout_height="@dimen/widget_size_45"
+                        android:layout_marginStart="@dimen/widget_size_10"
+                        android:src="@drawable/star_light" />
+
+                    <ImageView
+                        android:layout_width="@dimen/widget_size_45"
+                        android:layout_height="@dimen/widget_size_45"
+                        android:layout_marginStart="@dimen/widget_size_10"
+                        android:src="@drawable/star_light" />
+
+                    <ImageView
+                        android:layout_width="@dimen/widget_size_45"
+                        android:layout_height="@dimen/widget_size_45"
+                        android:layout_marginStart="@dimen/widget_size_10"
+                        android:src="@drawable/star_light" />
+                </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"

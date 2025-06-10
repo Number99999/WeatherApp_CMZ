@@ -32,6 +32,8 @@ import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
+import androidx.core.view.get
+import androidx.core.view.isEmpty
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -617,7 +619,10 @@ class MainActivity : AppCompatActivity() {
 
     private fun showVoteApp() {
         val container = findViewById<FrameLayout>(R.id.container_vote_app)
-        if (container.childCount == 0) {
+        container.setOnClickListener {
+            Toast.makeText(this, "Open GG Play", Toast.LENGTH_LONG).show();
+        }
+        if (container.isEmpty()) {
             val dialogView = layoutInflater.inflate(R.layout.dialog_vote_app, container, false)
             val params = FrameLayout.LayoutParams(
                 FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT
@@ -634,9 +639,51 @@ class MainActivity : AppCompatActivity() {
             dialogView.findViewById<Button>(R.id.btn_accept_vote)?.setOnClickListener {
                 container.visibility = View.GONE
                 container.removeAllViews()
+                Toast.makeText(this, "Open GG Play", Toast.LENGTH_LONG).show();
             }
         }
         container.visibility = View.VISIBLE
+
+        var count = 0;
+        val containStar = findViewById<LinearLayout>(R.id.contain_star)
+        for (i in 0 until containStar.childCount) {
+            val childView = containStar.getChildAt(i)
+            childView.animate().apply {
+                duration = 300L * i // Stagger the duration for each child view
+            }.withEndAction {
+                childView.animate().apply {
+                    duration = 150 // Apply scaling and rotation
+                    scaleX(1.1f)
+                    scaleY(1.1f)
+                    rotation(10f)
+                }.withEndAction {
+                    childView.animate().apply {
+                        duration = 150
+                        scaleX(0.9f)
+                        scaleY(0.9f)
+                        rotation(-10f)
+                    }.withEndAction {
+                        childView.animate().apply {
+                            duration = 150
+                            scaleX(1f)
+                            scaleY(1f)
+                            rotation(0f)
+                        }.withEndAction {
+                            count++;
+                            if (count == 5) {
+                                childView.animate().apply {
+                                    duration = 300
+                                }.withEndAction {
+                                    for (j in 0 until containStar.childCount) {
+                                        (containStar.get(j) as ImageView).setImageResource(R.drawable.star_dark)
+                                    }
+                                }.start()
+                            }
+                        }.start()
+                    }.start()
+                }.start()
+            }.start()
+        }
     }
 
     private fun setupLineChart() {

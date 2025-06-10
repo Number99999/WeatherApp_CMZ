@@ -1,8 +1,10 @@
 package com.cmzsoft.weather
 
 import android.Manifest
+import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
@@ -15,6 +17,8 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.cmzsoft.weather.Model.FakeGlobal
 import com.cmzsoft.weather.Model.PermissionModel
+import androidx.core.net.toUri
+
 
 class ActivityRequestLocation : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -87,6 +91,8 @@ class ActivityRequestLocation : AppCompatActivity() {
     private fun InitEventButtonManual() {
         val btn = findViewById<Button>(R.id.btn_manual_search)
         btn.setOnClickListener {
+//            context.startActivity(Intent.createChooser(intent, context.getString("email_body")))
+//
             FakeGlobal.getInstance().userAcceptRequestLocation = false;
 //            val changePage = Intent(this, ActivityBigCountry::class.java);
             val changePage = Intent(this, ActivityChooseLocation::class.java);
