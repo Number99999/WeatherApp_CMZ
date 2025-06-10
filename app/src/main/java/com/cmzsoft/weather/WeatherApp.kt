@@ -19,24 +19,14 @@ class WeatherApp : Application(), Application.ActivityLifecycleCallbacks {
     override fun onCreate() {
         super.onCreate()
         MobileAds.initialize(this) {}
-//        val languageCode = sharedPref.getLanguage()
-//        val locales = LocaleListCompat.forLanguageTags(languageCode)
-//        AppCompatDelegate.setApplicationLocales(locales)
+        println("onCreate Weather app")
         registerActivityLifecycleCallbacks(this)
-//        appContainer.initializeAdConfig { success ->
-//            if (success) {
-//                ALog.d("AppContainer", "AdConfig initialized with server data")
-//            } else {
-//                ALog.d("AppContainer", "AdConfig initialized with defaults due to fetch failure")
-//            }
-//        }
     }
 
     override fun onActivityCreated(
         activity: Activity,
         savedInstanceState: Bundle?
     ) {
-
     }
 
     override fun onActivityStarted(activity: Activity) {

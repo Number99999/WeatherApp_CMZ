@@ -59,7 +59,7 @@
 
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-7340251527995818~8284130762" />
+            android:value="ca-app-pub-8840577784150915~2522004329" />
 
         <provider
             android:name="androidx.startup.InitializationProvider"

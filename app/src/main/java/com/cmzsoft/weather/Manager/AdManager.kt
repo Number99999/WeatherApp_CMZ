@@ -17,18 +17,27 @@ import com.google.android.gms.ads.nativead.NativeAd
 import com.google.android.gms.ads.nativead.NativeAdView
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
 class AdManager @Inject constructor(
     @ApplicationContext private val context: Context
 ) {
-
     private var interstitialAd: InterstitialAd? = null
     private val lastAdShownTimeMap: MutableMap<String, Long> = mutableMapOf()
     private val isFirstAdShownMap: MutableMap<String, Boolean> = mutableMapOf()
 
+    companion object {
+        private var INSTANCE: AdManager? = null
+
+        fun getInstance(context: Context): AdManager {
+            if (INSTANCE == null) {
+                INSTANCE = AdManager(context)
+            }
+            return INSTANCE!!
+        }
+    }
+
     fun loadInterstitialAdIfNeeded(activity: Activity) {
+        println("loadInterstitialAdIfNeeded")
         if (interstitialAd != null || !isActivityValid(activity)) return
 
         InterstitialAd.load(
@@ -37,10 +46,12 @@ class AdManager @Inject constructor(
             AdRequest.Builder().build(),
             object : InterstitialAdLoadCallback() {
                 override fun onAdLoaded(ad: InterstitialAd) {
+                    println("onAdLoaded")
                     interstitialAd = ad
                 }
 
                 override fun onAdFailedToLoad(error: LoadAdError) {
+                    println("onAdFailedToLoad")
                     interstitialAd = null
                 }
             }
@@ -57,6 +68,7 @@ class AdManager @Inject constructor(
         onAdImpression: () -> Unit,
         onAdFailedToShow: (String) -> Unit = {}
     ) {
+        print("showInterstitialAdIfEligible")
         val now = SystemClock.elapsedRealtime()
         val lastShown = lastAdShownTimeMap[adTag] ?: 0L
         val isFirst = isFirstAdShownMap[adTag] != false

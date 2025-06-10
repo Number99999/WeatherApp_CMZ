@@ -64,15 +64,11 @@ import org.json.JSONObject
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
-import javax.inject.Inject
 import kotlin.math.roundToInt
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
-    @Inject
     lateinit var adManager: AdManager
-
-
     private val handler = android.os.Handler()
     private lateinit var updateRunnable: Runnable
     private lateinit var updateRunnableTime: Runnable
@@ -108,10 +104,12 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, ActivityChooseLocation::class.java);
             startActivity(intent)
         }
-        showInterAds()
     }
 
     private fun initValiable() {
+        val context: Context = this
+        adManager = AdManager(context)
+        showInterAds()
     }
 
 
@@ -491,7 +489,6 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupRecycleNight(dataModel: List<NightDayTempModel>) {
         val containerView = findViewById<LinearLayout>(R.id.container_night)
-        println("sizeeeeeeeeeeeee ${dataModel.size}")
         for (i in 0 until containerView.childCount) {
             if (i >= dataModel.size) continue;
             val parentView = containerView.getChildAt(i)
@@ -682,7 +679,6 @@ class MainActivity : AppCompatActivity() {
         val arrPop = hourly.getJSONArray("precipitation_probability")
         val arrWeatherCode = hourly.getJSONArray("weathercode")
         for (i in curHour until curHour + 24) {
-            println("hour: " + i)
             val s = arrTime.getString(i)
             val tempC = arrTemp.getDouble(i).toFloat()
             var h = curHour + i
