@@ -7,6 +7,7 @@ import android.location.Geocoder
 import android.location.Location
 import android.os.Bundle
 import android.view.View
+import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.SearchView
@@ -18,6 +19,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.cmzsoft.weather.CustomAdapter.LocationInMapAdapter
+import com.cmzsoft.weather.Manager.AdManager
 import com.cmzsoft.weather.Model.LocationInMapModel
 import com.cmzsoft.weather.Model.PermissionModel
 import com.cmzsoft.weather.Utils.WeatherUtil
@@ -77,6 +79,9 @@ class ActivityChooseLocation : AppCompatActivity(), OnMapReadyCallback {
 
         initEventOnTypingSearchViewMap()
         SetUpListBigCountry()
+
+
+        this.loadNativeAds()
     }
 
     private fun searchLocation(query: String?) {
@@ -100,6 +105,15 @@ class ActivityChooseLocation : AppCompatActivity(), OnMapReadyCallback {
         } catch (e: IOException) {
             e.printStackTrace()
         }
+    }
+
+    private fun loadNativeAds() {
+        var adMgr = AdManager.getInstance(this@ActivityChooseLocation);
+        adMgr.loadNativeClickAd(findViewById<FrameLayout>(R.id.ad_container), onAdLoaded = {
+            println("onAdLoaded")
+        }, onAdFailed = { println("onAdFailed") }, onAdImpression = {
+            println("onAdImpression")
+        })
     }
 
     private fun setUIRecycleViewCity(addressList: List<Address>) {
@@ -201,7 +215,11 @@ class ActivityChooseLocation : AppCompatActivity(), OnMapReadyCallback {
                     val addresses = geocoder.getFromLocation(lat, lng, 10)
                     if (!addresses.isNullOrEmpty()) {
                         addressLine = addresses[0].getAddressLine(0) ?: "Không rõ địa chỉ"
-                        if (addressLine != "Không rõ địa chỉ") setUIRecycleViewMap(listOf(addresses[0]))
+                        if (addressLine != "Không rõ địa chỉ") setUIRecycleViewMap(
+                            listOf(
+                                addresses[0]
+                            )
+                        )
                         Toast.makeText(
                             this, WeatherUtil.getLocationFromAddressLines(
                                 addresses[0].getAddressLine(0)

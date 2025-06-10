@@ -41,9 +41,9 @@ class ActivityRequestLocation : AppCompatActivity() {
     }
 
     fun showCustomPermissionDialog() {
-        PermissionDialogFragment {
-            requestLocationPermission()
-        }.show(supportFragmentManager, "PermissionDialog")
+//        PermissionDialogFragment {
+//            requestLocationPermission()
+//        }.show(supportFragmentManager, "PermissionDialog")
     }
 
     fun requestLocationPermission() {
