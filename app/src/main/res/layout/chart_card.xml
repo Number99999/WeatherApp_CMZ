@@ -22,14 +22,13 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingBottom="4dp"></RelativeLayout>
+                android:paddingBottom="4dp" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rc_title_chart"
                 android:layout_width="wrap_content"
                 android:layout_height="80dp"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager">
-            </androidx.recyclerview.widget.RecyclerView>
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
             <HorizontalScrollView
                 android:id="@+id/scroll_char"
@@ -42,7 +41,7 @@
                     android:id="@+id/lineChart"
                     android:layout_width="0dp"
                     android:layout_height="140dp"
-                    android:minWidth="1370dp" />
+                    android:minWidth="1300dp" />
             </HorizontalScrollView>
 
             <HorizontalScrollView

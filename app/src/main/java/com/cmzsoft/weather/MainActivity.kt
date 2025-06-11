@@ -211,6 +211,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun getCurLocation() {
         LocationService.getCurrentLocation();
+        LocationService.getLocationFromName("binh dinh");
     }
 
     private fun UpdateWeatherInfor() {

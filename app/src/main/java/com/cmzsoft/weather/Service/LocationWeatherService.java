@@ -29,7 +29,14 @@ public class LocationWeatherService extends SQLiteOpenHelper {
     }
 
     private void createTableLocationWeatherIfNotExist(SQLiteDatabase db) {
-        String createTable = "CREATE TABLE IF NOT EXISTS location_weather (" + "id INTEGER PRIMARY KEY AUTOINCREMENT, " + "name TEXT, " + "latitude REAL, " + "longitude REAL, " + "weather TEXT, " + "fullPathLocation TEXT)";
+        String createTable = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME +
+                " (" + "id INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + "name TEXT, "
+                + "latitude REAL, "
+                + "longitude REAL, "
+                + "isDefault INTEGER,"
+                + "weather TEXT, "
+                + "fullPathLocation TEXT)";
         db.execSQL(createTable);
     }
 
@@ -42,7 +49,7 @@ public class LocationWeatherService extends SQLiteOpenHelper {
 
     public boolean checkIsExistLocationInDb(LocationWeatherModel lw) {
         SQLiteDatabase db = this.getWritableDatabase();
-        String checkQuery = "SELECT * FROM location_weather WHERE fullPathLocation = ?";
+        String checkQuery = "SELECT * FROM " + TABLE_NAME + " WHERE fullPathLocation = ?";
         Cursor cursor = db.rawQuery(checkQuery, new String[]{lw.getName()});
         if (cursor.getCount() > 0) {
             cursor.close();
@@ -55,7 +62,7 @@ public class LocationWeatherService extends SQLiteOpenHelper {
     public List<LocationWeatherModel> getAllLocationWeather() {
         List<LocationWeatherModel> list = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
-        String sql = "SELECT * FROM location_weather";
+        String sql = "SELECT * FROM " + TABLE_NAME;
         Cursor cursor = db.rawQuery(sql, null);
         if (cursor.moveToFirst()) {
             do {
@@ -73,13 +80,12 @@ public class LocationWeatherService extends SQLiteOpenHelper {
         cursor.close();
         db.close();
         return list;
-
     }
 
-    public boolean insertLocationWeather(LocationWeatherModel lw) {
+    public boolean insertOrUpdateLocationWeather(LocationWeatherModel lw) {
         SQLiteDatabase db = this.getWritableDatabase();
-        if (this.checkIsExistLocationInDb(lw)) return false;
         ContentValues values = new ContentValues();
+        values.put("id", lw.getId());
         values.put("name", lw.getName());
         values.put("latitude", lw.getLatitude());
         values.put("longitude", lw.getLongitude());
@@ -88,5 +94,22 @@ public class LocationWeatherService extends SQLiteOpenHelper {
         long result = db.insert("location_weather", null, values);
         db.close();
         return result != -1;
+    }
+
+    public boolean changeDefaultLocation() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String sql = "SELECT * FROM " + TABLE_NAME + " WHERE isDefault=1";
+        Cursor cursor = db.rawQuery(sql, null);
+        LocationWeatherModel lw = new LocationWeatherModel();
+        lw.setId(cursor.getLong(cursor.getColumnIndexOrThrow("id")));
+        lw.setName(cursor.getString(cursor.getColumnIndexOrThrow("name")));
+        lw.setLatitude(cursor.getDouble(cursor.getColumnIndexOrThrow("latitude")));
+        lw.setLongitude(cursor.getDouble(cursor.getColumnIndexOrThrow("longitude")));
+        lw.setWeather(cursor.getString(cursor.getColumnIndexOrThrow("weather")));
+        lw.setFullPathLocation(cursor.getString(cursor.getColumnIndexOrThrow("fullPathLocation")));
+        lw.setIsDefaultLocation(cursor.getInt(cursor.getColumnIndexOrThrow("isDefault")));
+        lw.setIsDefaultLocation(0);
+        cursor.close();
+        sql = "insert "
     }
 }

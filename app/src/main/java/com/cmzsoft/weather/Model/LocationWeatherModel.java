@@ -9,18 +9,20 @@ public class LocationWeatherModel {
     private double longitude;
     private String weather;
     private String fullPathLocation;
+    private int isDefaultLocation;
 
     // Constructors
     public LocationWeatherModel() {
     }
 
-    public LocationWeatherModel(long id, String name, double latitude, double longitude, String weather, String fullPathLocation) {
+    public LocationWeatherModel(long id, String name, double latitude, double longitude, String weather, String fullPathLocation, int isDefaultLocation) {
         this.id = id;
         this.name = name;
         this.latitude = latitude;
         this.longitude = longitude;
         this.weather = weather;
         this.fullPathLocation = fullPathLocation;
+        this.isDefaultLocation = isDefaultLocation;
     }
 
     // Getter & Setter
@@ -72,9 +74,17 @@ public class LocationWeatherModel {
         this.fullPathLocation = fullPathLocation;
     }
 
+    public void setIsDefaultLocation(int isUsedLocation) {
+        this.isDefaultLocation = isUsedLocation;
+    }
+
+    public boolean getIsDefaultLocation() {
+        return this.isDefaultLocation == 1;
+    }
+
     @NonNull
     @Override
     public String toString() {
-        return this.name + " " + this.latitude + " " + this.longitude + " " + this.weather + " " + this.fullPathLocation;
+        return this.name + " " + this.latitude + " " + this.longitude + " " + this.weather + " " + this.fullPathLocation + " " + this.isDefaultLocation;
     }
 }
