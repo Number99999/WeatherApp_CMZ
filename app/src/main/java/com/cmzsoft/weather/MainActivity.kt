@@ -39,13 +39,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.cmzsoft.weather.APICall.RequestAPI
 import com.cmzsoft.weather.CustomAdapter.TitleChartDegreeAdapter
-import com.cmzsoft.weather.DatabaService.DatabaseService
 import com.cmzsoft.weather.Manager.AdManager
 import com.cmzsoft.weather.Model.DataHourWeatherModel
 import com.cmzsoft.weather.Model.FakeGlobal
 import com.cmzsoft.weather.Model.LocationWeatherModel
 import com.cmzsoft.weather.Model.NightDayTempModel
 import com.cmzsoft.weather.Model.TitleChartItemModel
+import com.cmzsoft.weather.Service.DatabaseService
+import com.cmzsoft.weather.Service.LocationService
 import com.cmzsoft.weather.Utils.WeatherUtil
 import com.github.mikephil.charting.animation.ChartAnimator
 import com.github.mikephil.charting.charts.LineChart
@@ -106,6 +107,9 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, ActivityChooseLocation::class.java);
             startActivity(intent)
         }
+        DatabaseService.getInstance(this).loadAllLocationInDb();
+
+        this.getCurLocation();
     }
 
     private fun initValiable() {
@@ -203,6 +207,10 @@ class MainActivity : AppCompatActivity() {
 
         if (listLocation.size == 0) return null
         return listLocation[listLocation.size - 1]
+    }
+
+    private fun getCurLocation() {
+        LocationService.getCurrentLocation();
     }
 
     private fun UpdateWeatherInfor() {
@@ -619,9 +627,9 @@ class MainActivity : AppCompatActivity() {
 
     private fun showVoteApp() {
         val container = findViewById<FrameLayout>(R.id.container_vote_app)
-        container.setOnClickListener {
-            Toast.makeText(this, "Open GG Play", Toast.LENGTH_LONG).show();
-        }
+//        container.findViewById<LinearLayout>(R.id.contain_star)?.setOnClickListener {
+//            Toast.makeText(this, "Open GG Play", Toast.LENGTH_SHORT).show();
+//        }
         if (container.isEmpty()) {
             val dialogView = layoutInflater.inflate(R.layout.dialog_vote_app, container, false)
             val params = FrameLayout.LayoutParams(

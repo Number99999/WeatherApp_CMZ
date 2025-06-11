@@ -4,6 +4,7 @@ import android.app.Activity
 import android.app.Application
 import android.content.Intent
 import android.os.Bundle
+import com.cmzsoft.weather.Service.LocationService
 import com.cmzsoft.weather.Utils.AppOpenAdManager
 import com.google.android.gms.ads.MobileAds
 import dagger.hilt.android.HiltAndroidApp
@@ -20,6 +21,7 @@ class WeatherApp : Application(), Application.ActivityLifecycleCallbacks {
         super.onCreate()
         MobileAds.initialize(this) {}
         println("onCreate Weather app")
+        LocationService.init(this)
         registerActivityLifecycleCallbacks(this)
     }
 

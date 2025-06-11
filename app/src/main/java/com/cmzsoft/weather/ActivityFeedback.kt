@@ -1,12 +1,11 @@
 package com.cmzsoft.weather
 
-import android.content.ActivityNotFoundException
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
-import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.net.toUri
@@ -34,21 +33,12 @@ class ActivityFeedback : AppCompatActivity() {
     }
 
     private fun sendFeedback() {
-
-        try {
-            val intent = Intent(Intent.ACTION_SENDTO)
-            intent.setData("mailto:duongnn.cmzsoft@gmail.com".toUri()) // only email apps should handle this
-//            intent.putExtra(
-//                Intent.EXTRA_EMAIL,
-//                "someone@gmail.com"
-//            );
-            intent.putExtra(Intent.EXTRA_SUBJECT, "App feedback")
-            intent.putExtra(Intent.EXTRA_TEXT, findViewById<EditText>(R.id.edt_feedback).text)
-            startActivity(intent)
-        } catch (ex: ActivityNotFoundException) {
-            Toast.makeText(
-                this, "\"There are no email client installed on your device.\"", Toast.LENGTH_LONG
-            ).show()
-        }
+        val send = Intent(Intent.ACTION_SENDTO)
+        val uriText = "mailto:" + Uri.encode("no-reply@accounts.google.com") +
+                "?subject=" + Uri.encode("App feedback: ${BuildConfig.VERSION_NAME}") +
+                "&body=" + Uri.encode(findViewById<EditText>(R.id.edt_feedback).text.toString())
+        val uri = uriText.toUri()
+        send.setData(uri)
+        startActivity(send)
     }
 }

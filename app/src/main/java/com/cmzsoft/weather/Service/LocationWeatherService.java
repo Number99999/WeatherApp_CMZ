@@ -1,4 +1,4 @@
-package com.cmzsoft.weather.DatabaService;
+package com.cmzsoft.weather.Service;
 
 
 import android.content.ContentValues;
@@ -29,14 +29,7 @@ public class LocationWeatherService extends SQLiteOpenHelper {
     }
 
     private void createTableLocationWeatherIfNotExist(SQLiteDatabase db) {
-        String createTable =
-                "CREATE TABLE IF NOT EXISTS location_weather (" +
-                        "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                        "name TEXT, " +
-                        "latitude REAL, " +
-                        "longitude REAL, " +
-                        "weather TEXT, " +
-                        "fullPathLocation TEXT)";
+        String createTable = "CREATE TABLE IF NOT EXISTS location_weather (" + "id INTEGER PRIMARY KEY AUTOINCREMENT, " + "name TEXT, " + "latitude REAL, " + "longitude REAL, " + "weather TEXT, " + "fullPathLocation TEXT)";
         db.execSQL(createTable);
     }
 
@@ -47,7 +40,19 @@ public class LocationWeatherService extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public List<LocationWeatherModel> getAllLocationWeather(){
+    public boolean checkIsExistLocationInDb(LocationWeatherModel lw) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String checkQuery = "SELECT * FROM location_weather WHERE fullPathLocation = ?";
+        Cursor cursor = db.rawQuery(checkQuery, new String[]{lw.getName()});
+        if (cursor.getCount() > 0) {
+            cursor.close();
+            db.close();
+            return true;
+        }
+        return false;
+    }
+
+    public List<LocationWeatherModel> getAllLocationWeather() {
         List<LocationWeatherModel> list = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
         String sql = "SELECT * FROM location_weather";
@@ -71,9 +76,9 @@ public class LocationWeatherService extends SQLiteOpenHelper {
 
     }
 
-
     public boolean insertLocationWeather(LocationWeatherModel lw) {
         SQLiteDatabase db = this.getWritableDatabase();
+        if (this.checkIsExistLocationInDb(lw)) return false;
         ContentValues values = new ContentValues();
         values.put("name", lw.getName());
         values.put("latitude", lw.getLatitude());

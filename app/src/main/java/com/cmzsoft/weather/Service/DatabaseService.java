@@ -1,7 +1,11 @@
-package com.cmzsoft.weather.DatabaService;
+package com.cmzsoft.weather.Service;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
+
+import com.cmzsoft.weather.Model.LocationWeatherModel;
+
+import java.util.List;
 
 public class DatabaseService {
     private static DatabaseService instance;
@@ -33,5 +37,12 @@ public class DatabaseService {
             locationWeatherService.close();
         }
         instance = null;
+    }
+
+    public void loadAllLocationInDb() {
+        List<LocationWeatherModel> l = locationWeatherService.getAllLocationWeather();
+        for (int i = 0; i < l.size(); i++) {
+            System.out.println("LocationWeatherModel: " + l.get(i).toString());
+        }
     }
 }

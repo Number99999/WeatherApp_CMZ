@@ -1,5 +1,7 @@
 package com.cmzsoft.weather.Model;
 
+import androidx.annotation.NonNull;
+
 public class LocationWeatherModel {
     private long id;
     private String name;
@@ -68,5 +70,11 @@ public class LocationWeatherModel {
 
     public void setFullPathLocation(String fullPathLocation) {
         this.fullPathLocation = fullPathLocation;
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return this.name + " " + this.latitude + " " + this.longitude + " " + this.weather + " " + this.fullPathLocation;
     }
 }

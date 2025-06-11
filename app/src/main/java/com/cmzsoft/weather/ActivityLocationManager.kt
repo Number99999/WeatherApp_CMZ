@@ -2,11 +2,12 @@ package com.cmzsoft.weather
 
 import android.os.Bundle
 import android.widget.ImageButton
-import android.widget.ImageView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.cmzsoft.weather.Model.LocationWeatherModel
+import com.cmzsoft.weather.Service.DatabaseService
 
 class ActivityLocationManager : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -20,6 +21,13 @@ class ActivityLocationManager : AppCompatActivity() {
         }
 
         addEventOnBtnBackClicked()
+        getListLocation()
+    }
+
+    private fun getListLocation() {
+        var listModel: List<LocationWeatherModel> =
+            DatabaseService.getInstance(this).locationWeatherService.getAllLocationWeather();
+        for (i in listModel) println("Loaded ${i}")
     }
 
     private fun addEventOnBtnBackClicked() {
