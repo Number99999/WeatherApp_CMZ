@@ -7,8 +7,11 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 
+import androidx.annotation.RequiresPermission;
 import androidx.core.content.ContextCompat;
 
+import com.cmzsoft.weather.Model.LocationWeatherModel;
+import com.cmzsoft.weather.Service.Interface.GetCurrentLocationCallback;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -42,8 +45,9 @@ public class LocationService {
         LocationService.appContext = appContext;
     }
 
-    public static void getCurrentLocation() {
-        if (ContextCompat.checkSelfPermission(appContext, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(appContext, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+    @RequiresPermission(allOf = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})
+    public static void getCurrentLocation(final GetCurrentLocationCallback callback) {
+        if (checkPermissionLocation()) {
             FusedLocationProviderClient fusedLocationClient = LocationServices.getFusedLocationProviderClient(appContext);
             fusedLocationClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
                 @Override
@@ -53,15 +57,36 @@ public class LocationService {
                         double longitude = location.getLongitude();
                         Geocoder geocoder = new Geocoder(appContext);
                         try {
-                            List<Address> addressList = geocoder.getFromLocation(latitude, longitude, 1);
+                            List<Address> addressList = geocoder.getFromLocation(latitude, longitude, 5);
                             assert addressList != null;
-                            System.out.println("ebhehehehe " + addressList.toString());
+                            Address add = addressList.get(0);
+                            String[] ls = add.getAddressLine(0).split(",");
+                            String nameAdd = "";
+                            if (ls.length >= 3) nameAdd = ls[ls.length - 3];
+                            else nameAdd = ls[0];
+                            LocationWeatherModel lc = new LocationWeatherModel(0, nameAdd, add.getLatitude(), add.getLongitude(), null, add.getAddressLine(0), 0);
+                            callback.onLocationReceived(lc);
                         } catch (IOException e) {
-                            throw new RuntimeException(e);
+                            callback.onError(e);
                         }
-                    }
+                    } else callback.onError(new Exception("Location is null"));
                 }
             });
+        }
+    }
+
+    public static LocationWeatherModel getLocationFromLatLon(double lat, double lon) {
+        try {
+            Geocoder geocoder = new Geocoder(appContext);
+            List<Address> list = geocoder.getFromLocation(lat, lon, 5);
+            assert list != null;
+            Address add = list.get(0);
+            String[] ls = add.getAddressLine(0).split(",");
+            String nameAdd = "";
+            nameAdd = ls.length >= 3 ? ls[ls.length - 3] : ls[0];
+            return new LocationWeatherModel(0, nameAdd, add.getLatitude(), add.getLongitude(), null, add.getAddressLine(0), 0);
+        } catch (Exception e) {
+            return null;
         }
     }
 

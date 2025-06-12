@@ -4,7 +4,6 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.location.Address
 import android.location.Geocoder
-import android.location.Location
 import android.os.Bundle
 import android.view.View
 import android.widget.FrameLayout
@@ -22,7 +21,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.cmzsoft.weather.CustomAdapter.LocationInMapAdapter
 import com.cmzsoft.weather.Manager.AdManager
 import com.cmzsoft.weather.Model.LocationInMapModel
+import com.cmzsoft.weather.Model.LocationWeatherModel
 import com.cmzsoft.weather.Model.PermissionModel
+import com.cmzsoft.weather.Service.Interface.GetCurrentLocationCallback
+import com.cmzsoft.weather.Service.LocationService
 import com.cmzsoft.weather.Utils.WeatherUtil
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -210,56 +212,26 @@ class ActivityChooseLocation : AppCompatActivity(), OnMapReadyCallback {
             return
         }
 
-        fusedLocationProviderClient.lastLocation.addOnSuccessListener { location: Location? ->
-            try {
-                if (location != null) {
-                    val lat = location.latitude
-                    val lng = location.longitude
-
-                    val geocoder = Geocoder(this, Locale.getDefault())
-                    var addressLine = "Không rõ địa chỉ"
-                    val addresses = geocoder.getFromLocation(lat, lng, 10)
-                    if (!addresses.isNullOrEmpty()) {
-                        addressLine = addresses[0].getAddressLine(0) ?: "Không rõ địa chỉ"
-                        if (addressLine != "Không rõ địa chỉ") setUIRecycleViewMap(
-                            listOf(
-                                addresses[0]
-                            )
-                        )
-                        Toast.makeText(
-                            this, WeatherUtil.getLocationFromAddressLines(
-                                addresses[0].getAddressLine(0)
-                            ), Toast.LENGTH_SHORT
-                        ).show()
-                    }
-
-//                    val model = LocationWeatherModel()
-//                    model.id = 0L
-//                    model.name = addressLine
-//                    model.longitude = lng
-//                    model.latitude = lat
-//                    model.weather = ""
-//                    model.fullPathLocation = addressLine
-//                    DatabaseService.getInstance(this).locationWeatherService.insertLocationWeather(
-//                        model
-//                    )
-
-                    currentMarker?.remove()
-                    val currentLatLng = LatLng(lat, lng)
-                    currentMarker = myMap.addMarker(
-                        MarkerOptions().position(currentLatLng).title("Vị trí hiện tại")
-                    )
-                    myMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 15f))
-                } else {
-                    Toast.makeText(this, "Không lấy được vị trí", Toast.LENGTH_SHORT).show()
-                }
-            } catch (e: Exception) {
-                Toast.makeText(
-                    this, "Lỗi khi lấy vị trí: " + e.message.toString(), Toast.LENGTH_SHORT
-                ).show()
+        LocationService.getCurrentLocation(object : GetCurrentLocationCallback {
+            @Override
+            override fun onLocationReceived(address: LocationWeatherModel) {
+                val lat = address.latitude
+                val lng = address.longitude
+                currentMarker?.remove()
+                val currentLatLng = LatLng(lat, lng)
+                currentMarker = myMap.addMarker(
+                    MarkerOptions().position(currentLatLng).title("Vị trí hiện tại")
+                )
+                myMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 15f))
             }
-        }
 
+            override fun onError(exception: Exception) {
+                Toast.makeText(
+                    this@ActivityChooseLocation, "Không lấy được vị trí", Toast.LENGTH_SHORT
+                ).show()
+                exception.printStackTrace();
+            }
+        })
     }
 
     @Override

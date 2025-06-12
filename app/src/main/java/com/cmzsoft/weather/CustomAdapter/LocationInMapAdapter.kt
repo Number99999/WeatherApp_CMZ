@@ -8,10 +8,11 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.cmzsoft.weather.MainActivity
-import com.cmzsoft.weather.Model.CurLocationModel
 import com.cmzsoft.weather.Model.FakeGlobal
 import com.cmzsoft.weather.Model.LocationInMapModel
 import com.cmzsoft.weather.R
+import com.cmzsoft.weather.Service.DatabaseService
+import com.cmzsoft.weather.Service.LocationService
 import com.google.android.gms.maps.model.LatLng
 
 class LocationInMapAdapter(private val items: List<LocationInMapModel>) :
@@ -40,9 +41,20 @@ class LocationInMapAdapter(private val items: List<LocationInMapModel>) :
 
         val context = holder.itemView.context
         holder.itemLocation.setOnClickListener {
-            FakeGlobal.getInstance().curLocation = CurLocationModel(item.loc, item.title);
-            FakeGlobal.getInstance().curLocation.title = item.title;
+            FakeGlobal.getInstance().curLocation =
+                LocationService.getLocationFromLatLon(item.loc.latitude, item.loc.longitude);
+//            LocationService.getInstance(context.applicationContext).
+            val isExist =
+                DatabaseService.getInstance(context.applicationContext).locationWeatherService.checkIsExistLocationInDb(
+                    FakeGlobal.getInstance().curLocation
+                )
+            if (isExist == false) {
+                DatabaseService.getInstance(context.applicationContext).locationWeatherService.insertOrUpdateLocationWeather(
+                    FakeGlobal.getInstance().curLocation
+                );
+            }
             val changeIntent = Intent(context, MainActivity::class.java);
+            changeIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
             context.startActivity(changeIntent)
         }
     }

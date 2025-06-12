@@ -1,13 +1,13 @@
 package com.cmzsoft.weather.Model;
 
-import com.google.android.gms.maps.model.LatLng;
-
 public class FakeGlobal {
     private static FakeGlobal instance;
 
     //region public field
-    public CurLocationModel curLocation;
+    public LocationWeatherModel curLocation;
     public boolean userAcceptRequestLocation;
+
+    public boolean isFirstLoadActivity = true;
     public boolean userAcceptRequestNotifi;
     //endregion
 
@@ -15,7 +15,7 @@ public class FakeGlobal {
     public static FakeGlobal getInstance() {
         if (instance == null) {
             instance = new FakeGlobal();
-            instance.curLocation = new CurLocationModel(new LatLng(21.0266468, 105.7703291), "Hanoi");
+            instance.curLocation = new LocationWeatherModel(0, "Hà Nội", 21.0266468, 105.7703291, "", "", 0);
         }
 
         return instance;

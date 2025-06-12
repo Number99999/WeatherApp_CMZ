@@ -11,15 +11,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <!-- ImageView làm nền, fill chiều cao theo content -->
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="120dp"
             android:background="@drawable/bg_item_location_setting_location"
             android:scaleType="centerCrop" />
 
-        <!-- Nội dung -->
         <LinearLayout
+            android:id="@+id/contain_card"
             android:layout_width="match_parent"
             android:layout_height="120dp"
             android:gravity="center_vertical"
@@ -27,7 +26,6 @@
             android:paddingStart="20dp"
             android:paddingEnd="20dp">
 
-            <!-- Cột trái: Thông tin vị trí -->
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -35,6 +33,7 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/txt_title_location"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -43,6 +42,7 @@
                     android:textStyle="bold" />
 
                 <TextView
+                    android:id="@+id/txt_path_location"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -50,7 +50,6 @@
                     android:text="Hà nội - Việt Nam" />
             </LinearLayout>
 
-            <!-- Cột phải: Ảnh và nhãn -->
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -61,6 +60,7 @@
                 android:paddingBottom="10dp">
 
                 <ImageView
+                    android:id="@+id/icon_status"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:contentDescription="@string/app_name"
@@ -68,6 +68,7 @@
                     android:src="@drawable/icon_small_cloud" />
 
                 <TextView
+                    android:id="@+id/txt_default"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/background_text_activity_location_manager"

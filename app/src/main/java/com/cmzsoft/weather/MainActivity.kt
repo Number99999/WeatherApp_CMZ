@@ -46,6 +46,7 @@ import com.cmzsoft.weather.Model.LocationWeatherModel
 import com.cmzsoft.weather.Model.NightDayTempModel
 import com.cmzsoft.weather.Model.TitleChartItemModel
 import com.cmzsoft.weather.Service.DatabaseService
+import com.cmzsoft.weather.Service.Interface.GetCurrentLocationCallback
 import com.cmzsoft.weather.Service.LocationService
 import com.cmzsoft.weather.Utils.WeatherUtil
 import com.github.mikephil.charting.animation.ChartAnimator
@@ -96,20 +97,13 @@ class MainActivity : AppCompatActivity() {
         createNotificationChannel(this)
         RequestAcceptSendNotification();
 
-        UpdateWeatherInfor()
-        startAutoUpdateWeather()
-        setupLineChart()
-        initEventNavBar()
-        setupLineChartDayNight()
-        eventScrollMain()
-        setupHeaderWithStatusBar()
         findViewById<ImageView>(R.id.add_location).setOnClickListener {
             val intent = Intent(this, ActivityChooseLocation::class.java);
             startActivity(intent)
         }
         DatabaseService.getInstance(this).loadAllLocationInDb();
-
         this.getCurLocation();
+        startAutoUpdateWeather()
     }
 
     private fun initValiable() {
@@ -118,6 +112,14 @@ class MainActivity : AppCompatActivity() {
         showInterAds()
     }
 
+    private fun onInitedLocation() {
+        UpdateWeatherInfor()
+        setupLineChart()
+        initEventNavBar()
+        setupLineChartDayNight()
+        eventScrollMain()
+        setupHeaderWithStatusBar()
+    }
 
     private fun eventScrollMain() {
         val scrollView = findViewById<ScrollView>(R.id.mainScroll)
@@ -201,17 +203,39 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun getCurLocationInDb(): LocationWeatherModel? {
-        val listLocation: List<LocationWeatherModel> =
-            DatabaseService.getInstance(this).locationWeatherService.getAllLocationWeather()
-
-        if (listLocation.size == 0) return null
-        return listLocation[listLocation.size - 1]
-    }
-
     private fun getCurLocation() {
-        LocationService.getCurrentLocation();
-        LocationService.getLocationFromName("binh dinh");
+        if (ActivityCompat.checkSelfPermission(
+                this, Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(
+                this, Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            return
+        }
+        if (!FakeGlobal.getInstance().isFirstLoadActivity) return;
+        FakeGlobal.getInstance().isFirstLoadActivity = false;
+        LocationService.getCurrentLocation(object : GetCurrentLocationCallback {
+            override fun onLocationReceived(add: LocationWeatherModel) {
+                val defaultAdd =
+                    DatabaseService.getInstance(this@MainActivity).locationWeatherService.getDefaultLocationWeather();
+                if (defaultAdd != null) {
+                    this@MainActivity.curLocation =
+                        LatLng(defaultAdd.latitude, defaultAdd.longitude);
+                    FakeGlobal.getInstance().curLocation = defaultAdd;
+                } else {
+                    this@MainActivity.curLocation = LatLng(add.latitude, add.longitude);
+                    FakeGlobal.getInstance().curLocation = add;
+                }
+
+                this@MainActivity.onInitedLocation();
+            }
+
+            override fun onError(exception: Exception) {
+                Toast.makeText(
+                    this@MainActivity, "Error: ${exception.message}", Toast.LENGTH_SHORT
+                ).show()
+            }
+        })
     }
 
     private fun UpdateWeatherInfor() {
@@ -219,7 +243,10 @@ class MainActivity : AppCompatActivity() {
         updateWeatherJob = lifecycleScope.launch {
             val requestAPI = RequestAPI.getInstance()
             val result = withContext(Dispatchers.IO) {
-                requestAPI.GetCurrentWeather(curLocation.latitude, curLocation.longitude)
+                requestAPI.GetCurrentWeather(
+                    FakeGlobal.getInstance().curLocation.latitude,
+                    FakeGlobal.getInstance().curLocation.longitude
+                )
             }
             updateDataOnMainInfo(result)
             setIsRainInNextTwoHours()
@@ -271,9 +298,10 @@ class MainActivity : AppCompatActivity() {
                 result.getJSONObject("hourly").getJSONArray("apparent_temperature").get(curHour)
             findViewById<TextView>(R.id.txt_feel_like).text = "Môi trường:\n$feelsLike℃"
 
-            if (FakeGlobal.getInstance()?.curLocation?.title != null) {
+            if (FakeGlobal.getInstance()?.curLocation?.name != null) {
+                println("debuggggggggg ${FakeGlobal.getInstance()?.curLocation} ${FakeGlobal.getInstance()?.curLocation?.name}");
                 val txtCity = findViewById<TextView>(R.id.cityName);
-                txtCity.text = FakeGlobal.getInstance().curLocation.title;
+                txtCity.text = FakeGlobal.getInstance().curLocation.name;
             }
         } catch (e: Exception) {
             Toast.makeText(this@MainActivity, e.message.toString(), Toast.LENGTH_SHORT).show()
@@ -353,6 +381,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun showInterAds() {
+//        println("show inter ads")
         adManager.showInterstitialAdIfEligible(
             this,
             minIntervalMillis = 60_000L,
@@ -746,7 +775,6 @@ class MainActivity : AppCompatActivity() {
                 )
             )
         }
-        println("arrInfo length: " + arrInfo.size)
         return arrInfo
     }
 
@@ -1124,41 +1152,31 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onResume() {
-        if (isFirstResume == false) {
-            isFirstResume = true;
-            return
-        }
-        if (FakeGlobal.getInstance().curLocation != null) {
-            curLocation = LatLng(
-                FakeGlobal.getInstance().curLocation.latLng.latitude,
-                FakeGlobal.getInstance().curLocation.latLng.longitude
-            )
-            this.UpdateWeatherInfor()
-        }
-
-        val now = java.util.Calendar.getInstance()
-        val second = now.get(java.util.Calendar.SECOND)
-        val delayToNextMinute = (60 - second) * 1000L
-
-        handler.removeCallbacks(updateRunnable)
-        handler.removeCallbacks(updateRunnableTime)
-
-        updateRunnable = Runnable {
-            UpdateWeatherInfor()
-            handler.postDelayed(updateRunnable, 900_000)
-        }
-        updateRunnableTime = Runnable {
-            UpdateCurrentTime()
-            handler.postDelayed(updateRunnableTime, 60_000)
-        }
-
-        handler.postDelayed({
-            UpdateWeatherInfor()
-            UpdateCurrentTime()
-            handler.postDelayed(updateRunnableTime, 60_000)
-            handler.postDelayed(updateRunnable, 900_000)
-        }, delayToNextMinute)
         super.onResume()
+        try {
+            if (isFirstResume == false) {
+                isFirstResume = true
+                return
+            } else {
+                if (FakeGlobal.getInstance().curLocation != null) {
+                    curLocation = LatLng(
+                        FakeGlobal.getInstance().curLocation.latitude,
+                        FakeGlobal.getInstance().curLocation.longitude
+                    )
+
+                    if (::updateRunnable.isInitialized) {
+                        handler.removeCallbacks(updateRunnable)
+                    }
+
+                    if (::updateRunnableTime.isInitialized) {
+                        handler.removeCallbacks(updateRunnableTime)
+                    }
+                    this.onInitedLocation()
+                }
+            }
+        } catch (e: Exception) {
+            println("erorrrrrrrrrrr: ${e.message}")
+        }
     }
 }
 

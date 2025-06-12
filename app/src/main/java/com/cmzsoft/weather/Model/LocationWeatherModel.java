@@ -3,7 +3,7 @@ package com.cmzsoft.weather.Model;
 import androidx.annotation.NonNull;
 
 public class LocationWeatherModel {
-    private long id;
+    private long id = -1;
     private String name;
     private double latitude;
     private double longitude;
@@ -15,7 +15,7 @@ public class LocationWeatherModel {
     public LocationWeatherModel() {
     }
 
-    public LocationWeatherModel(long id, String name, double latitude, double longitude, String weather, String fullPathLocation, int isDefaultLocation) {
+    public LocationWeatherModel(int id, String name, double latitude, double longitude, String weather, String fullPathLocation, int isDefaultLocation) {
         this.id = id;
         this.name = name;
         this.latitude = latitude;

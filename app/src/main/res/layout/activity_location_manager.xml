@@ -8,85 +8,109 @@
     android:background="@color/bg_blue_1"
     tools:context=".ActivityLocationManager">
 
-    <RelativeLayout
-        android:id="@+id/headerLayout"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <ImageButton
-            android:id="@+id/backButton"
-            android:layout_width="30dp"
-            android:layout_height="40dp"
-            android:layout_alignParentStart="true"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="15dp"
-            android:background="@android:color/transparent"
-            android:scaleType="fitCenter"
-            android:src="@drawable/icon_back" />
+        <RelativeLayout
+            android:id="@+id/headerLayout"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:layout_width="wrap_content"
+            <ImageButton
+                android:id="@+id/backButton"
+                android:layout_width="30dp"
+                android:layout_height="40dp"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="15dp"
+                android:background="@android:color/transparent"
+                android:scaleType="fitCenter"
+                android:src="@drawable/icon_back" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:gravity="center"
+                android:text="Quản lý vị trí"
+                android:textColor="@android:color/white"
+                android:textSize="24sp" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:gravity="center"
-            android:text="Quản lý vị trí"
-            android:textColor="@android:color/white"
-            android:textSize="24sp" />
-    </RelativeLayout>
+            android:background="#00518a"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingTop="15dp"
+            android:paddingBottom="15dp">
 
-    <ScrollView
-        android:id="@+id/scrollView"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/headerLayout">
+            <TextView
+                android:id="@+id/txt_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:maxLines="1"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"
+                android:text="Tính năng phát hiện tự động, đang hoạt động không ổn định"
+                android:textColor="#fff" />
+
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginEnd="20dp"
+                android:src="@drawable/icon_btn_close_x" />
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="#00518a"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:paddingTop="15dp"
-                android:paddingBottom="15dp">
-
-                <TextView
-                    android:id="@+id/txt_title"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:maxLines="1"
-                    android:paddingStart="20dp"
-                    android:paddingEnd="20dp"
-                    android:text="Tính năng phát hiện tự động, đang hoạt động không ổn định"
-                    android:textColor="#fff" />
-
-                <ImageView
-                    android:id="@+id/icon_back_title"
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
-                    android:layout_marginEnd="20dp"
-                    android:src="@drawable/icon_btn_close_x" />
-            </LinearLayout>
-
             <include
-                layout="@layout/card_location"
+                layout="@layout/item_location_manager"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp" />
 
-
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
         </LinearLayout>
-    </ScrollView>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="@dimen/widget_size_100"
+                android:layout_height="@dimen/widget_size_50"
+                android:background="@drawable/background_border_white"
+                android:gravity="center"
+                android:text="Chỉnh sửa"
+                android:textColor="@color/black"
+                android:textSize="@dimen/widget_size_16" />
+
+            <TextView
+                android:layout_width="@dimen/widget_size_100"
+                android:layout_height="@dimen/widget_size_50"
+                android:layout_marginStart="@dimen/margin_24dp"
+                android:background="@drawable/background_border_white"
+                android:gravity="center"
+                android:text="Chỉnh sửa"
+                android:textColor="@color/black"
+                android:textSize="@dimen/widget_size_16" />
+        </LinearLayout>
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
