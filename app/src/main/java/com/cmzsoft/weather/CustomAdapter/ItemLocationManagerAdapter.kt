@@ -50,4 +50,8 @@ class ItemLocationManagerAdapter(private val items: List<LocationWeatherModel>) 
             context.startActivity(changeIntent)
         }
     }
+    
+    private fun showBtnDelete(){
+
+    }
 }

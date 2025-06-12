@@ -1,7 +1,10 @@
 package com.cmzsoft.weather
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.ImageButton
+import android.widget.ImageView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -24,10 +27,20 @@ class ActivityLocationManager : AppCompatActivity() {
         }
 
         addEventOnBtnBackClicked()
-        getListLocation()
+        setupAdapter()
+        findViewById<ImageView>(R.id.btn_edit).setOnClickListener{
+            Toast.makeText(this, "EDIT LOCATION", Toast.LENGTH_SHORT).show()
+        }
+        findViewById<ImageView>(R.id.btn_add_location).setOnClickListener{
+            val changePage = Intent(this, ActivityChooseLocation::class.java)
+            changePage.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            startActivity(changePage)
+        }
     }
 
-    private fun getListLocation() {
+
+
+    private fun setupAdapter() {
         var listModel: List<LocationWeatherModel> =
             DatabaseService.getInstance(this).locationWeatherService.getAllLocationWeather();
         for (i in listModel) println("Loaded ${i}")
