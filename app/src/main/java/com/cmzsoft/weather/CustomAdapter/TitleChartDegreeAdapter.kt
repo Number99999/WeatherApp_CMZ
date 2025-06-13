@@ -47,4 +47,9 @@ class TitleChartDegreeAdapter(
             holder.icon_status_weather.setImageResource(R.drawable.status_day_partly_cloudy)
         }
     }
+
+//    fun clearItems() {
+//        items.clear()  // Xóa tất cả các phần tử trong danh sách
+//        notifyDataSetChanged()  // Thông báo RecyclerView cập nhật lại giao diện
+//    }
 }

@@ -85,12 +85,11 @@ public class RequestAPI {
     }
 
     public boolean GetWeatherForNext120Minutes(double lat, double lon) {
-        String urlString = "https://api.weatherapi.com/v1/forecast.json?key=" + apiKey + "&q=" + lat + "," + lon + "&hours=3&aqi=yes&alerts=yes"; // Requesting forecast for 3 hours
+        String urlString = "https://api.meteo.fr/api/forecast?key=" + apiKey + "&q=" + lat + "," + lon + "&hours=3";
         try {
             URL url = new URL(urlString);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
-
             int responseCode = conn.getResponseCode();
             if (responseCode == HttpURLConnection.HTTP_OK) {
                 BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
@@ -101,33 +100,30 @@ public class RequestAPI {
                     response.append(line);
                 }
                 in.close();
-
-                // Parse the response to get the forecast
                 JSONObject jsonResponse = new JSONObject(response.toString());
-                JSONArray forecastArray = jsonResponse.getJSONObject("forecast").getJSONArray("forecastday");
+                JSONArray forecastArray = jsonResponse.getJSONArray("forecast");
                 JSONObject forecastData = forecastArray.getJSONObject(0);
-
-                // Check the weather conditions for the next 2 hours
-                JSONArray hourArray = forecastData.getJSONArray("hour");
+                JSONArray hourArray = forecastData.getJSONArray("hourly");
+                long currentTime = System.currentTimeMillis() / 1000;
                 for (int i = 0; i < hourArray.length(); i++) {
                     JSONObject hourData = hourArray.getJSONObject(i);
-                    if (hourData.getInt("time_epoch") <= (System.currentTimeMillis() / 1000) + 120 * 60) {
+                    long hourTime = hourData.getLong("timestamp");
+
+                    if (hourTime <= currentTime + 3 * 60 * 60) {  // 3 giờ sau
                         String condition = hourData.getJSONObject("condition").getString("text");
                         if (condition.toLowerCase().contains("rain")) {
-                            return true;
+                            return true;  // Nếu có mưa, trả về true
                         }
                     }
                 }
-                return false;
             } else {
                 System.out.println("Error calling API. Error code: " + responseCode);
             }
             conn.disconnect();
-            return false;
         } catch (Exception e) {
             e.printStackTrace();
-            return false;
         }
+        return false;
     }
 
     public List<DataWeatherPerHourModel> getWeatherPerHourInNextTwentyFour(double lat, double lon) {
@@ -138,7 +134,6 @@ public class RequestAPI {
             URL url = new URL(urlString);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
-
             int responseCode = conn.getResponseCode();
             if (responseCode == HttpURLConnection.HTTP_OK) {
                 BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
@@ -162,8 +157,6 @@ public class RequestAPI {
                 JSONArray windSpeedArr = hourly.getJSONArray("wind_speed_10m");
                 JSONArray windDir = hourly.getJSONArray("wind_direction_10m");
                 for (int i = curHour; i < curHour + 24; i++) {
-
-
                     long timeEpoch = 0;
                     String time = timeArr.get(i).toString().substring(timeArr.get(i).toString().length() - 5);
                     int hour = Integer.parseInt(time.substring(0, 2)); //

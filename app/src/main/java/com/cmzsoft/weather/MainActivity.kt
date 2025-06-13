@@ -118,6 +118,26 @@ class MainActivity : AppCompatActivity() {
         setupLineChartDayNight()
         eventScrollMain()
         setupHeaderWithStatusBar()
+        syncScrollWeatherTweentyHour();
+    }
+
+    private fun syncScrollWeatherTweentyHour() {
+//        val chartTempAtDay = findViewById<LineChart>(R.id.chart_temp_at_day)
+//        val chartTempAtNight = findViewById<LineChart>(R.id.chart_temp_at_night)
+//        val containerDay = findViewById<LinearLayout>(R.id.container_day)
+//        val containerNight = findViewById<LinearLayout>(R.id.container_night)
+//
+//        containerDay.viewTreeObserver.addOnScrollChangedListener {
+//            val scrollPosition = containerDay.scrollY
+//            containerNight.scrollY = scrollPosition  // Đồng bộ cuộn với containerNight
+//            chartTempAtNight.scrollY = scrollPosition  // Đồng bộ cuộn với chartTempAtNight
+//        }
+//
+//        chartTempAtDay.viewTreeObserver.addOnScrollChangedListener {
+//            val scrollPosition = chartTempAtDay.scrollY
+//            chartTempAtNight.scrollY = scrollPosition  // Đồng bộ cuộn với chartTempAtNight
+//            containerNight.scrollY = scrollPosition  // Đồng bộ cuộn với containerNight
+//        }
     }
 
     private fun eventScrollMain() {
@@ -200,6 +220,26 @@ class MainActivity : AppCompatActivity() {
             val changePage = Intent(this, ActivityCustomLayout::class.java)
             startActivity(changePage)
         }
+
+        findViewById<LinearLayout>(R.id.nav_privacy_policy).setOnClickListener {
+            val changePage = Intent(this, ActivityPolicy::class.java)
+            startActivity(changePage)
+        }
+
+        findViewById<LinearLayout>(R.id.nav_share).setOnClickListener {
+            shareAppLink()
+        }
+    }
+
+    private fun shareAppLink() {
+        val appLink = "https://play.google.com/store/apps/details?id=${packageName}"
+
+        val intent = Intent(Intent.ACTION_SEND).apply {
+            type = "text/plain"
+            putExtra(Intent.EXTRA_TEXT, appLink)
+        }
+
+        startActivity(Intent.createChooser(intent, "Share app"))
     }
 
     private fun getCurLocation() {
@@ -261,7 +301,6 @@ class MainActivity : AppCompatActivity() {
             txtDegree.text = tempC.roundToInt().toString()
 
             UpdateCurrentTime()
-
             val txtWeatherStatus = findViewById<TextView>(R.id.weatherStatus)
             val current = WeatherUtil.getWeatherStatus(currentWeather.getInt("weathercode"))
             txtWeatherStatus.text = current
@@ -819,9 +858,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun setupChartStyle(
-        lineChart: LineChart, arrInfo: List<DataHourWeatherModel>
-    ) {
+    private fun setupChartStyle(lineChart: LineChart, arrInfo: List<DataHourWeatherModel>) {
         try {
             lineChart.setDrawGridBackground(false)
             lineChart.description.isEnabled = false
@@ -1068,12 +1105,29 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+
     private fun setIsRainInNextTwoHours() {
-        val result = RequestAPI.getInstance()
-            .GetWeatherForNext120Minutes(curLocation.latitude, curLocation.longitude)
-        val txt = findViewById<TextView>(R.id.txt_noti_rain)
-        if (result == true) txt.text = "Có mưa trong 120 phút";
-        else txt.text = "Không có mưa trong 120 phút";
+        lifecycleScope.launch {
+            val result = withContext(Dispatchers.IO) {
+                RequestAPI.getInstance().getWeatherPerHourInNextTwentyFour(
+                    curLocation.latitude, curLocation.longitude
+                )
+            }
+            var isRain = false
+            for (i in 0 until result.size) {
+                if (i >= 3) break
+                if (result[i].changeRain >= 40) {
+                    isRain = true
+                    break
+                }
+            }
+            val txt = findViewById<TextView>(R.id.txt_noti_rain)
+            if (isRain) {
+                txt.text = "Có mưa trong 120 phút"
+            } else {
+                txt.text = "Không có mưa trong 120 phút"
+            }
+        }
     }
 
     private fun sendNotification() {
@@ -1125,13 +1179,11 @@ class MainActivity : AppCompatActivity() {
         val rc_view = findViewById<RecyclerView>(R.id.rc_title_chart)
         val listData = mutableListOf<TitleChartItemModel>()
         for (item in arr) {
+            val isDay = item.time.substring(item.time.length - 5, item.time.length - 3)
+                .toInt() in 6 until 19
             listData.add(
                 TitleChartItemModel(
-                    item.time.substring(item.time.length - 5),
-                    null,
-                    item.urlIcon,
-                    item.isDay,
-                    item.tempC
+                    item.time.substring(item.time.length - 5), null, item.urlIcon, isDay, item.tempC
                 )
             )
         }
@@ -1142,8 +1194,6 @@ class MainActivity : AppCompatActivity() {
 
         val itemCount = listData.size
 
-        val spacing = 10
-
         rc_view.addItemDecoration(object : RecyclerView.ItemDecoration() {
             override fun getItemOffsets(
                 outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State
@@ -1151,7 +1201,7 @@ class MainActivity : AppCompatActivity() {
                 val position = parent.getChildAdapterPosition(view)
                 if (position == RecyclerView.NO_POSITION) return
 
-                outRect.left = if (position == 0) -7 else spacing
+                outRect.left = if (position == 0) -7 else 0
                 outRect.right = if (position == itemCount - 1) 8 else 0
             }
         })
@@ -1219,7 +1269,6 @@ class MainActivity : AppCompatActivity() {
 class CustomLineChartRenderer(
     chart: LineChart, animator: ChartAnimator, viewPortHandler: ViewPortHandler
 ) : LineChartRenderer(chart, animator, viewPortHandler) {
-
     override fun drawExtras(c: Canvas) {
         super.drawExtras(c)
         val paint = Paint().apply {

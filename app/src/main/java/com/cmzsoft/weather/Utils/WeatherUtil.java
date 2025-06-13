@@ -137,16 +137,15 @@ public class WeatherUtil {
 
     public static String getWeatherIconName(int code, boolean isDay) {
         switch (code) {
-            case 0: // Trời quang đãng
-                return isDay ? "day_partly_cloudy.png" : "night_clear_moon.png";
-            case 1: // Chủ yếu trời quang
-                return isDay ? "day_partly_cloudy.png" : "night_partly_cloudy_moon.png";
-            case 2: // Có mây rải rác
-                return isDay ? "day_partly_cloudy.png" : "night_few_clouds.png";
-            case 3: // Nhiều mây
-                return isDay ? "day_partly_cloudy.png" : "night_few_clouds.png";
+            case 0:
+                return isDay ? "sunny.png" : "night_clear.png";
+            case 1:
+                return isDay ? "sunny.png" : "night_partly_cloudy_moon.png";
+            case 2:
+            case 3:
+                return isDay ? "day_partly_cloudy.png" : "night_partly_cloudy_moon_1.png";
             case 45:
-            case 48: // Sương mù
+            case 48:
                 return isDay ? "day_partly_cloudy.png" : "night_few_clouds.png";
             case 51:
             case 53:
@@ -159,7 +158,7 @@ public class WeatherUtil {
             case 65:
             case 66:
             case 67: // Mưa các loại
-                return isDay ? "day_partly_cloudy.png" : "rain.png";
+                return isDay ? "sunny_rain.png" : "rain.png";
             case 71:
             case 73:
             case 75:
@@ -168,15 +167,15 @@ public class WeatherUtil {
             case 80:
             case 81:
             case 82: // Mưa rào các loại
-                return isDay ? "day_partly_cloudy.png" : "rain.png";
+                return "rain.png";
             case 85:
             case 86: // Tuyết rào
                 return isDay ? "day_partly_cloudy.png" : "night_full_moon.png";
             case 95: // Dông
-                return isDay ? "day_partly_cloudy.png" : "night_thunderstorm.png";
+                return "storm.png";
             case 96:
-            case 99: // Dông kèm mưa đá
-                return isDay ? "day_partly_cloudy.png" : "night_thunderstorm.png";
+            case 99: // Dông kèm mưa storm
+                return "storm.png";
         }
         return isDay ? "day_partly_cloudy.png" : "night_clear_moon.png";
     }

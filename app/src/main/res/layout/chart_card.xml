@@ -41,7 +41,7 @@
                     android:id="@+id/lineChart"
                     android:layout_width="0dp"
                     android:layout_height="140dp"
-                    android:minWidth="1300dp" />
+                    android:minWidth="1220dp" />
             </HorizontalScrollView>
 
             <HorizontalScrollView

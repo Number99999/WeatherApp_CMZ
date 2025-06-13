@@ -1,10 +1,8 @@
 package com.cmzsoft.weather
 
 import android.Manifest
-import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.net.Uri
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
@@ -17,7 +15,6 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.cmzsoft.weather.Model.FakeGlobal
 import com.cmzsoft.weather.Model.PermissionModel
-import androidx.core.net.toUri
 
 
 class ActivityRequestLocation : AppCompatActivity() {
@@ -66,11 +63,10 @@ class ActivityRequestLocation : AppCompatActivity() {
     private fun InitEventClickPolicy() {
         val txt = findViewById<TextView>(R.id.txt_policy)
         txt.setOnClickListener {
-//            val intent = Intent(Intent.ACTION_VIEW)
-//            intent.data = Uri.parse(" https://www.google.com/") // Thay link tại đây
-//            startActivity(intent)
-            Toast.makeText(this, "Policy clicked", Toast.LENGTH_SHORT).show()
+            val changePage = Intent(this, ActivityPolicy::class.java)
+            startActivity(changePage)
         }
+
     }
 
     private fun InitEventButtonAcceptLocation() {
