@@ -375,9 +375,83 @@
         android:id="@+id/container_vote_app"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#99000000"
+        android:background="@color/bg_popup"
         android:gravity="center"
         android:visibility="gone" />
+
+    <FrameLayout
+        android:id="@+id/popup_confirm_defaul"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/bg_popup"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@drawable/background_border_white"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/txt_title_popup_confirm_defaul"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/margin_12dp"
+                android:text="BANGKOK"
+                android:textColor="@color/black"
+                android:textSize="@dimen/font_size_16"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_24dp"
+                android:layout_marginTop="@dimen/margin_12dp"
+                android:text="Đặt làm vị trí mặc định"
+                android:textColor="@color/black"
+                android:textStyle="normal" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_8dp"
+                android:layout_marginBottom="@dimen/margin_12dp">
+
+                <Button
+                    android:id="@+id/rej_set_default_1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="?android:attr/windowBackground"
+                    android:text="Không bao giờ"
+                    android:textColor="@color/bg_blue_1"
+                    app:backgroundTint="@null"
+                    app:backgroundTintMode="@null" />
+
+                <Button
+                    android:id="@+id/rej_set_default_2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="?android:attr/windowBackground"
+                    android:text="Huỷ bỏ"
+                    android:textColor="@color/bg_blue_1"
+                    app:backgroundTint="@null"
+                    app:backgroundTintMode="@null" />
+
+                <Button
+                    android:id="@+id/btn_accept_set_default"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="?android:attr/windowBackground"
+                    android:text="Ok"
+                    android:textColor="@color/bg_blue_1"
+                    app:backgroundTint="@null"
+                    app:backgroundTintMode="@null" />
+            </LinearLayout>
+        </LinearLayout>
+
+    </FrameLayout>
 
     <FrameLayout
         android:id="@+id/frame_nav_bar"

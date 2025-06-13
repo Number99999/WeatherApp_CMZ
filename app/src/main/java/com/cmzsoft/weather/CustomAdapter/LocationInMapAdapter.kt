@@ -43,16 +43,16 @@ class LocationInMapAdapter(private val items: List<LocationInMapModel>) :
         holder.itemLocation.setOnClickListener {
             FakeGlobal.getInstance().curLocation =
                 LocationService.getLocationFromLatLon(item.loc.latitude, item.loc.longitude);
-//            LocationService.getInstance(context.applicationContext).
             val isExist =
                 DatabaseService.getInstance(context.applicationContext).locationWeatherService.checkIsExistLocationInDb(
                     FakeGlobal.getInstance().curLocation
                 )
             if (isExist == false) {
-                DatabaseService.getInstance(context.applicationContext).locationWeatherService.insertOrUpdateLocationWeather(
+                DatabaseService.getInstance(context.applicationContext).locationWeatherService.insertLocationWeather(
                     FakeGlobal.getInstance().curLocation
                 );
             }
+            FakeGlobal.getInstance().flagIsChooseDefaultLocation = true
             val changeIntent = Intent(context, MainActivity::class.java);
             changeIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
             context.startActivity(changeIntent)

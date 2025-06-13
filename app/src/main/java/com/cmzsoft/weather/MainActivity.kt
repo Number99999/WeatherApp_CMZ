@@ -101,7 +101,6 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, ActivityChooseLocation::class.java);
             startActivity(intent)
         }
-        DatabaseService.getInstance(this).loadAllLocationInDb();
         this.getCurLocation();
         startAutoUpdateWeather()
     }
@@ -299,7 +298,6 @@ class MainActivity : AppCompatActivity() {
             findViewById<TextView>(R.id.txt_feel_like).text = "Môi trường:\n$feelsLike℃"
 
             if (FakeGlobal.getInstance()?.curLocation?.name != null) {
-                println("debuggggggggg ${FakeGlobal.getInstance()?.curLocation} ${FakeGlobal.getInstance()?.curLocation?.name}");
                 val txtCity = findViewById<TextView>(R.id.cityName);
                 txtCity.text = FakeGlobal.getInstance().curLocation.name;
             }
@@ -684,8 +682,16 @@ class MainActivity : AppCompatActivity() {
 
         var count = 0;
         val containStar = findViewById<LinearLayout>(R.id.contain_star)
+        var voted = false;
         for (i in 0 until containStar.childCount) {
             val childView = containStar.getChildAt(i)
+            (childView as ImageView).setOnClickListener {
+                voted = true;
+                for (j in 0 until i + 1) (containStar.getChildAt(j) as ImageView).setImageResource(R.drawable.star_light);
+                for (j in i + 1 until containStar.childCount) (containStar.getChildAt(j) as ImageView).setImageResource(
+                    R.drawable.star_dark
+                )
+            }
             childView.animate().apply {
                 duration = 300L * i // Stagger the duration for each child view
             }.withEndAction {
@@ -708,7 +714,7 @@ class MainActivity : AppCompatActivity() {
                             rotation(0f)
                         }.withEndAction {
                             count++;
-                            if (count == 5) {
+                            if (count == 5 && !voted) {
                                 childView.animate().apply {
                                     duration = 300
                                 }.withEndAction {
@@ -1158,7 +1164,15 @@ class MainActivity : AppCompatActivity() {
                 isFirstResume = true
                 return
             } else {
+                hideCustomNav()
                 if (FakeGlobal.getInstance().curLocation != null) {
+                    if (FakeGlobal.getInstance().flagIsChooseDefaultLocation && DatabaseService.getInstance(
+                            applicationContext
+                        ).locationWeatherService.checkIsExistLocationInDb(FakeGlobal.getInstance().curLocation)
+                    ) {
+                        FakeGlobal.getInstance().flagIsChooseDefaultLocation = false
+                        this.showConfirmDefault()
+                    }
                     curLocation = LatLng(
                         FakeGlobal.getInstance().curLocation.latitude,
                         FakeGlobal.getInstance().curLocation.longitude
@@ -1176,6 +1190,28 @@ class MainActivity : AppCompatActivity() {
             }
         } catch (e: Exception) {
             println("erorrrrrrrrrrr: ${e.message}")
+        }
+    }
+
+    private fun showConfirmDefault() {
+        val contain = findViewById<FrameLayout>(R.id.popup_confirm_defaul)
+        contain.visibility = View.VISIBLE;
+        findViewById<TextView>(R.id.txt_title_popup_confirm_defaul).text =
+            FakeGlobal.getInstance().curLocation.name;
+        findViewById<Button>(R.id.rej_set_default_1).setOnClickListener {
+            contain.visibility = View.GONE
+        }
+        findViewById<Button>(R.id.rej_set_default_2).setOnClickListener {
+            contain.visibility = View.GONE
+        }
+
+        findViewById<Button>(R.id.btn_accept_set_default).setOnClickListener {
+            if (FakeGlobal.getInstance().isCurrentLocation == false) DatabaseService.getInstance(
+                applicationContext
+            ).locationWeatherService.changeDefaultLocation(
+                FakeGlobal.getInstance().curLocation
+            )
+            contain.visibility = View.GONE
         }
     }
 }

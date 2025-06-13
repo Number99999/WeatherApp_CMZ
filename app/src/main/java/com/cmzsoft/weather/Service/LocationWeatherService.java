@@ -6,6 +6,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.database.sqlite.SQLiteStatement;
 
 import com.cmzsoft.weather.Model.LocationWeatherModel;
 
@@ -29,15 +30,8 @@ public class LocationWeatherService extends SQLiteOpenHelper {
     }
 
     private void createTableLocationWeatherIfNotExist(SQLiteDatabase db) {
-        String createTable = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME + " ("
-                + "id INTEGER PRIMARY KEY AUTOINCREMENT, "
-                + "name TEXT, "
-                + "latitude REAL, "
-                + "longitude REAL, "
-                + "isDefault INTEGER, "  // Thêm trường isDefault
-                + "weather TEXT, "
-                + "fullPathLocation TEXT"
-                + ")";
+        String createTable = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME + " (" + "id INTEGER PRIMARY KEY AUTOINCREMENT, " + "name TEXT, " + "latitude REAL, " + "longitude REAL, " + "isDefault INTEGER, "  // Thêm trường isDefault
+                + "weather TEXT, " + "fullPathLocation TEXT" + ")";
 
         db.execSQL(createTable);
     }
@@ -55,10 +49,18 @@ public class LocationWeatherService extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery(checkQuery, new String[]{lw.getFullPathLocation()});
         if (cursor.getCount() > 0) {
             cursor.close();
-            db.close();
             return true;
         }
         return false;
+    }
+
+    public boolean deleteItemInTable(LocationWeatherModel lw) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String checkQuery = "DELETE FROM " + TABLE_NAME + " WHERE fullPathLocation = ?";
+        SQLiteStatement stmt = db.compileStatement(checkQuery);
+        stmt.bindString(1, lw.getFullPathLocation());
+        long result = stmt.executeUpdateDelete();
+        return result > 0;
     }
 
     public LocationWeatherModel getDefaultLocationWeather() {
@@ -85,16 +87,16 @@ public class LocationWeatherService extends SQLiteOpenHelper {
                 lw.setLongitude(cursor.getDouble(cursor.getColumnIndexOrThrow("longitude")));
                 lw.setWeather(cursor.getString(cursor.getColumnIndexOrThrow("weather")));
                 lw.setFullPathLocation(cursor.getString(cursor.getColumnIndexOrThrow("fullPathLocation")));
+                lw.setIsDefaultLocation((int) cursor.getLong(cursor.getColumnIndexOrThrow("isDefault")));
                 list.add(lw);
             } while (cursor.moveToNext());
         }
 
         cursor.close();
-        db.close();
         return list;
     }
 
-    public boolean insertOrUpdateLocationWeather(LocationWeatherModel lw) {
+    public boolean insertLocationWeather(LocationWeatherModel lw) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         if (lw.getId() != 0) values.put("id", lw.getId());
@@ -104,53 +106,62 @@ public class LocationWeatherService extends SQLiteOpenHelper {
         values.put("weather", lw.getWeather());
         values.put("fullPathLocation", lw.getFullPathLocation());
         long result = db.insert("location_weather", null, values);
-        db.close();
         return result != -1;
     }
+
+    public boolean updateLocation(LocationWeatherModel lwModel) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        System.out.println("updateLocation " + lwModel.toString() + " " + lwModel.getIsDefaultLocation());
+        String updateQuery = "UPDATE " + TABLE_NAME + " SET " +
+                "name = ?, " +
+                "latitude = ?, " +
+                "longitude = ?, " +
+                "weather = ?, " +
+                "fullPathLocation = ?, " +
+                "isDefault = ? " +
+                "WHERE fullPathLocation = ?";
+
+        SQLiteStatement stmt = db.compileStatement(updateQuery);
+        stmt.bindString(1, lwModel.getName());
+        stmt.bindDouble(2, lwModel.getLatitude());
+        stmt.bindDouble(3, lwModel.getLongitude());
+        stmt.bindString(4, lwModel.getWeather() == null ? "" : lwModel.getWeather());
+        stmt.bindString(5, lwModel.getFullPathLocation() == null ? "" : lwModel.getFullPathLocation());
+        stmt.bindLong(6, lwModel.getIsDefaultLocation());
+        stmt.bindString(7, lwModel.getFullPathLocation());
+
+        long result = stmt.executeUpdateDelete();
+
+        return result > 0;
+    }
+
 
     public boolean changeDefaultLocation(LocationWeatherModel wModel) {
         SQLiteDatabase db = this.getWritableDatabase();
 
-        db.beginTransaction();
-
         try {
-            String sql = "SELECT * FROM " + TABLE_NAME + " WHERE isDefault=1";
-            Cursor cursor = db.rawQuery(sql, null);
+            db.beginTransaction();
 
-            if (cursor != null && cursor.moveToFirst()) {
-                // Tạo một đối tượng LocationWeatherModel từ dữ liệu trong cursor
-                LocationWeatherModel lw = new LocationWeatherModel();
-                lw.setId(cursor.getLong(cursor.getColumnIndexOrThrow("id")));
-                lw.setName(cursor.getString(cursor.getColumnIndexOrThrow("name")));
-                lw.setLatitude(cursor.getDouble(cursor.getColumnIndexOrThrow("latitude")));
-                lw.setLongitude(cursor.getDouble(cursor.getColumnIndexOrThrow("longitude")));
-                lw.setWeather(cursor.getString(cursor.getColumnIndexOrThrow("weather")));
-                lw.setFullPathLocation(cursor.getString(cursor.getColumnIndexOrThrow("fullPathLocation")));
-                lw.setIsDefaultLocation(0); // Đặt lại isDefaultLocation là 0 cho bản ghi cũ
-
-                String updateSql = "UPDATE " + TABLE_NAME + " SET isDefault = 0 WHERE id = ?";
-                db.execSQL(updateSql, new Object[]{lw.getId()});  // Thực hiện câu lệnh UPDATE để thay đổi isDefaultLocation của bản ghi cũ
-                cursor.close();
+            String updateQuery = "UPDATE " + TABLE_NAME + " SET isDefault = 0 WHERE isDefault = 1";
+            wModel.setIsDefaultLocation(1);
+            db.execSQL(updateQuery);
+            boolean insertOrUpdateSuccess = false;
+            boolean isExist = checkIsExistLocationInDb(wModel);
+            if (!isExist) {
+                insertOrUpdateSuccess = this.insertLocationWeather(wModel);
             } else {
-                cursor.close();
-                db.endTransaction();
-                return false;
+                insertOrUpdateSuccess = updateLocation(wModel);
             }
-
-            boolean insertOrUpdateSuccess = this.insertOrUpdateLocationWeather(wModel);
 
             if (insertOrUpdateSuccess) {
                 db.setTransactionSuccessful();
             }
-
             db.endTransaction();
             return insertOrUpdateSuccess;
         } catch (Exception e) {
             e.printStackTrace();
             db.endTransaction();
             return false;
-        } finally {
-            db.close();
         }
     }
 }

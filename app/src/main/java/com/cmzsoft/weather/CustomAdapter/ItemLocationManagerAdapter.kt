@@ -1,5 +1,6 @@
 package com.cmzsoft.weather.CustomAdapter
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
@@ -12,8 +13,9 @@ import com.cmzsoft.weather.MainActivity
 import com.cmzsoft.weather.Model.FakeGlobal
 import com.cmzsoft.weather.Model.LocationWeatherModel
 import com.cmzsoft.weather.R
+import com.cmzsoft.weather.Service.DatabaseService
 
-class ItemLocationManagerAdapter(private val items: List<LocationWeatherModel>) :
+class ItemLocationManagerAdapter(private var items: MutableList<LocationWeatherModel>) :
     RecyclerView.Adapter<ItemLocationManagerAdapter.ViewHolder>() {
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -32,26 +34,62 @@ class ItemLocationManagerAdapter(private val items: List<LocationWeatherModel>) 
 
     override fun getItemCount(): Int = items.size
 
+    @SuppressLint("NotifyDataSetChanged")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = items[position]
         val context = holder.itemView.context
-
-        holder.title.text = item.name;
-        holder.fullPath.text = item.fullPathLocation.replace("${item.name}, ", "");
-
-        holder.txtDefault.visibility = (if (item.isDefaultLocation) {
+        val defaultAdd =
+            DatabaseService.getInstance(context.applicationContext).locationWeatherService.getDefaultLocationWeather();
+        holder.txtDefault.visibility = if (item.isDefaultLocation == 1) {
             View.VISIBLE
-        } else View.GONE)
+        } else {
+            View.GONE
+        }
+        if (position == 0) {
+            holder.title.text = "${item.name} (Vị trí của bạn)";
+            if (defaultAdd == null) {
+                holder.txtDefault.visibility = View.VISIBLE
+            }
+        } else holder.title.text = item.name
+        holder.fullPath.text = item.fullPathLocation.replace("${item.name}, ", "")
 
         holder.contain.setOnClickListener {
-            FakeGlobal.getInstance().curLocation = item;
-            val changeIntent = Intent(context, MainActivity::class.java);
-            changeIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            if (item.isEdit == true) return@setOnClickListener
+            FakeGlobal.getInstance().flagIsChooseDefaultLocation = true
+            FakeGlobal.getInstance().curLocation = item
+            val changeIntent = Intent(context, MainActivity::class.java)
+            changeIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
             context.startActivity(changeIntent)
         }
-    }
-    
-    private fun showBtnDelete(){
+        val btn_delete = holder.itemView.findViewById<ImageView>(R.id.btn_delete)
+        btn_delete.visibility = if (item.isEdit) View.VISIBLE else View.GONE
+        btn_delete.setOnClickListener {
+            items.remove(item)
+            DatabaseService.getInstance(context.applicationContext).locationWeatherService.deleteItemInTable(
+                item
+            );
+            notifyDataSetChanged()
+        }
+        if (item.weather != null && item.weather.isNotEmpty()) {
+            val weatherIcon = item.weather.toIntOrNull()
+            if (weatherIcon != null)
+                holder.itemView.findViewById<ImageView>(R.id.icon_status)
+                    .setImageResource(weatherIcon);
+        }
 
+        val btn_drag = holder.itemView.findViewById<ImageView>(R.id.btn_drag_to_move)
+        btn_drag.visibility = if (item.isEdit) View.VISIBLE else View.GONE
+//        btn_drag.setOnDragListener {
+//
+//        }
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun btnEditClicked() {
+        for (item in items) {
+            item.setIdEdit(!item.isEdit)
+        }
+        // update RecyclerView
+        notifyDataSetChanged()  // Hoặc notifyItemChanged() nếu cần thay đổi cho từng item
     }
 }

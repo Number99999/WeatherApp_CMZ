@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginStart="8dp"
+    android:layout_marginTop="@dimen/margin_12dp"
     android:layout_marginEnd="8dp"
     app:cardBackgroundColor="#1794D2"
     app:cardCornerRadius="18dp">
@@ -26,6 +27,14 @@
             android:paddingStart="20dp"
             android:paddingEnd="20dp">
 
+            <ImageView
+                android:id="@+id/btn_delete"
+                android:layout_width="@dimen/widget_size_25"
+                android:layout_height="@dimen/widget_size_25"
+                android:layout_marginEnd="@dimen/widget_size_10"
+                android:src="@drawable/icon_delete"
+                android:visibility="gone" />
+
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -37,6 +46,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:singleLine="true"
                     android:text="Nam Từ Liêm (Vị trí của tôi)"
                     android:textSize="16sp"
                     android:textStyle="bold" />
@@ -47,6 +59,10 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginTop="2dp"
+                    android:ellipsize="end"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:singleLine="true"
                     android:text="Hà nội - Việt Nam" />
             </LinearLayout>
 
@@ -61,8 +77,8 @@
 
                 <ImageView
                     android:id="@+id/icon_status"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_width="@dimen/widget_size_65"
+                    android:layout_height="@dimen/widget_size_65"
                     android:contentDescription="@string/app_name"
                     android:scaleType="centerCrop"
                     android:src="@drawable/icon_small_cloud" />
@@ -79,6 +95,13 @@
                     android:textStyle="bold"
                     android:visibility="visible" />
             </LinearLayout>
+
+            <ImageView
+                android:id="@+id/btn_drag_to_move"
+                android:layout_width="@dimen/widget_size_25"
+                android:layout_height="@dimen/widget_size_25"
+                android:src="@drawable/icon_show_nav_bar"
+                android:visibility="gone" />
         </LinearLayout>
     </FrameLayout>
 </androidx.cardview.widget.CardView>

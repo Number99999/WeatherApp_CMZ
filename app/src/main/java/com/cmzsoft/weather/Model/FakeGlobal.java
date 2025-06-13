@@ -5,6 +5,8 @@ public class FakeGlobal {
 
     //region public field
     public LocationWeatherModel curLocation;
+    public boolean isCurrentLocation;
+    public boolean flagIsChooseDefaultLocation = false;
     public boolean userAcceptRequestLocation;
 
     public boolean isFirstLoadActivity = true;

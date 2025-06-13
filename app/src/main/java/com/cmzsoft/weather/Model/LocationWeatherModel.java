@@ -4,12 +4,13 @@ import androidx.annotation.NonNull;
 
 public class LocationWeatherModel {
     private long id = -1;
-    private String name;
-    private double latitude;
-    private double longitude;
-    private String weather;
-    private String fullPathLocation;
-    private int isDefaultLocation;
+    private String name = "";
+    private double latitude = 0;
+    private double longitude = 0;
+    private String weather = "";
+    private String fullPathLocation = "";
+    private int isDefaultLocation = 0;
+    private boolean isEdit = false;
 
     // Constructors
     public LocationWeatherModel() {
@@ -21,7 +22,7 @@ public class LocationWeatherModel {
         this.latitude = latitude;
         this.longitude = longitude;
         this.weather = weather;
-        this.fullPathLocation = fullPathLocation;
+        this.fullPathLocation = handleFullPath(fullPathLocation);
         this.isDefaultLocation = isDefaultLocation;
     }
 
@@ -67,24 +68,45 @@ public class LocationWeatherModel {
     }
 
     public String getFullPathLocation() {
-        return fullPathLocation;
+        return handleFullPath(fullPathLocation);
     }
 
     public void setFullPathLocation(String fullPathLocation) {
-        this.fullPathLocation = fullPathLocation;
+        this.fullPathLocation = handleFullPath(fullPathLocation);
+    }
+
+    private String handleFullPath(String fullPathLocation) {
+        String[] list = fullPathLocation.split(",");
+        for (int i = list.length >= 3 ? list.length - 3 : 0; i < list.length; i++) {
+            list[i] = list[i].replaceAll("[0-9]", "");
+
+        }
+        StringBuilder s = new StringBuilder(list[0]);
+        for (int i = 1; i < list.length; i++)
+            s.append(",").append(list[i]);
+        return s.toString();
     }
 
     public void setIsDefaultLocation(int isUsedLocation) {
         this.isDefaultLocation = isUsedLocation;
     }
 
-    public boolean getIsDefaultLocation() {
-        return this.isDefaultLocation == 1;
+    public int getIsDefaultLocation() {
+        return this.isDefaultLocation;
     }
+
+    public void setIdEdit(boolean b) {
+        isEdit = b;
+    }
+
+    public boolean getIsEdit() {
+        return isEdit;
+    }
+
 
     @NonNull
     @Override
     public String toString() {
-        return this.name + " " + this.latitude + " " + this.longitude + " " + this.weather + " " + this.fullPathLocation + " " + this.isDefaultLocation;
+        return this.id + " " + this.name + " " + this.latitude + " " + this.longitude + " " + this.weather + " " + this.fullPathLocation + " " + this.isDefaultLocation;
     }
 }
