@@ -28,6 +28,8 @@
                 android:id="@+id/rc_title_chart"
                 android:layout_width="wrap_content"
                 android:layout_height="80dp"
+                android:layout_marginStart="-7dp"
+                android:layout_marginEnd="@dimen/margin_8dp"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
             <HorizontalScrollView
@@ -42,21 +44,6 @@
                     android:layout_width="0dp"
                     android:layout_height="140dp"
                     android:minWidth="1220dp" />
-            </HorizontalScrollView>
-
-            <HorizontalScrollView
-                android:id="@+id/emoji_scroll"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fillViewport="true"
-                android:scrollbars="none">
-
-                <LinearLayout
-                    android:id="@+id/emojiContainer"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="-8dp"
-                    android:orientation="horizontal" />
             </HorizontalScrollView>
 
             <TextView

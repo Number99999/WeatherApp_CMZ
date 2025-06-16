@@ -53,6 +53,10 @@ class ActivityChooseLocation : AppCompatActivity(), OnMapReadyCallback {
         setContentView(R.layout.activity_choose_location)
         enableEdgeToEdge()
         searchViewCity = findViewById(R.id.search_view_city)
+        val btnCloseTxtViewCity = searchViewCity.findViewById<ImageView>(
+            androidx.appcompat.R.id.search_close_btn
+        )
+        btnCloseTxtViewCity?.visibility = View.GONE
         searchViewCity.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 searchLocation(query)
@@ -65,6 +69,10 @@ class ActivityChooseLocation : AppCompatActivity(), OnMapReadyCallback {
         })
 
         searchViewMap = findViewById(R.id.search_view_map)
+        val btnCloseSearchViewMap = searchViewMap.findViewById<ImageView>(
+            androidx.appcompat.R.id.search_close_btn
+        )
+        btnCloseSearchViewMap?.visibility = View.GONE
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
 
         val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment

@@ -6,11 +6,7 @@ import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Canvas
 import android.graphics.Color
-import android.graphics.DashPathEffect
-import android.graphics.Paint
-import android.graphics.Rect
 import android.location.Location
 import android.os.Build
 import android.os.Bundle
@@ -32,6 +28,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.toColorInt
 import androidx.core.view.get
 import androidx.core.view.isEmpty
 import androidx.lifecycle.lifecycleScope
@@ -45,20 +42,28 @@ import com.cmzsoft.weather.Model.FakeGlobal
 import com.cmzsoft.weather.Model.LocationWeatherModel
 import com.cmzsoft.weather.Model.NightDayTempModel
 import com.cmzsoft.weather.Model.TitleChartItemModel
+import com.cmzsoft.weather.RendererChart.CustomLineChartRenderer
+import com.cmzsoft.weather.RendererChart.RainfallRendererBarChart
 import com.cmzsoft.weather.Service.DatabaseService
 import com.cmzsoft.weather.Service.Interface.GetCurrentLocationCallback
 import com.cmzsoft.weather.Service.LocationService
 import com.cmzsoft.weather.Utils.WeatherUtil
-import com.github.mikephil.charting.animation.ChartAnimator
+import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.charts.LineChart
+import com.github.mikephil.charting.components.XAxis
+import com.github.mikephil.charting.data.BarData
+import com.github.mikephil.charting.data.BarDataSet
+import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.github.mikephil.charting.formatter.ValueFormatter
-import com.github.mikephil.charting.renderer.LineChartRenderer
-import com.github.mikephil.charting.utils.ViewPortHandler
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.model.LatLng
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.analytics.ktx.logEvent
+import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -109,6 +114,7 @@ class MainActivity : AppCompatActivity() {
         val context: Context = this
         adManager = AdManager(context)
         showInterAds()
+        testFirebase()
     }
 
     private fun onInitedLocation() {
@@ -118,26 +124,101 @@ class MainActivity : AppCompatActivity() {
         setupLineChartDayNight()
         eventScrollMain()
         setupHeaderWithStatusBar()
-        syncScrollWeatherTweentyHour();
+        setupDataRainfallChart()
     }
 
-    private fun syncScrollWeatherTweentyHour() {
-//        val chartTempAtDay = findViewById<LineChart>(R.id.chart_temp_at_day)
-//        val chartTempAtNight = findViewById<LineChart>(R.id.chart_temp_at_night)
-//        val containerDay = findViewById<LinearLayout>(R.id.container_day)
-//        val containerNight = findViewById<LinearLayout>(R.id.container_night)
-//
-//        containerDay.viewTreeObserver.addOnScrollChangedListener {
-//            val scrollPosition = containerDay.scrollY
-//            containerNight.scrollY = scrollPosition  // Đồng bộ cuộn với containerNight
-//            chartTempAtNight.scrollY = scrollPosition  // Đồng bộ cuộn với chartTempAtNight
-//        }
-//
-//        chartTempAtDay.viewTreeObserver.addOnScrollChangedListener {
-//            val scrollPosition = chartTempAtDay.scrollY
-//            chartTempAtNight.scrollY = scrollPosition  // Đồng bộ cuộn với chartTempAtNight
-//            containerNight.scrollY = scrollPosition  // Đồng bộ cuộn với containerNight
-//        }
+    private fun setupDataRainfallChart() {
+        lifecycleScope.launch {
+            val resultAPI = withContext(Dispatchers.IO) {
+                RequestAPI.getInstance().GetPOPNextWeek(
+                    FakeGlobal.getInstance().curLocation.latitude,
+                    FakeGlobal.getInstance().curLocation.longitude
+                )
+            }
+
+            val arrTime = resultAPI.getJSONObject("hourly").getJSONArray("time")
+            val arrRainSum =
+                resultAPI.getJSONObject("hourly").getJSONArray("precipitation_probability")
+
+            val barChart = findViewById<BarChart>(R.id.barchart_rainfall)
+            barChart.setScaleEnabled(false)
+            barChart.setPinchZoom(false)
+            barChart.setDragEnabled(false)
+            barChart.isDoubleTapToZoomEnabled = false
+            barChart.animateY(1000)
+            barChart.setDrawGridBackground(false)
+            barChart.description.isEnabled = false
+            barChart.legend.isEnabled = false
+            barChart.isHighlightPerTapEnabled = false
+            barChart.isHighlightPerDragEnabled = false
+
+            val listData = mutableListOf<BarEntry>()
+            val listTime = mutableListOf<String>()
+            val listRainPop = mutableListOf<Number>()
+            for (dayIndex in 0 until 7) {
+                var maxRain = 0.0f
+                for (hourIndex in 0 until 24) {
+                    val index = dayIndex * 24 + hourIndex
+                    val value = arrRainSum.get(index)
+                    if (value is Number) {
+                        val rainValue = value.toFloat()
+                        if (rainValue > maxRain) {
+                            maxRain = rainValue
+                        }
+                    }
+                }
+                listRainPop.add(maxRain)
+                val fullStr = arrTime.getString(dayIndex * 24)
+                val dayOfWeek = WeatherUtil.getDayOfWeek(fullStr.substring(0, 10))
+                val dateShort = "${fullStr.substring(8, 10)}/${fullStr.substring(5, 7)}"
+                listTime.add("$dayOfWeek\u2028$dateShort")
+                listData.add(BarEntry(dayIndex.toFloat(), maxRain))
+            }
+
+            val barDataSet = BarDataSet(listData, "")
+            barDataSet.color = resources.getColor(R.color.blue_600, null)
+            barDataSet.barShadowColor = Color.TRANSPARENT
+            barDataSet.valueTextColor = Color.WHITE
+            barDataSet.setDrawValues(true)
+            barDataSet.valueTextSize = 12f
+            barDataSet.valueFormatter = object : ValueFormatter() {
+                override fun getBarLabel(barEntry: BarEntry?): String {
+                    val index = barEntry?.x?.toInt() ?: return ""
+                    return listRainPop[index].toInt().toString().plus("%")
+                }
+            }
+
+            val barData = BarData(barDataSet)
+            barChart.data = barData
+            barData.barWidth = 0.5f
+            barChart.setDrawBorders(true)
+            barChart.setBorderWidth(0.1f)
+            barChart.notifyDataSetChanged()
+
+            val xAxis: XAxis = barChart.xAxis
+            xAxis.granularity = 1f
+            xAxis.setDrawGridLines(false)
+            xAxis.setDrawAxisLine(false)
+            xAxis.setDrawLabels(true)
+            xAxis.valueFormatter = IndexAxisValueFormatter(listTime)
+            xAxis.textColor = Color.WHITE
+            xAxis.position = XAxis.XAxisPosition.BOTTOM
+
+            val yAxis = barChart.axisLeft
+            yAxis.axisMinimum = 0f
+            yAxis.mAxisMaximum = 100f;
+            yAxis.setDrawLabels(false)
+            yAxis.setDrawGridLines(false)
+            yAxis.setDrawAxisLine(false)
+
+            barChart.axisRight.isEnabled = false
+            barChart.animate()
+            val customRenderer =
+                RainfallRendererBarChart(barChart, barChart.animator, barChart.viewPortHandler)
+            customRenderer.initBuffers()
+            barChart.renderer = customRenderer
+            barChart.invalidate()
+        }
     }
 
     private fun eventScrollMain() {
@@ -146,9 +227,9 @@ class MainActivity : AppCompatActivity() {
         scrollView.setOnScrollChangeListener { _, _, scrollY, _, _ ->
             val headerHeight = headerView.height
             if (scrollY >= headerHeight) {
-                headerView.setBackgroundColor(Color.parseColor("#B3000000"))
+                headerView.setBackgroundColor("#B3000000".toColorInt())
             } else {
-                headerView.setBackgroundColor(Color.parseColor("#00000000"))
+                headerView.setBackgroundColor("#00000000".toColorInt())
             }
         }
     }
@@ -1192,19 +1273,27 @@ class MainActivity : AppCompatActivity() {
         rc_view.adapter = adapter
         rc_view.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
 
-        val itemCount = listData.size
+//        val itemCount = listData.size
 
-        rc_view.addItemDecoration(object : RecyclerView.ItemDecoration() {
-            override fun getItemOffsets(
-                outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State
-            ) {
-                val position = parent.getChildAdapterPosition(view)
-                if (position == RecyclerView.NO_POSITION) return
+//        rc_view.addItemDecoration(object : RecyclerView.ItemDecoration() {
+//            override fun getItemOffsets(
+//                outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State
+//            ) {
+//                val position = parent.getChildAdapterPosition(view)
+//                if (position == RecyclerView.NO_POSITION) return
+//
+//                outRect.left = if (position == 0) -7 else 0
+//                outRect.right = if (position == itemCount - 1) 8 else 0
+//            }
+//        })
+    }
 
-                outRect.left = if (position == 0) -7 else 0
-                outRect.right = if (position == itemCount - 1) 8 else 0
-            }
-        })
+    private fun testFirebase() {
+        val firebaseAnalytics = Firebase.analytics;
+        firebaseAnalytics.logEvent("user_login") {
+            param("user_login", "ehe")
+        }
+        println("sebnd event")
     }
 
     override fun onResume() {
@@ -1262,37 +1351,6 @@ class MainActivity : AppCompatActivity() {
                 FakeGlobal.getInstance().curLocation
             )
             contain.visibility = View.GONE
-        }
-    }
-}
-
-class CustomLineChartRenderer(
-    chart: LineChart, animator: ChartAnimator, viewPortHandler: ViewPortHandler
-) : LineChartRenderer(chart, animator, viewPortHandler) {
-    override fun drawExtras(c: Canvas) {
-        super.drawExtras(c)
-        val paint = Paint().apply {
-            color = Color.WHITE
-            strokeWidth = 1.5f
-            alpha = 180
-            style = Paint.Style.STROKE
-            isAntiAlias = true
-            pathEffect = DashPathEffect(floatArrayOf(10f, 10f), 0f)
-        }
-        val dataSets = mChart.lineData.dataSets
-        for (dataSet in dataSets) {
-            for (i in 0 until dataSet.entryCount) {
-                val entry = dataSet.getEntryForIndex(i)
-                val pos = mChart.getTransformer(dataSet.axisDependency)
-                    .getPixelForValues(entry.x, entry.y)
-                c.drawLine(
-                    pos.x.toFloat(),
-                    pos.y.toFloat(),
-                    pos.x.toFloat(),
-                    mViewPortHandler.contentBottom(),
-                    paint
-                )
-            }
         }
     }
 }

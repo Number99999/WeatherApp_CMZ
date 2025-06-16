@@ -76,7 +76,7 @@ public class LocationWeatherService extends SQLiteOpenHelper {
     public List<LocationWeatherModel> getAllLocationWeather() {
         List<LocationWeatherModel> list = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
-        String sql = "SELECT * FROM " + TABLE_NAME;
+        String sql = "SELECT * FROM " + TABLE_NAME + " ORDER BY isDefault DESC ";
         Cursor cursor = db.rawQuery(sql, null);
         if (cursor.moveToFirst()) {
             do {

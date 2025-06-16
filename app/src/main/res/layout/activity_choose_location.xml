@@ -93,10 +93,10 @@
 
                 <ImageView
                     android:id="@+id/icon_map"
-                    android:layout_width="@dimen/widget_size_40"
-                    android:layout_height="@dimen/widget_size_40"
+                    android:layout_width="@dimen/widget_size_50"
+                    android:layout_height="@dimen/widget_size_50"
                     android:layout_gravity="end|center_vertical"
-                    android:layout_marginTop="@dimen/margin_8dp"
+                    android:layout_marginTop="@dimen/widget_size_10"
                     android:layout_marginEnd="17dp"
                     android:src="@drawable/icon_map_search" />
             </FrameLayout>
@@ -149,7 +149,6 @@
             android:id="@+id/ad_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
             android:layout_marginTop="16dp"
             android:layout_marginBottom="16dp" />
     </LinearLayout>

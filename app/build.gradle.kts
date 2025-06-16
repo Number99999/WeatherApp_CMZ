@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.google.services)
 }
 
 android {
@@ -40,7 +41,6 @@ android {
 }
 
 dependencies {
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
@@ -66,6 +66,8 @@ dependencies {
     implementation("com.google.ads.mediation:ironsource:8.9.0.0")
     implementation("com.google.ads.mediation:vungle:7.5.0.0")
 //    implementation("com.mbridge.msdk.oversea:mbridge_android_sdk:16.8.61.0")
+    implementation(platform("com.google.firebase:firebase-bom:33.15.0"))
+    implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.ads.mediation:pangle:7.2.0.3.0")
     implementation("com.unity3d.ads:unity-ads:4.15.0")
     implementation("com.google.dagger:hilt-android:2.51")

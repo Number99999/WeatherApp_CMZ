@@ -6,20 +6,23 @@
     app:cardBackgroundColor="#19415b">
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Lượng mưa" />
+            android:layout_marginStart="@dimen/margin_12dp"
+            android:layout_marginTop="@dimen/margin_8dp"
+            android:text="TỈ LỆ MƯA"
+            android:textSize="@dimen/font_size_16"
+            android:textStyle="bold" />
 
         <com.github.mikephil.charting.charts.BarChart
+            android:id="@+id/barchart_rainfall"
             android:layout_width="match_parent"
-            android:layout_height="300dp">
-
-        </com.github.mikephil.charting.charts.BarChart>
+            android:layout_height="300dp" />
     </LinearLayout>
 
 </androidx.cardview.widget.CardView>
