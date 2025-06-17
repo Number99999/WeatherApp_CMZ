@@ -22,7 +22,7 @@
         <com.github.mikephil.charting.charts.BarChart
             android:id="@+id/barchart_rainfall"
             android:layout_width="match_parent"
-            android:layout_height="300dp" />
+            android:layout_height="@dimen/widget_size_250" />
     </LinearLayout>
 
 </androidx.cardview.widget.CardView>

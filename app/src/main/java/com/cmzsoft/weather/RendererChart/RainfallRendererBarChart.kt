@@ -7,17 +7,18 @@ import android.graphics.RectF
 import com.github.mikephil.charting.animation.ChartAnimator
 import com.github.mikephil.charting.buffer.BarBuffer
 import com.github.mikephil.charting.charts.BarChart
+import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet
 import com.github.mikephil.charting.renderer.BarChartRenderer
 import com.github.mikephil.charting.utils.ViewPortHandler
 
 class RainfallRendererBarChart constructor(
-    chart: BarChart,
+    private val chart: BarChart,
     animator: ChartAnimator,
-    viewPortHandler: ViewPortHandler,
-    private val radius: Float = 50f
+    private val viewPortHandler: ViewPortHandler,
+    private val radius: Float = 50f,
 ) : BarChartRenderer(chart, animator, viewPortHandler) {
-    private var customXAxisLabels: List<String> = emptyList()
+
     override fun drawDataSet(c: Canvas, dataSet: IBarDataSet, index: Int) {
         val trans = mChart.getTransformer(dataSet.axisDependency)
         val buffer: BarBuffer = mBarBuffers[index]
@@ -124,9 +125,5 @@ class RainfallRendererBarChart constructor(
         path.rLineTo(0f, -heightMinusCorners)
         path.close()
         return path
-    }
-
-    override fun drawValues(c: Canvas) {
-        super.drawValues(c)
     }
 }

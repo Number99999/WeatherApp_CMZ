@@ -25,7 +25,6 @@ class WeatherApp : Application(), Application.ActivityLifecycleCallbacks {
     override fun onCreate() {
         super.onCreate()
 //        MobileAds.initialize(this) {}
-        println("onCreate Weather app")
         MobileAds.initialize(
             this,
             OnInitializationCompleteListener { initializationStatus: InitializationStatus? ->

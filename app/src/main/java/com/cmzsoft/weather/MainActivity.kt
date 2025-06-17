@@ -1,5 +1,6 @@
 package com.cmzsoft.weather
 
+import XAxisRendererTwoLine
 import android.Manifest
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -52,6 +53,7 @@ import com.cmzsoft.weather.Utils.WeatherUtil
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.XAxis
+import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
@@ -178,7 +180,7 @@ class MainActivity : AppCompatActivity() {
                 val fullStr = arrTime.getString(dayIndex * 24)
                 val dayOfWeek = WeatherUtil.getDayOfWeek(fullStr.substring(0, 10))
                 val dateShort = "${fullStr.substring(8, 10)}/${fullStr.substring(5, 7)}"
-                listTime.add("$dayOfWeek\u2028$dateShort")
+                listTime.add("$dayOfWeek\n$dateShort")
                 listData.add(BarEntry(dayIndex.toFloat(), maxRain))
             }
 
@@ -207,13 +209,14 @@ class MainActivity : AppCompatActivity() {
             xAxis.setDrawGridLines(false)
             xAxis.setDrawAxisLine(false)
             xAxis.setDrawLabels(true)
+            xAxis.yOffset = 30f
             xAxis.valueFormatter = IndexAxisValueFormatter(listTime)
             xAxis.textColor = Color.WHITE
             xAxis.position = XAxis.XAxisPosition.BOTTOM
 
             val yAxis = barChart.axisLeft
             yAxis.axisMinimum = 0f
-            yAxis.mAxisMaximum = 100f;
+            yAxis.mAxisMaximum = 100f
             yAxis.setDrawLabels(false)
             yAxis.setDrawGridLines(false)
             yAxis.setDrawAxisLine(false)
@@ -224,6 +227,14 @@ class MainActivity : AppCompatActivity() {
                 RainfallRendererBarChart(barChart, barChart.animator, barChart.viewPortHandler)
             customRenderer.initBuffers()
             barChart.renderer = customRenderer
+            barChart.setXAxisRenderer(
+                XAxisRendererTwoLine(
+                    barChart.viewPortHandler,
+                    barChart.xAxis,
+                    barChart.getTransformer(YAxis.AxisDependency.RIGHT),
+                    listTime.toList()
+                )
+            )
             barChart.invalidate()
         }
     }
@@ -1298,7 +1309,7 @@ class MainActivity : AppCompatActivity() {
     private fun testFirebase() {
         val firebaseAnalytics = Firebase.analytics;
         firebaseAnalytics.logEvent("user_login") {
-            param("user_login", "ehe")
+            param("user_login", "test")
         }
         println("sebnd event")
     }

@@ -14,12 +14,11 @@ class XAxisRendererTwoLine(
 ) : XAxisRenderer(viewPortHandler, xAxis, trans) {
 
     override fun drawLabels(c: Canvas, pos: Float, anchor: MPPointF) {
-        var labelPaint: Paint = mAxisLabelPaint
-
+        val labelPaint: Paint = mAxisLabelPaint
         for (i in labels.indices) {
-            var x = i.toFloat()
+            val x = i.toFloat()
+            val pt = floatArrayOf(x, 0f)
 
-            var pt = floatArrayOf(x, 0f)
             mTrans.pointValuesToPixel(pt)
 
             if (mViewPortHandler.isInBoundsX(pt[0])) {
@@ -28,9 +27,8 @@ class XAxisRendererTwoLine(
 
                 val line1 = parts.getOrNull(0) ?: ""
                 val line2 = parts.getOrNull(1) ?: ""
-
-                c.drawText(line1, pt[0], pos - 10f, labelPaint)
-                c.drawText(line2, pt[0], pos + labelPaint.textSize, labelPaint)
+                c.drawText(line1, pt[0], pos - 25f, labelPaint)
+                c.drawText(line2, pt[0], pos + labelPaint.textSize - 15f, labelPaint)
             }
         }
     }
