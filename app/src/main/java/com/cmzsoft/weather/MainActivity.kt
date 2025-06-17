@@ -36,6 +36,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.cmzsoft.weather.APICall.RequestAPI
 import com.cmzsoft.weather.CustomAdapter.TitleChartDegreeAdapter
+import com.cmzsoft.weather.FrameWork.RemoteConfigManager
 import com.cmzsoft.weather.Manager.AdManager
 import com.cmzsoft.weather.Model.DataHourWeatherModel
 import com.cmzsoft.weather.Model.FakeGlobal
@@ -108,6 +109,12 @@ class MainActivity : AppCompatActivity() {
         }
         this.getCurLocation();
         startAutoUpdateWeather()
+
+        println(
+            "fucking shiet i hate this ${
+                RemoteConfigManager.getInstance().getBoolean("aoa_enabled")
+            }"
+        )
     }
 
     private fun initValiable() {

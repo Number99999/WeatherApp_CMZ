@@ -4,10 +4,15 @@ import android.app.Activity
 import android.app.Application
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
+import com.cmzsoft.weather.FrameWork.RemoteConfigManager
 import com.cmzsoft.weather.Service.LocationService
 import com.cmzsoft.weather.Utils.AppOpenAdManager
 import com.google.android.gms.ads.MobileAds
+import com.google.android.gms.ads.initialization.InitializationStatus
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener
 import dagger.hilt.android.HiltAndroidApp
+
 
 @HiltAndroidApp
 class WeatherApp : Application(), Application.ActivityLifecycleCallbacks {
@@ -19,10 +24,23 @@ class WeatherApp : Application(), Application.ActivityLifecycleCallbacks {
 
     override fun onCreate() {
         super.onCreate()
-        MobileAds.initialize(this) {}
+//        MobileAds.initialize(this) {}
         println("onCreate Weather app")
+        MobileAds.initialize(
+            this,
+            OnInitializationCompleteListener { initializationStatus: InitializationStatus? ->
+                Log.d("Mediation", "Google Mobile Ads SDK Initialized")
+            })
         LocationService.init(this)
         registerActivityLifecycleCallbacks(this)
+        RemoteConfigManager.getInstance().fetchRemoteConfigCircle()
+        RemoteConfigManager.getInstance().fetchAndActivate { success ->
+            if (success) {
+                println("Remote Config values activated successfully.")
+            } else {
+                println("Failed to activate Remote Config values.")
+            }
+        }
     }
 
     override fun onActivityCreated(
