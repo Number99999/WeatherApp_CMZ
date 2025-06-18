@@ -2,6 +2,7 @@ package com.cmzsoft.weather
 
 import android.os.Bundle
 import android.widget.ImageButton
+import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -33,6 +34,7 @@ class ActivityWeatherPerHour : AppCompatActivity() {
         findViewById<ImageButton>(R.id.backButton).setOnClickListener {
             finish()
         }
+        findViewById<TextView>(R.id.cityName).text = FakeGlobal.getInstance().curLocation.name
     }
 
     private fun setupAdapterData() {

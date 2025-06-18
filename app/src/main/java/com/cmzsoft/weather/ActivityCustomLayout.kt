@@ -38,6 +38,7 @@ class ActivityCustomLayout : AppCompatActivity() {
             CustomLayoutItem("Nhiếp ảnh", R.drawable.icon_camera),
             CustomLayoutItem("Dị ứng", R.drawable.icon_allergy),
             CustomLayoutItem("Bản đồ", R.drawable.icon_map),
+            CustomLayoutItem("CN & Sức ép", R.drawable.icon_sucep)
         )
         val adapter = CustomLayoutAdapter(data)
         recyclerView.adapter = adapter

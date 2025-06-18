@@ -2,6 +2,7 @@ package com.cmzsoft.weather
 
 import XAxisRendererTwoLine
 import android.Manifest
+import android.animation.ValueAnimator
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
@@ -11,6 +12,7 @@ import android.graphics.Color
 import android.location.Location
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
@@ -37,9 +39,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.cmzsoft.weather.APICall.RequestAPI
 import com.cmzsoft.weather.CustomAdapter.TitleChartDegreeAdapter
-import com.cmzsoft.weather.FrameWork.RemoteConfigManager
+import com.cmzsoft.weather.CustomView.SunArcView
 import com.cmzsoft.weather.Manager.AdManager
 import com.cmzsoft.weather.Model.DataHourWeatherModel
+import com.cmzsoft.weather.Model.DataWeatherPerHourModel
 import com.cmzsoft.weather.Model.FakeGlobal
 import com.cmzsoft.weather.Model.LocationWeatherModel
 import com.cmzsoft.weather.Model.NightDayTempModel
@@ -73,9 +76,11 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
+import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
+import java.util.TimeZone
 import kotlin.math.roundToInt
 
 @AndroidEntryPoint
@@ -111,12 +116,19 @@ class MainActivity : AppCompatActivity() {
         }
         this.getCurLocation();
         startAutoUpdateWeather()
+//        drawSunArcView()
+    }
 
-        println(
-            "fucking shiet i hate this ${
-                RemoteConfigManager.getInstance().getBoolean("aoa_enabled")
-            }"
-        )
+    private fun drawSunArcView() {
+        val sunArcView = findViewById<SunArcView>(R.id.sunArcView)
+
+        val animator = ValueAnimator.ofFloat(0f, 1f)
+        animator.duration = 5000
+        animator.addUpdateListener {
+            val value = it.animatedValue as Float
+            sunArcView.setSunPosition(value)
+        }
+        animator.start()
     }
 
     private fun initValiable() {
@@ -127,6 +139,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun onInitedLocation() {
+        println("onInitedLocation")
         UpdateWeatherInfor()
         setupLineChart()
         initEventNavBar()
@@ -700,27 +713,42 @@ class MainActivity : AppCompatActivity() {
         val textView = findViewById<TextView>(R.id.timeInfo)
         val now = java.util.Date()
 
-        val hourMinute = SimpleDateFormat("HH:mm", Locale.getDefault()).format(now)
+        val hourMinute = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()).format(now)
 
-        val calendar = Calendar.getInstance()
-        calendar.time = now
-        val day = calendar.get(Calendar.DAY_OF_MONTH)
-        val month = calendar.get(Calendar.MONTH) + 1
-        val year = calendar.get(Calendar.YEAR)
+//        val day = calendar.get(Calendar.DAY_OF_MONTH)
+//        val month = calendar.get(Calendar.MONTH) + 1
+//        val year = calendar.get(Calendar.YEAR)
+//        val weekday = calendar.get(Calendar.DAY_OF_WEEK)
 
-        val weekday = calendar.get(Calendar.DAY_OF_WEEK)
-        val weekdays = arrayOf("Chủ nhật", "Thứ 2", "Thứ 3", "Thứ 4", "Thứ 5", "Thứ 6", "Thứ 7")
-        val weekdayStr = weekdays[weekday - 1]
+        val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.US)
+        sdf.timeZone = TimeZone.getTimeZone(FakeGlobal.getInstance().curLocation.timeZone)
+        val timeConverted = WeatherUtil.convertTimeDeviceToTimezone(
+            hourMinute, FakeGlobal.getInstance().curLocation.timeZone
+        )
+        try {
+            val date = sdf.parse(timeConverted)
+            val calendar = Calendar.getInstance()
+            calendar.time = date
 
-        val formatted = "$hourMinute - $weekdayStr, $day tháng $month $year"
+            val day = calendar.get(Calendar.DAY_OF_MONTH)
+            val month = calendar.get(Calendar.MONTH) + 1
+            val year = calendar.get(Calendar.YEAR)
 
-        textView.text = formatted
+            val weekday = calendar.get(Calendar.DAY_OF_WEEK)
+
+            Log.d("DATE", "Ngày: $day/$month/$year - Thứ: $weekday $timeConverted")
+            val weekdays = arrayOf("Chủ nhật", "Thứ 2", "Thứ 3", "Thứ 4", "Thứ 5", "Thứ 6", "Thứ 7")
+            val weekdayStr = weekdays[weekday - 1]
+            val formatted = "${timeConverted.substring(11)} - $weekdayStr, $day tháng $month $year"
+            textView.text = formatted
+        } catch (e: ParseException) {
+            e.printStackTrace()
+        }
     }
-
 
     private fun showSettingsDialog() {
         val container = findViewById<FrameLayout>(R.id.container_dialog_setting)
-        if (container.childCount == 0) {
+        if (container.isEmpty()) {
             val dialogView = layoutInflater.inflate(R.layout.dialog_setting, container, false)
             val params = FrameLayout.LayoutParams(
                 FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT
@@ -873,7 +901,10 @@ class MainActivity : AppCompatActivity() {
         lifecycleScope.launch {
             try {
                 val resultAPI = withContext(Dispatchers.IO) {
-                    RequestAPI.getInstance().GetAllDataInCurrentDay(21.0227396, 105.8369637)
+                    RequestAPI.getInstance().getWeatherPerHourInNextTwentyFour(
+                        FakeGlobal.getInstance().curLocation.latitude,
+                        FakeGlobal.getInstance().curLocation.longitude
+                    )
                 }
                 setupLineChartInUI(resultAPI)
             } catch (e: Exception) {
@@ -883,10 +914,11 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun setupLineChartInUI(hour: JSONObject) {
+    private fun setupLineChartInUI(arrInfo: List<DataWeatherPerHourModel>) {
         try {
-            val arrInfo = parseWeatherData(hour.getJSONObject("hourly"))
+//            val arrInfo = parseWeatherData(hour.getJSONObject("hourly"))
             setupTitleChartDegree(arrInfo)
+
             setupChart(arrInfo)
             setupScrollSync()
 
@@ -919,7 +951,7 @@ class MainActivity : AppCompatActivity() {
         return arrInfo
     }
 
-    private fun setupChart(arrInfo: List<DataHourWeatherModel>) {
+    private fun setupChart(arrInfo: List<DataWeatherPerHourModel>) {
         try {
             val entries = ArrayList<Entry>()
             arrInfo.forEachIndexed { i, model ->
@@ -954,7 +986,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun setupChartStyle(lineChart: LineChart, arrInfo: List<DataHourWeatherModel>) {
+    private fun setupChartStyle(lineChart: LineChart, arrInfo: List<DataWeatherPerHourModel>) {
         try {
             lineChart.setDrawGridBackground(false)
             lineChart.description.isEnabled = false
@@ -1271,15 +1303,17 @@ class MainActivity : AppCompatActivity() {
         }.start()
     }
 
-    private fun setupTitleChartDegree(arr: List<DataHourWeatherModel>) {
+    private fun setupTitleChartDegree(arr: List<DataWeatherPerHourModel>) {
         val rc_view = findViewById<RecyclerView>(R.id.rc_title_chart)
         val listData = mutableListOf<TitleChartItemModel>()
         for (item in arr) {
-            val isDay = item.time.substring(item.time.length - 5, item.time.length - 3)
-                .toInt() in 6 until 19
             listData.add(
                 TitleChartItemModel(
-                    item.time.substring(item.time.length - 5), null, item.urlIcon, isDay, item.tempC
+                    item.time.substring(item.time.length - 5),
+                    null,
+                    item.iconCode,
+                    item.isDay,
+                    item.changeRain
                 )
             )
         }

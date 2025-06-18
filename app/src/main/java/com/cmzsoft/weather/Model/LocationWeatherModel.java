@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 
 public class LocationWeatherModel {
     private long id = -1;
+    private String timeZone = "GMT+0";
     private String name = "";
     private double latitude = 0;
     private double longitude = 0;
@@ -103,6 +104,13 @@ public class LocationWeatherModel {
         return isEdit;
     }
 
+    public String getTimeZone() {
+        return this.timeZone;
+    }
+
+    public void setTimeZone(String s) {
+        this.timeZone = s;
+    }
 
     @NonNull
     @Override

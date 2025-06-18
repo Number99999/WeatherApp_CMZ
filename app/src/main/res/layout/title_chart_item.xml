@@ -5,7 +5,7 @@
     android:layout_height="wrap_content">
 
     <LinearLayout
-        android:layout_width="@dimen/widget_size_51"
+        android:layout_width="@dimen/widget_size_46"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:orientation="vertical"
@@ -39,15 +39,16 @@
             <ImageView
                 android:layout_width="13dp"
                 android:layout_height="13dp"
-                android:scaleType="fitCenter"
                 android:layout_gravity="center"
+                android:scaleType="fitCenter"
                 android:src="@drawable/icon_rainfall" />
 
             <TextView
                 android:id="@+id/txt_rainfall_rate"
-                android:layout_width="25dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
+                android:maxWidth="@dimen/widget_size_25"
                 android:text="100%"
                 android:textColor="#FFFFFF"
                 android:textSize="10sp" />

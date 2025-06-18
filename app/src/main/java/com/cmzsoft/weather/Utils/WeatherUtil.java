@@ -1,8 +1,12 @@
 package com.cmzsoft.weather.Utils;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 public class WeatherUtil {
     public static String getLocationFromAddressLines(String add) {
@@ -210,12 +214,34 @@ public class WeatherUtil {
             case 99:
                 iconCode = 32;
                 break;
+            case 9998:
+                iconCode = 30;
+                break;
+            case 9999:
+                iconCode = 31;
+                break;
             default:
                 iconCode = 1;
                 break;
         }
-
         return "icon_weather_" + iconCode;
+    }
+
+    /*
+        time: format: hh:mm
+        timezone: format: GMT+h
+     */
+    public static String convertTimeDeviceToTimezone(String time, String timeZone) {
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+            sdf.setTimeZone(TimeZone.getDefault());
+            Date date = sdf.parse(time);
+            sdf.setTimeZone(TimeZone.getTimeZone(timeZone));
+            return sdf.format(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return "";
+        }
     }
 
 }

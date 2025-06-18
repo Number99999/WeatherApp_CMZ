@@ -28,8 +28,8 @@
                 android:id="@+id/rc_title_chart"
                 android:layout_width="wrap_content"
                 android:layout_height="80dp"
-                android:layout_marginStart="-7dp"
-                android:layout_marginEnd="@dimen/margin_8dp"
+                android:layout_marginStart="@dimen/margin_4dp"
+                android:layout_marginEnd="@dimen/margin_4dp"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
             <HorizontalScrollView
@@ -38,7 +38,6 @@
                 android:layout_height="wrap_content"
                 android:fillViewport="true"
                 android:scrollbars="none">
-
                 <com.github.mikephil.charting.charts.LineChart
                     android:id="@+id/lineChart"
                     android:layout_width="0dp"

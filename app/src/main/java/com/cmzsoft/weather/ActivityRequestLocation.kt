@@ -15,6 +15,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.cmzsoft.weather.Model.FakeGlobal
 import com.cmzsoft.weather.Model.PermissionModel
+import java.util.TimeZone
 
 
 class ActivityRequestLocation : AppCompatActivity() {
@@ -28,6 +29,7 @@ class ActivityRequestLocation : AppCompatActivity() {
             insets
         }
         InitEventBtn()
+        val tz = TimeZone.getDefault()
     }
 
     private val requestPermissionLauncher = registerForActivityResult(

@@ -40,9 +40,7 @@ class WeatherItemAdapter(
         holder.txtWind.text = "${(item.winDir)}, ${(item.winSpeed.toString())}kph";
         holder.txtTime.text = item.time.substring(item.time.length - 5)
         holder.txtDegree.text = "${item.tempC}℃"
-        val nameIcon = "status_${
-            WeatherUtil.getWeatherIconName(item.iconCode, item.isDay).replace(".png", "")
-        }";
+        val nameIcon = WeatherUtil.getWeatherIconName(item.iconCode, item.isDay)
         val context = holder.itemView.context
         val resId = context.resources.getIdentifier(nameIcon, "drawable", context.packageName)
         System.out.println("name icon: " + nameIcon + " " + resId)
