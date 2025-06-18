@@ -102,9 +102,9 @@ public class WeatherUtil {
             case 65:
                 return "Mưa nặng";
             case 66:
-                return "Mưa đóng băng nhẹ";
+                return "Mưa băng nhẹ";
             case 67:
-                return "Mưa đóng băng nặng";
+                return "Mưa băng nặng";
             case 71:
                 return "Tuyết nhẹ";
             case 73:
@@ -136,48 +136,86 @@ public class WeatherUtil {
 
 
     public static String getWeatherIconName(int code, boolean isDay) {
+        int iconCode;
         switch (code) {
             case 0:
-                return isDay ? "sunny.png" : "night_clear.png";
+                iconCode = isDay ? 1 : 9;
+                break;
             case 1:
-                return isDay ? "sunny.png" : "night_partly_cloudy_moon.png";
+                iconCode = isDay ? 3 : 24;
+                break;
             case 2:
+                iconCode = isDay ? 3 : 24;
+                break;
             case 3:
-                return isDay ? "day_partly_cloudy.png" : "night_partly_cloudy_moon_1.png";
             case 45:
+                iconCode = 7;
+                break;
             case 48:
-                return isDay ? "day_partly_cloudy.png" : "night_few_clouds.png";
+                iconCode = 12;
+                break;
             case 51:
+                iconCode = isDay ? 14 : 25;
+                break;
             case 53:
+                iconCode = isDay ? 5 : 27;
+                break;
             case 55:
+                iconCode = 6;
+                break;
             case 56:
-            case 57: // Mưa phùn, mưa phùn băng
-                return isDay ? "day_partly_cloudy.png" : "rain.png";
+            case 57:
+                iconCode = 32;
+                break;
             case 61:
+                iconCode = 5;
+                break;
             case 63:
+                iconCode = isDay ? 14 : 25;
+                break;
             case 65:
+                iconCode = isDay ? 5 : 27;
+                break;
             case 66:
-            case 67: // Mưa các loại
-                return isDay ? "sunny_rain.png" : "rain.png";
+            case 67:
+                iconCode = 32;
+                break;
             case 71:
+                iconCode = isDay ? 13 : 20;
+                break;
             case 73:
+                iconCode = 12;
+                break;
             case 75:
-            case 77: // Tuyết các loại
-                return isDay ? "day_partly_cloudy.png" : "night_full_moon.png";
+            case 77:
+                iconCode = 17;
+                break;
             case 80:
             case 81:
-            case 82: // Mưa rào các loại
-                return "rain.png";
+                iconCode = 5;
+                break;
+            case 82:
+                iconCode = 6;
+                break;
             case 85:
-            case 86: // Tuyết rào
-                return isDay ? "day_partly_cloudy.png" : "night_full_moon.png";
-            case 95: // Dông
-                return "storm.png";
+                iconCode = isDay ? 13 : 20;
+                break;
+            case 86:
+                iconCode = 12;
+                break;
+            case 95:
+                iconCode = 18;
+                break;
             case 96:
-            case 99: // Dông kèm mưa storm
-                return "storm.png";
+            case 99:
+                iconCode = 32;
+                break;
+            default:
+                iconCode = 1;
+                break;
         }
-        return isDay ? "day_partly_cloudy.png" : "night_clear_moon.png";
+
+        return "icon_weather_" + iconCode;
     }
 
 }

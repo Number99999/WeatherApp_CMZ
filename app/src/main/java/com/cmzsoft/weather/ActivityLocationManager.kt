@@ -82,8 +82,7 @@ class ActivityLocationManager : AppCompatActivity() {
                     val iconName = WeatherUtil.getWeatherIconName(
                         currentWeather.getInt("weathercode"), currentWeather.getInt("is_day") == 1
                     )
-                    val drawableName = "status_" + iconName.removeSuffix(".png")
-                    val resId = resources.getIdentifier(drawableName, "drawable", packageName)
+                    val resId = resources.getIdentifier(iconName, "drawable", packageName)
                     item.weather = resId.toString()
                     adapter.notifyItemChanged(newList.indexOf(item))
                 }
@@ -112,10 +111,8 @@ class ActivityLocationManager : AppCompatActivity() {
                                 currentWeather.getInt("weathercode"),
                                 currentWeather.getInt("is_day") == 1
                             )
-                            val drawableName = "status_" + iconName.removeSuffix(".png")
                             val resId =
-                                resources.getIdentifier(drawableName, "drawable", packageName)
-                            println("jdsgfjagsdjkfhgasdjkf: " + resId);
+                                resources.getIdentifier(iconName, "drawable", packageName)
                             item.weather = resId.toString()
                             adapter.notifyItemChanged(newList.indexOf(item))
                         }

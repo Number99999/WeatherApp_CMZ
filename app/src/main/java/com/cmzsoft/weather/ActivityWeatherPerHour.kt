@@ -59,7 +59,7 @@ class ActivityWeatherPerHour : AppCompatActivity() {
     fun getWeatherIconRes(iconCode: Int, isDay: Boolean): Int {
         val name = WeatherUtil.getWeatherIconName(iconCode, isDay)
         val resId =
-            resources.getIdentifier("status_" + name.removeSuffix(".png"), "drawable", packageName)
+            resources.getIdentifier(name, "drawable", packageName)
         return resId
     }
 }

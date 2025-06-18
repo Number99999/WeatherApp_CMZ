@@ -38,13 +38,12 @@ class TitleChartDegreeAdapter(
             item.weatherIconUrl,
             item.isDay
         )
-        val drawableName = "status_" + iconName.removeSuffix(".png")
         val context = holder.itemView.context
-        val resId = context.resources.getIdentifier(drawableName, "drawable", context.packageName)
+        val resId = context.resources.getIdentifier(iconName, "drawable", context.packageName)
         if (resId != 0) {
             holder.icon_status_weather.setImageResource(resId)
         } else {
-            holder.icon_status_weather.setImageResource(R.drawable.status_day_partly_cloudy)
+            holder.icon_status_weather.setImageResource(R.drawable.icon_weather_1)
         }
     }
 

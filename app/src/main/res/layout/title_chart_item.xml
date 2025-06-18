@@ -27,7 +27,7 @@
             android:layout_height="30dp"
             android:layout_gravity="center"
             android:layout_marginTop="4dp"
-            android:src="@drawable/status_sunny" />
+            android:src="@drawable/icon_weather_1" />
 
         <LinearLayout
             android:layout_width="wrap_content"

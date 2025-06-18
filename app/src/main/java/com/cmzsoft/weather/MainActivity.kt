@@ -408,12 +408,11 @@ class MainActivity : AppCompatActivity() {
             val iconName = WeatherUtil.getWeatherIconName(
                 currentWeather.getInt("weathercode"), currentWeather.getInt("is_day") == 1
             )
-            val drawableName = "status_" + iconName.removeSuffix(".png")
-            val resId = resources.getIdentifier(drawableName, "drawable", packageName)
+            val resId = resources.getIdentifier(iconName, "drawable", packageName)
             if (resId != 0) {
                 imgWeatherIcon.setImageResource(resId)
             } else {
-                imgWeatherIcon.setImageResource(R.drawable.status_sunny)
+                imgWeatherIcon.setImageResource(R.drawable.icon_weather_1)
             }
 
             val windDir =
@@ -638,13 +637,12 @@ class MainActivity : AppCompatActivity() {
                     val iconName = WeatherUtil.getWeatherIconName(
                         dataModel.get(i).iconID, true
                     )
-                    val drawableName = "status_" + iconName.removeSuffix(".png")
-                    val resId = resources.getIdentifier(drawableName, "drawable", packageName)
+                    val resId = resources.getIdentifier(iconName, "drawable", packageName)
                     if (resId != 0) {
                         (parentView.getChildAt(1) as ImageView).setImageResource(resId)
                     } else {
                         // fallback icon nếu không tìm thấy
-                        (parentView.getChildAt(1) as ImageView).setImageResource(R.drawable.status_sunny)
+                        (parentView.getChildAt(1) as ImageView).setImageResource(R.drawable.icon_weather_1)
                     }
                 }
 
@@ -680,12 +678,11 @@ class MainActivity : AppCompatActivity() {
                     val iconName = WeatherUtil.getWeatherIconName(
                         dataModel.get(i).iconID, false
                     )
-                    val drawableName = "status_" + iconName.removeSuffix(".png")
-                    val resId = resources.getIdentifier(drawableName, "drawable", packageName)
+                    val resId = resources.getIdentifier(iconName, "drawable", packageName)
                     if (resId != 0) {
                         (parentView.getChildAt(1) as ImageView).setImageResource(resId)
                     } else {
-                        (parentView.getChildAt(1) as ImageView).setImageResource(R.drawable.status_sunny)
+                        (parentView.getChildAt(1) as ImageView).setImageResource(R.drawable.icon_weather_1)
                     }
                 }
 
@@ -1308,10 +1305,8 @@ class MainActivity : AppCompatActivity() {
 
     private fun testFirebase() {
         val firebaseAnalytics = Firebase.analytics;
-        firebaseAnalytics.logEvent("user_login") {
-            param("user_login", "test")
-        }
-        println("sebnd event")
+        firebaseAnalytics.logEvent("user_login", {})
+        println("send event")
     }
 
     override fun onResume() {
