@@ -1,4 +1,4 @@
-package com.cmzsoft.weather.FrameWork
+package com.cmzsoft.weather.FrameWork.SDK
 
 data class RemoteConfigModel(
     val aoaEnabled: Boolean,

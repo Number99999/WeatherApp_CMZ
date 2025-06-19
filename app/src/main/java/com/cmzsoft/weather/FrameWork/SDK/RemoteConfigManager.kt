@@ -1,4 +1,4 @@
-package com.cmzsoft.weather.FrameWork
+package com.cmzsoft.weather.FrameWork.SDK
 
 import com.google.firebase.Firebase
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig

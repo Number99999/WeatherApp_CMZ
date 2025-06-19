@@ -19,6 +19,14 @@
         android:theme="@style/Theme.Weather"
         tools:targetApi="31">
         <activity
+            android:name=".LoadingAppActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
             android:name=".ActivityChooseLocation"
             android:exported="false" />
         <activity
@@ -40,18 +48,13 @@
 
         <activity
             android:name=".ActivityRequestLocation"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            android:exported="false">
         </activity>
         <activity
             android:name=".ActivitySettingNotification"
             android:exported="false" />
         <activity
-            android:name=".activity_setting_scene"
+            android:name=".ActivityEstablish"
             android:exported="false" />
         <activity
             android:name=".MainActivity"
@@ -63,9 +66,11 @@
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="ca-app-pub-7340251527995818~8284130762" />
+
         <provider
             android:name="androidx.startup.InitializationProvider"
             android:authorities="${applicationId}.androidx-startup"
             tools:node="remove" />
     </application>
+
 </manifest>

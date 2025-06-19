@@ -5,7 +5,8 @@ import android.app.Application
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import com.cmzsoft.weather.FrameWork.RemoteConfigManager
+import com.cmzsoft.weather.FrameWork.Data.LocalStorageManager
+import com.cmzsoft.weather.FrameWork.SDK.RemoteConfigManager
 import com.cmzsoft.weather.Service.LocationService
 import com.cmzsoft.weather.Utils.AppOpenAdManager
 import com.google.android.gms.ads.MobileAds
@@ -26,10 +27,14 @@ class WeatherApp : Application(), Application.ActivityLifecycleCallbacks {
         super.onCreate()
 //        MobileAds.initialize(this) {}
         MobileAds.initialize(
-            this,
-            OnInitializationCompleteListener { initializationStatus: InitializationStatus? ->
+            this, OnInitializationCompleteListener { initializationStatus: InitializationStatus? ->
                 Log.d("Mediation", "Google Mobile Ads SDK Initialized")
             })
+        initApp()
+    }
+
+    private fun initApp() {
+        LocalStorageManager.init(applicationContext);
         LocationService.init(this)
         registerActivityLifecycleCallbacks(this)
         RemoteConfigManager.getInstance().fetchRemoteConfigCircle()
@@ -43,8 +48,7 @@ class WeatherApp : Application(), Application.ActivityLifecycleCallbacks {
     }
 
     override fun onActivityCreated(
-        activity: Activity,
-        savedInstanceState: Bundle?
+        activity: Activity, savedInstanceState: Bundle?
     ) {
     }
 
@@ -73,19 +77,15 @@ class WeatherApp : Application(), Application.ActivityLifecycleCallbacks {
 //                (activity as AppCompatActivity).supportFragmentManager
 //            )
 
-            AppOpenAdManager.loadAd(
-                context = this,
-                onAdLoaded = {
-                    AppOpenAdManager.showAdIfAvailable(activity, onAdImpression = {
-                        onAdImpression()
-                    }, onAdClosed = {
+            AppOpenAdManager.loadAd(context = this, onAdLoaded = {
+                AppOpenAdManager.showAdIfAvailable(activity, onAdImpression = {
+                    onAdImpression()
+                }, onAdClosed = {
 
-                    })
-                },
-                onAdFailed = {
+                })
+            }, onAdFailed = {
 
-                }
-            )
+            })
 
 
         }
@@ -117,8 +117,7 @@ class WeatherApp : Application(), Application.ActivityLifecycleCallbacks {
     }
 
     override fun onActivitySaveInstanceState(
-        activity: Activity,
-        outState: Bundle
+        activity: Activity, outState: Bundle
     ) {
         //TODO("Not yet implemented")
     }

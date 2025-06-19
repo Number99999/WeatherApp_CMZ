@@ -13,9 +13,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.cmzsoft.weather.FrameWork.Data.LocalStorageManager
 import com.cmzsoft.weather.Model.FakeGlobal
-import com.cmzsoft.weather.Model.PermissionModel
-import java.util.TimeZone
+import com.cmzsoft.weather.Model.Object.KeysStorage
+import com.cmzsoft.weather.Model.Object.PermissionModel
 
 
 class ActivityRequestLocation : AppCompatActivity() {
@@ -29,7 +30,7 @@ class ActivityRequestLocation : AppCompatActivity() {
             insets
         }
         InitEventBtn()
-        val tz = TimeZone.getDefault()
+        LocalStorageManager.putString(KeysStorage.isFirstOpenApp, "true");
     }
 
     private val requestPermissionLauncher = registerForActivityResult(

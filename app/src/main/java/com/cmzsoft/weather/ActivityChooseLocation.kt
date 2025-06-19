@@ -22,7 +22,7 @@ import com.cmzsoft.weather.CustomAdapter.LocationInMapAdapter
 import com.cmzsoft.weather.Manager.AdManager
 import com.cmzsoft.weather.Model.LocationInMapModel
 import com.cmzsoft.weather.Model.LocationWeatherModel
-import com.cmzsoft.weather.Model.PermissionModel
+import com.cmzsoft.weather.Model.Object.PermissionModel
 import com.cmzsoft.weather.Service.Interface.GetCurrentLocationCallback
 import com.cmzsoft.weather.Service.LocationService
 import com.cmzsoft.weather.Utils.WeatherUtil

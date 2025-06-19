@@ -27,6 +27,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SwitchCompat
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
@@ -40,12 +41,15 @@ import androidx.recyclerview.widget.RecyclerView
 import com.cmzsoft.weather.APICall.RequestAPI
 import com.cmzsoft.weather.CustomAdapter.TitleChartDegreeAdapter
 import com.cmzsoft.weather.CustomView.SunArcView
+import com.cmzsoft.weather.FrameWork.Data.LocalStorageManager
 import com.cmzsoft.weather.Manager.AdManager
 import com.cmzsoft.weather.Model.DataHourWeatherModel
 import com.cmzsoft.weather.Model.DataWeatherPerHourModel
 import com.cmzsoft.weather.Model.FakeGlobal
 import com.cmzsoft.weather.Model.LocationWeatherModel
+import com.cmzsoft.weather.Model.NavMenuModel
 import com.cmzsoft.weather.Model.NightDayTempModel
+import com.cmzsoft.weather.Model.Object.KeysStorage
 import com.cmzsoft.weather.Model.TitleChartItemModel
 import com.cmzsoft.weather.RendererChart.CustomLineChartRenderer
 import com.cmzsoft.weather.RendererChart.RainfallRendererBarChart
@@ -299,7 +303,7 @@ class MainActivity : AppCompatActivity() {
     private fun initEventBtnInNavBar() {
         val nav_establish = findViewById<LinearLayout>(R.id.nav_establish)
         nav_establish.setOnClickListener {
-            val changePage = Intent(this, activity_setting_scene::class.java);
+            val changePage = Intent(this, ActivityEstablish::class.java);
             startActivity(changePage);
         }
 
@@ -1294,6 +1298,32 @@ class MainActivity : AppCompatActivity() {
         navPanel.post {
             navPanel.translationX = -navPanel.width.toFloat()
             navPanel.animate().translationX(0f).setDuration(300).start()
+        }
+        val safeData =
+            LocalStorageManager.getObject(KeysStorage.navMenuModel, NavMenuModel::class.java)
+                ?: NavMenuModel()
+
+        val switchNoti = findViewById<SwitchCompat>(R.id.switch_notification)
+        val switchDaily = findViewById<SwitchCompat>(R.id.switch_daily_weather)
+        val switchBg = findViewById<SwitchCompat>(R.id.switch_background)
+
+        switchNoti.isChecked = safeData.notification
+        switchBg.isChecked = safeData.background
+        switchDaily.isChecked = safeData.weatherDaily
+
+        switchNoti.setOnClickListener {
+            safeData.notification = switchNoti.isChecked
+            LocalStorageManager.putObject(KeysStorage.navMenuModel, safeData)
+        }
+
+        switchDaily.setOnClickListener {
+            safeData.weatherDaily =switchDaily.isChecked
+            LocalStorageManager.putObject(KeysStorage.navMenuModel, safeData)
+        }
+
+        switchBg.setOnClickListener {
+            safeData.background = switchBg.isChecked
+            LocalStorageManager.putObject(KeysStorage.navMenuModel, safeData)
         }
     }
 

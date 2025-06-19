@@ -11,7 +11,8 @@ import com.cmzsoft.weather.CustomLayoutItem
 import com.cmzsoft.weather.R
 
 class CustomLayoutAdapter(
-    private val items: List<CustomLayoutItem>
+    private val items: List<CustomLayoutItem>,
+    private val onSwitchChanged: (title: String, isChecked: Boolean) -> Unit
 ) : RecyclerView.Adapter<CustomLayoutAdapter.ViewHolder>() {
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -34,8 +35,11 @@ class CustomLayoutAdapter(
 
         holder.imgIcon.setImageResource(item.icon)
         holder.txtTitle.text = item.title
-        holder.sw.isChecked = true;
+        holder.sw.isChecked = item.isCheck;
 
-        // holder.btnArrow.setOnClickListener { ... }
+        holder.sw.setOnClickListener {
+            val newState = holder.sw.isChecked
+            onSwitchChanged(item.title, newState)
+        }
     }
 }

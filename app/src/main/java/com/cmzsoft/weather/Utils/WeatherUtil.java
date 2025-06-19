@@ -226,7 +226,6 @@ public class WeatherUtil {
         }
         return "icon_weather_" + iconCode;
     }
-
     /*
         time: format: hh:mm
         timezone: format: GMT+h
@@ -237,6 +236,8 @@ public class WeatherUtil {
             sdf.setTimeZone(TimeZone.getDefault());
             Date date = sdf.parse(time);
             sdf.setTimeZone(TimeZone.getTimeZone(timeZone));
+            assert date != null;
+            System.out.println("convertTimeDeviceToTimezone " + sdf.format(date));
             return sdf.format(date);
         } catch (ParseException e) {
             e.printStackTrace();
