@@ -23,10 +23,10 @@ class LoadingAppActivity : AppCompatActivity() {
     }
 
     fun activeActivity() {
-        val changePage = Intent(this, ActivitySettingTheme::class.java);
-        startActivity(changePage);
-
-        return
+//        val changePage = Intent(this, ActivitySettingTheme::class.java);
+//        startActivity(changePage);
+//
+//        return
         if (LocalStorageManager.getString(KeysStorage.isFirstOpenApp) == null) {
             val changePage = Intent(this, ActivityRequestLocation::class.java);
             startActivity(changePage);

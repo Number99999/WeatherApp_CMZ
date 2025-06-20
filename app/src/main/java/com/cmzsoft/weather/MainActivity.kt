@@ -8,7 +8,10 @@ import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.graphics.Color
+import android.graphics.Paint
 import android.location.Location
 import android.os.Build
 import android.os.Bundle
@@ -120,6 +123,7 @@ class MainActivity : AppCompatActivity() {
         }
         this.getCurLocation();
         startAutoUpdateWeather()
+//        test()
 //        drawSunArcView()
     }
 
@@ -139,7 +143,6 @@ class MainActivity : AppCompatActivity() {
         val context: Context = this
         adManager = AdManager(context)
         showInterAds()
-        testFirebase()
     }
 
     private fun onInitedLocation() {
@@ -904,7 +907,7 @@ class MainActivity : AppCompatActivity() {
 
             setupChart(arrInfo)
             setupScrollSync()
-
+            test()
         } catch (e: Exception) {
             Toast.makeText(this, e.message.toString(), Toast.LENGTH_SHORT).show()
             e.printStackTrace()
@@ -1346,10 +1349,36 @@ class MainActivity : AppCompatActivity() {
 //        })
     }
 
-    private fun testFirebase() {
-        val firebaseAnalytics = Firebase.analytics;
-        firebaseAnalytics.logEvent("user_login", {})
-        println("send event")
+    fun test(){
+        val bitmap = createLineChartBitmap(this)
+        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val channelId = "chart_channel"
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = NotificationChannel(channelId, "Biểu đồ", NotificationManager.IMPORTANCE_DEFAULT)
+            notificationManager.createNotificationChannel(channel)
+        }
+
+        val notification = NotificationCompat.Builder(this, channelId)
+            .setContentTitle("Thống kê hôm nay")
+            .setContentText("Biểu đồ thể hiện dữ liệu")
+            .setSmallIcon(R.drawable.icon_weather_1)
+            .setStyle(NotificationCompat.BigPictureStyle().bigPicture(bitmap))
+            .setOngoing(true)
+            .build()
+
+        notificationManager.notify(2001, notification)
+
+    }
+
+    fun createLineChartBitmap(context: Context): Bitmap {
+       val chart = findViewById<LineChart>(R.id.lineChart);
+        chart.isDrawingCacheEnabled = true
+        chart.buildDrawingCache(true)
+        val bitmap = Bitmap.createBitmap(chart.drawingCache)
+        chart.isDrawingCacheEnabled = false
+        return bitmap
+        return bitmap
     }
 
     override fun onResume() {
