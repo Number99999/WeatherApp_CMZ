@@ -81,9 +81,11 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
                 android:layout_marginTop="8dp"
-                android:text="Tải ngay"
+                android:text="Cài đặt"
                 android:textAllCaps="false"
-                android:textColor="#ffffff" />
+                android:textColor="#ffffff"
+                android:background="@drawable/background_blue_2"
+                app:backgroundTint="@null" />
         </LinearLayout>
     </com.google.android.gms.ads.nativead.NativeAdView>
 </LinearLayout>

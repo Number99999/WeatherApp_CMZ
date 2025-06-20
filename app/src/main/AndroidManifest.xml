@@ -42,16 +42,14 @@
         <activity
             android:name=".ActivityPolicy"
             android:exported="false" />
-
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyAE_6F6J92mVoin5BvwysIpafryT0gUyRs" />
-
         <activity
             android:name=".ActivityRequestLocation"
-            android:exported="false"></activity>
+            android:exported="false" />
         <activity
             android:name=".ActivitySettingNotification"
+            android:exported="false" />
+        <activity
+            android:name=".ActivitySettingTheme"
             android:exported="false" />
         <activity
             android:name=".ActivityEstablish"
@@ -66,6 +64,9 @@
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="ca-app-pub-7340251527995818~8284130762" />
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyAE_6F6J92mVoin5BvwysIpafryT0gUyRs" />
 
         <provider
             android:name="androidx.startup.InitializationProvider"

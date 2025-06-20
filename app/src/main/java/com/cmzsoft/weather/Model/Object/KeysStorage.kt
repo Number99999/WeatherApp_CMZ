@@ -5,4 +5,5 @@ object KeysStorage {
     const val navMenuModel = "NavMenuModel"
     const val establish = "Establish"
     const val customLayout = "CustomLayout"
+    const val settingTheme = "SettingTheme"
 }

@@ -19,9 +19,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:navigationContentDescription="Back"
         app:titleCentered="true" />
-    <!--    app:navigationIcon="@drawable/ic_arrow_back"-->
 
-    <!-- TabLayout -->
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout"
         android:layout_width="0dp"
@@ -34,12 +32,10 @@
         app:tabSelectedTextColor="#FFFFFF"
         app:tabTextColor="#7A9FBF" />
 
-    <!-- RecyclerView làm grid 2 cột -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:padding="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
