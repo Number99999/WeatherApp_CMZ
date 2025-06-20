@@ -7,6 +7,7 @@
     android:layout_height="match_parent"
     android:background="#222222"
     android:clipToPadding="false"
+    android:fitsSystemWindows="false"
     android:paddingTop="?attr/actionBarSize"
     tools:context=".ActivityRequestLocation">
 
@@ -28,7 +29,7 @@
         android:id="@+id/request_location_1"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:visibility="visible"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@id/guidelineRight"
         app:layout_constraintStart_toStartOf="@id/guidelineLeft"
@@ -247,6 +248,105 @@
                 android:text="Không cho phép"
                 android:textColor="@color/black" />
 
+        </LinearLayout>
+    </ScrollView>
+
+    <ScrollView
+        android:id="@+id/request_location_3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/widget_size_240"
+                android:scaleType="fitCenter"
+                android:src="@drawable/image_map" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="Cho phép quyền"
+                    android:textSize="@dimen/font_size_19"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/widget_size_20"
+                    android:layout_marginTop="@dimen/widget_size_12"
+                    android:layout_marginEnd="@dimen/widget_size_20"
+                    android:gravity="center"
+                    android:lines="2"
+                    android:text="Ứng dụng cần truy cập vào vị trí thiết bị của bạn
+để cung cấp dự báo thời tiết chính xác" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginStart="@dimen/widget_size_20"
+                    android:layout_marginTop="@dimen/margin_12dp"
+                    android:layout_marginEnd="@dimen/widget_size_20"
+                    android:background="@drawable/background_border_gray"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="@dimen/widget_size_20"
+                        android:layout_height="@dimen/widget_size_20"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="@dimen/margin_8dp"
+                        android:src="@drawable/icon_location_nav_bar" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Cho phép quyền" />
+
+                    <androidx.appcompat.widget.SwitchCompat
+                        android:id="@+id/switch_accept"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/margin_8dp"
+                        android:checked="true" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/btn_continue"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/widget_size_20"
+                    android:layout_marginTop="@dimen/margin_20dp"
+                    android:layout_marginEnd="@dimen/widget_size_20"
+                    android:background="@drawable/background_blue_2"
+                    android:gravity="center"
+                    android:padding="@dimen/widget_size_10"
+                    android:text="Tiếp tục"
+                    android:textSize="@dimen/font_size_16" />
+            </LinearLayout>
+
+            <FrameLayout
+                android:id="@+id/ad_container"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginTop="@dimen/widget_size_15"
+                android:layout_weight="1"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
         </LinearLayout>
     </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

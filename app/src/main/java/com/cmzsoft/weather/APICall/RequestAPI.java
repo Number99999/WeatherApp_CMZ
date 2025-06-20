@@ -47,6 +47,7 @@ public class RequestAPI {
                 in.close();
                 JSONObject obj = new JSONObject(response.toString());
                 FakeGlobal.getInstance().curLocation.setTimeZone(obj.getString("timezone_abbreviation"));
+                System.out.println("SET TIME ZONEEEEEEEEEEE " + FakeGlobal.getInstance().curLocation.getTimeZone());
                 return obj;
             } else {
                 System.out.println("Lỗi khi gọi API. Mã lỗi: " + responseCode);
@@ -140,9 +141,6 @@ public class RequestAPI {
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
             int responseCode = conn.getResponseCode();
-//            Calendar calendar = Calendar.getInstance();
-//            int curHour = calendar.get(Calendar.HOUR_OF_DAY);
-
             Date now = new Date();
 
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
@@ -152,7 +150,6 @@ public class RequestAPI {
 
             String timeConverted = WeatherUtil.convertTimeDeviceToTimezone(hourMinute, targetTimeZone);
             int curHour = Integer.parseInt(timeConverted.substring(11, 13));
-            System.out.println("CUR HOURRRRRRRRRRRRRRRR " + curHour);
             if (responseCode == HttpURLConnection.HTTP_OK) {
                 BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
                 StringBuilder response = new StringBuilder();
@@ -179,7 +176,7 @@ public class RequestAPI {
                 for (int i = curHour; i < curHour + 24; i++) {
                     String fullTime = timeArr.getString(i); // "2025-06-18T18:00"
                     String hourMinute2 = fullTime.split("T")[1]; // "18:00"
-                    LocalTime currentHour = LocalTime.parse(hourMinute2);
+//                    LocalTime currentHour = LocalTime.parse(hourMinute2);
 
                     boolean isDay = (Integer.parseInt(hourMinute2.substring(0, 2)) >= 6) && (Integer.parseInt(hourMinute2.substring(0, 2)) <= 19);
                     int tempC = tempArr.getInt(i);
@@ -208,7 +205,7 @@ public class RequestAPI {
     }
 
     public JSONObject GetPOPNextWeek(double lat, double lon) {
-        String urlString = "https://api.open-meteo.com/v1/forecast?latitude=" + lat + "&longitude=" + lon + "&hourly=precipitation_probability";
+        String urlString = "https://api.open-meteo.com/v1/forecast?latitude=" + lat + "&longitude=" + lon + "&hourly=precipitation_probability&timezone=auto";
         try {
             URL url = new URL(urlString);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -218,12 +215,10 @@ public class RequestAPI {
                 BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
                 StringBuilder response = new StringBuilder();
                 String line;
-
                 while ((line = in.readLine()) != null) {
                     response.append(line);
                 }
                 in.close();
-
                 JSONObject result = new JSONObject(response.toString());
                 return result;
             } else {
@@ -238,7 +233,8 @@ public class RequestAPI {
     }
 
     public JSONObject GetTempInAWeek(double lat, double lon) {
-        String urlString = "https://api.open-meteo.com/v1/forecast?latitude=" + lat + "&longitude=" + lon + "&hourly=precipitation_probability,temperature_2m,weathercode&timezone=auto\n";
+        String urlString = "https://api.open-meteo.com/v1/forecast?latitude=" + lat + "&longitude=" + lon + "&hourly=precipitation_probability,temperature_2m,weathercode&timezone=auto";
+        System.out.println("STRINGGGGGGGGGGGGGG " + urlString);
         try {
             URL url = new URL(urlString);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();

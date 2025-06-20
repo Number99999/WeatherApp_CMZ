@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
 import com.cmzsoft.weather.R
 import com.cmzsoft.weather.Utils.AdUnitIds
@@ -194,22 +195,19 @@ class AdManager @Inject constructor(
         val inflater = LayoutInflater.from(context)
         val view = inflater.inflate(R.layout.native_ad_layout, container, false)
         val adView = view.findViewById<NativeAdView>(R.id.native_ad_views)
-//        val shimmerViewContainer =  view.findViewById<com.facebook.shimmer.ShimmerFrameLayout>(R.id.shimmer_view_container)
+        val iconImageView = view.findViewById<ImageView>(R.id.ad_app_icon)
         val adLoader = AdLoader.Builder(context, AdUnitIds.NATIVE)
             .forNativeAd { nativeAd ->
                 container.removeAllViews()
                 displayNativeAd(adView, nativeAd, view)
-//                shimmerViewContainer.stopShimmer()
-//                shimmerViewContainer.visibility = View.GONE
                 adView.visibility = View.VISIBLE
                 adView.setNativeAd(nativeAd)
-
+                iconImageView.setImageDrawable(nativeAd.icon?.drawable)
                 container.addView(view)
                 onAdLoaded(nativeAd)
             }
             .withAdListener(object : AdListener() {
                 override fun onAdFailedToLoad(error: LoadAdError) {
-//                    ALog.d("AdManager", "Native ad failed to load: ${error.message}")
                     container.addView(view)
                     onAdFailed(error.message)
                 }

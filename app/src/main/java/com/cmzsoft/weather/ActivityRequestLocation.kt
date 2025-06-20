@@ -4,16 +4,23 @@ import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.view.View
 import android.widget.Button
+import android.widget.FrameLayout
+import android.widget.ScrollView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SwitchCompat
 import androidx.core.app.ActivityCompat
 import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
+import com.cmzsoft.weather.CustomView.PermissionDialogFragment
 import com.cmzsoft.weather.FrameWork.Data.LocalStorageManager
+import com.cmzsoft.weather.Manager.AdManager
 import com.cmzsoft.weather.Model.FakeGlobal
 import com.cmzsoft.weather.Model.Object.KeysStorage
 import com.cmzsoft.weather.Model.Object.PermissionModel
@@ -23,6 +30,7 @@ class ActivityRequestLocation : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        WindowCompat.setDecorFitsSystemWindows(window, false)
         setContentView(R.layout.activity_request_location)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -31,6 +39,11 @@ class ActivityRequestLocation : AppCompatActivity() {
         }
         InitEventBtn()
         LocalStorageManager.putString(KeysStorage.isFirstOpenApp, "true");
+        findViewById<ScrollView>(R.id.request_location_1).visibility = View.VISIBLE
+        findViewById<ScrollView>(R.id.request_location_2).visibility = View.GONE
+        findViewById<ScrollView>(R.id.request_location_3).visibility = View.GONE
+
+        this.loadNativeAds()
     }
 
     private val requestPermissionLauncher = registerForActivityResult(
@@ -44,9 +57,9 @@ class ActivityRequestLocation : AppCompatActivity() {
     }
 
     fun showCustomPermissionDialog() {
-//        PermissionDialogFragment {
-//            requestLocationPermission()
-//        }.show(supportFragmentManager, "PermissionDialog")
+        PermissionDialogFragment {
+            requestLocationPermission()
+        }.show(supportFragmentManager, "PermissionDialog")
     }
 
     fun requestLocationPermission() {
@@ -60,6 +73,16 @@ class ActivityRequestLocation : AppCompatActivity() {
         InitEventAcceptThisTime()
         InitEventDontAccept()
         InitEventClickPolicy()
+        findViewById<TextView>(R.id.btn_continue).setOnClickListener {
+            if (findViewById<SwitchCompat>(R.id.switch_accept).isChecked) {
+                FakeGlobal.getInstance().userAcceptRequestLocation = true;
+                requestPermissionLocation()
+            } else {
+                val changeP = Intent(this, ActivityChooseLocation::class.java);
+                startActivity(changeP)
+//                finish()
+            }
+        }
     }
 
     private fun InitEventClickPolicy() {
@@ -81,9 +104,21 @@ class ActivityRequestLocation : AppCompatActivity() {
 
 //            startActivity(changePage);
 //            showCustomPermissionDialog()
-            FakeGlobal.getInstance().userAcceptRequestLocation = true;
-            requestPermissionLocation()
+
+            findViewById<ScrollView>(R.id.request_location_1).visibility = View.GONE
+            findViewById<ScrollView>(R.id.request_location_3).visibility = View.VISIBLE
+            findViewById<ScrollView>(R.id.request_location_3).post {
+                findViewById<ScrollView>(R.id.request_location_3).fullScroll(View.FOCUS_DOWN)
+            }
+            findViewById<ScrollView>(R.id.request_location_3).setOnTouchListener { _, _ -> true }
         }
+    }
+
+    private fun loadNativeAds() {
+        var adMgr = AdManager.getInstance(this@ActivityRequestLocation);
+        adMgr.loadNativeClickAd(findViewById<FrameLayout>(R.id.ad_container), onAdLoaded = {
+        }, onAdFailed = { println("onAdFailed") }, onAdImpression = {
+        })
     }
 
     private fun InitEventButtonManual() {

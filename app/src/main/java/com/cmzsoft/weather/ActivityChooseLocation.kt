@@ -212,11 +212,11 @@ class ActivityChooseLocation : AppCompatActivity(), OnMapReadyCallback {
                 this, Manifest.permission.ACCESS_FINE_LOCATION
             ) != PackageManager.PERMISSION_GRANTED
         ) {
-            ActivityCompat.requestPermissions(
-                this,
-                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-                PermissionModel.REQUEST_LOCATION
-            )
+//            ActivityCompat.requestPermissions(
+//                this,
+//                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+//                PermissionModel.REQUEST_LOCATION
+//            )
             return
         }
 
@@ -301,11 +301,11 @@ class ActivityChooseLocation : AppCompatActivity(), OnMapReadyCallback {
                 this, Manifest.permission.ACCESS_FINE_LOCATION
             ) != PackageManager.PERMISSION_GRANTED
         ) {
-            ActivityCompat.requestPermissions(
-                this,
-                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-                PermissionModel.REQUEST_LOCATION
-            )
+//            ActivityCompat.requestPermissions(
+//                this,
+//                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+//                PermissionModel.REQUEST_LOCATION
+//            )
         } else {
             myMap.isMyLocationEnabled = true
         }

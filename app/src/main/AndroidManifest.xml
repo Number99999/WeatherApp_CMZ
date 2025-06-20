@@ -28,7 +28,8 @@
         </activity>
         <activity
             android:name=".ActivityChooseLocation"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".ActivityCustomLayout"
             android:exported="false" />
@@ -48,8 +49,7 @@
 
         <activity
             android:name=".ActivityRequestLocation"
-            android:exported="false">
-        </activity>
+            android:exported="false"></activity>
         <activity
             android:name=".ActivitySettingNotification"
             android:exported="false" />

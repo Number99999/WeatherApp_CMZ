@@ -1,11 +1,14 @@
 package com.cmzsoft.weather.Utils;
 
+import com.cmzsoft.weather.Model.FakeGlobal;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.TimeZone;
 
 public class WeatherUtil {
@@ -226,6 +229,7 @@ public class WeatherUtil {
         }
         return "icon_weather_" + iconCode;
     }
+
     /*
         time: format: hh:mm
         timezone: format: GMT+h
@@ -245,4 +249,13 @@ public class WeatherUtil {
         }
     }
 
+    public static String CurrentTime() {
+        Date now = new Date();
+
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
+        String hourMinute = formatter.format(now);
+
+        String targetTimeZone = FakeGlobal.getInstance().curLocation.getTimeZone();
+        return WeatherUtil.convertTimeDeviceToTimezone(hourMinute, targetTimeZone);
+    }
 }

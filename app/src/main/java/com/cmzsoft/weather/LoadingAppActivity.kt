@@ -28,7 +28,8 @@ class LoadingAppActivity : AppCompatActivity() {
             startActivity(changePage);
             finish()
         } else {
-            val changePage = Intent(this, MainActivity::class.java);
+//            val changePage = Intent(this, MainActivity::class.java);
+            val changePage = Intent(this, ActivityRequestLocation::class.java);
             startActivity(changePage);
             finish()
         }

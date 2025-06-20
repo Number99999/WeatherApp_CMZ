@@ -80,11 +80,11 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
+import java.lang.Integer.parseInt
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
-import java.util.TimeZone
 import kotlin.math.roundToInt
 
 @AndroidEntryPoint
@@ -143,7 +143,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun onInitedLocation() {
-        println("onInitedLocation")
         UpdateWeatherInfor()
         setupLineChart()
         initEventNavBar()
@@ -161,7 +160,6 @@ class MainActivity : AppCompatActivity() {
                     FakeGlobal.getInstance().curLocation.longitude
                 )
             }
-
             val arrTime = resultAPI.getJSONObject("hourly").getJSONArray("time")
             val arrRainSum =
                 resultAPI.getJSONObject("hourly").getJSONArray("precipitation_probability")
@@ -365,6 +363,7 @@ class MainActivity : AppCompatActivity() {
                 this, Manifest.permission.ACCESS_COARSE_LOCATION
             ) != PackageManager.PERMISSION_GRANTED
         ) {
+            this@MainActivity.onInitedLocation();
             return
         }
         if (!FakeGlobal.getInstance().isFirstLoadActivity) return;
@@ -410,7 +409,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun updateDataOnMainInfo(result: JSONObject) {
         try {
-            val curHour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
+            val curHour = parseInt(WeatherUtil.CurrentTime().substring(11, 13))
             val txtDegree = findViewById<TextView>(R.id.temperature)
             val currentWeather = result.getJSONObject("current_weather")
             val tempC = currentWeather.getDouble("temperature")
@@ -494,22 +493,15 @@ class MainActivity : AppCompatActivity() {
             // Giả sử: 6h (06:00) đến trước 18h (18:00) là ban ngày, còn lại là ban đêm
             for (idx in idxList) {
                 val hour = timeArr.getString(idx).substring(11, 13).toInt()
-                if (hour in 6 until 18) {
+                if (hour in 6 until 19) {
                     dayHours.add(idx)
                 } else {
                     nightHours.add(idx)
                 }
             }
 
-            // Max tỉ lệ mưa và max nhiệt độ cho ban ngày và ban đêm
-            val rainDay =
-                if (dayHours.isNotEmpty()) dayHours.map { rainProbArr.optDouble(it, 0.0) }.average()
-                    .toInt()
-                else 0
-            val rainNight =
-                if (nightHours.isNotEmpty()) nightHours.map { rainProbArr.optDouble(it, 0.0) }
-                    .average().toInt()
-                else 0
+            val rainDay = dayHours.maxOfOrNull { rainProbArr.optDouble(it, 0.0) }?.toInt() ?: 0
+            val rainNight = nightHours.maxOfOrNull { rainProbArr.optDouble(it, 0.0) }?.toInt() ?: 0
             val tempDay = dayHours.maxOfOrNull { tempArr.optDouble(it, 0.0) }?.toFloat() ?: 0f
             val tempNight = nightHours.maxOfOrNull { tempArr.optDouble(it, 0.0) }?.toFloat() ?: 0f
             val iconID = dayHours.maxByOrNull { tempArr.optDouble(it, 0.0) }
@@ -715,24 +707,11 @@ class MainActivity : AppCompatActivity() {
 
     private fun UpdateCurrentTime() {
         val textView = findViewById<TextView>(R.id.timeInfo)
-        val now = java.util.Date()
-
-        val hourMinute = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()).format(now)
-
-//        val day = calendar.get(Calendar.DAY_OF_MONTH)
-//        val month = calendar.get(Calendar.MONTH) + 1
-//        val year = calendar.get(Calendar.YEAR)
-//        val weekday = calendar.get(Calendar.DAY_OF_WEEK)
-
-        val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.US)
-        sdf.timeZone = TimeZone.getTimeZone(FakeGlobal.getInstance().curLocation.timeZone)
-        val timeConverted = WeatherUtil.convertTimeDeviceToTimezone(
-            hourMinute, FakeGlobal.getInstance().curLocation.timeZone
-        )
+        val timeConverted = WeatherUtil.CurrentTime()
         try {
-            val date = sdf.parse(timeConverted)
+            val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
             val calendar = Calendar.getInstance()
-            calendar.time = date
+            calendar.time = formatter.parse(timeConverted);
 
             val day = calendar.get(Calendar.DAY_OF_MONTH)
             val month = calendar.get(Calendar.MONTH) + 1
@@ -1317,7 +1296,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         switchDaily.setOnClickListener {
-            safeData.weatherDaily =switchDaily.isChecked
+            safeData.weatherDaily = switchDaily.isChecked
             LocalStorageManager.putObject(KeysStorage.navMenuModel, safeData)
         }
 
