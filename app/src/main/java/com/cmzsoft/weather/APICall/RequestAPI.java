@@ -47,7 +47,6 @@ public class RequestAPI {
                 in.close();
                 JSONObject obj = new JSONObject(response.toString());
                 FakeGlobal.getInstance().curLocation.setTimeZone(obj.getString("timezone_abbreviation"));
-                System.out.println("SET TIME ZONEEEEEEEEEEE " + FakeGlobal.getInstance().curLocation.getTimeZone());
                 return obj;
             } else {
                 System.out.println("Lỗi khi gọi API. Mã lỗi: " + responseCode);

@@ -241,7 +241,6 @@ public class WeatherUtil {
             Date date = sdf.parse(time);
             sdf.setTimeZone(TimeZone.getTimeZone(timeZone));
             assert date != null;
-            System.out.println("convertTimeDeviceToTimezone " + sdf.format(date));
             return sdf.format(date);
         } catch (ParseException e) {
             e.printStackTrace();

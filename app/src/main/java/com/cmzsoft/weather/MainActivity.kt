@@ -11,11 +11,9 @@ import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
-import android.graphics.Paint
 import android.location.Location
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
@@ -31,6 +29,7 @@ import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
+import androidx.cardview.widget.CardView
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
@@ -74,9 +73,6 @@ import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.model.LatLng
-import com.google.firebase.analytics.ktx.analytics
-import com.google.firebase.analytics.ktx.logEvent
-import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -302,8 +298,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initEventBtnInNavBar() {
-        val nav_establish = findViewById<LinearLayout>(R.id.nav_establish)
-        nav_establish.setOnClickListener {
+        findViewById<LinearLayout>(R.id.nav_establish).setOnClickListener {
             val changePage = Intent(this, ActivityEstablish::class.java);
             startActivity(changePage);
         }
@@ -345,6 +340,11 @@ class MainActivity : AppCompatActivity() {
 
         findViewById<LinearLayout>(R.id.nav_share).setOnClickListener {
             shareAppLink()
+        }
+
+        findViewById<LinearLayout>(R.id.nav_choose_theme).setOnClickListener {
+            val changePage = Intent(this, ActivitySettingTheme::class.java)
+            startActivity(changePage)
         }
     }
 
@@ -722,7 +722,6 @@ class MainActivity : AppCompatActivity() {
 
             val weekday = calendar.get(Calendar.DAY_OF_WEEK)
 
-            Log.d("DATE", "Ngày: $day/$month/$year - Thứ: $weekday $timeConverted")
             val weekdays = arrayOf("Chủ nhật", "Thứ 2", "Thứ 3", "Thứ 4", "Thứ 5", "Thứ 6", "Thứ 7")
             val weekdayStr = weekdays[weekday - 1]
             val formatted = "${timeConverted.substring(11)} - $weekdayStr, $day tháng $month $year"
@@ -907,7 +906,6 @@ class MainActivity : AppCompatActivity() {
 
             setupChart(arrInfo)
             setupScrollSync()
-            test()
         } catch (e: Exception) {
             Toast.makeText(this, e.message.toString(), Toast.LENGTH_SHORT).show()
             e.printStackTrace()
@@ -1349,35 +1347,38 @@ class MainActivity : AppCompatActivity() {
 //        })
     }
 
-    fun test(){
-        val bitmap = createLineChartBitmap(this)
-        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+    fun test() {
+        val bitmap = createLineChartBitmap()
+        if (bitmap == null) {
+            println("BITMAP NULLLLLLLLL")
+            return;
+        }
+        val notificationManager =
+            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val channelId = "chart_channel"
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(channelId, "Biểu đồ", NotificationManager.IMPORTANCE_DEFAULT)
+            val channel =
+                NotificationChannel(channelId, "Biểu đồ", NotificationManager.IMPORTANCE_DEFAULT)
             notificationManager.createNotificationChannel(channel)
         }
 
-        val notification = NotificationCompat.Builder(this, channelId)
-            .setContentTitle("Thống kê hôm nay")
-            .setContentText("Biểu đồ thể hiện dữ liệu")
-            .setSmallIcon(R.drawable.icon_weather_1)
-            .setStyle(NotificationCompat.BigPictureStyle().bigPicture(bitmap))
-            .setOngoing(true)
-            .build()
+        val notification =
+            NotificationCompat.Builder(this, channelId).setContentTitle("Thống kê hôm nay")
+                .setContentText("Biểu đồ thể hiện dữ liệu").setSmallIcon(R.drawable.icon_weather_1)
+                .setStyle(NotificationCompat.BigPictureStyle().bigPicture(bitmap)).setOngoing(true)
+                .build()
 
         notificationManager.notify(2001, notification)
 
     }
 
-    fun createLineChartBitmap(context: Context): Bitmap {
-       val chart = findViewById<LineChart>(R.id.lineChart);
-        chart.isDrawingCacheEnabled = true
-        chart.buildDrawingCache(true)
-        val bitmap = Bitmap.createBitmap(chart.drawingCache)
-        chart.isDrawingCacheEnabled = false
-        return bitmap
+    fun createLineChartBitmap(): Bitmap? {
+        val chartView = findViewById<CardView>(R.id.chartCard)
+        if (chartView.width == 0 || chartView.height == 0) return null
+        val bitmap = Bitmap.createBitmap(chartView.width, chartView.height, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bitmap)
+        chartView.draw(canvas)
         return bitmap
     }
 
