@@ -1,13 +1,11 @@
 package com.cmzsoft.weather.RendererChart
 
-import XAxisRendererTwoLine
 import android.graphics.Canvas
 import android.graphics.Path
 import android.graphics.RectF
 import com.github.mikephil.charting.animation.ChartAnimator
 import com.github.mikephil.charting.buffer.BarBuffer
 import com.github.mikephil.charting.charts.BarChart
-import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet
 import com.github.mikephil.charting.renderer.BarChartRenderer
 import com.github.mikephil.charting.utils.ViewPortHandler

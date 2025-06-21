@@ -1,6 +1,6 @@
 package com.cmzsoft.weather
 
-import XAxisRendererTwoLine
+import XAxisRendererRainfallChart
 import android.Manifest
 import android.animation.ValueAnimator
 import android.app.NotificationChannel
@@ -242,7 +242,7 @@ class MainActivity : AppCompatActivity() {
             customRenderer.initBuffers()
             barChart.renderer = customRenderer
             barChart.setXAxisRenderer(
-                XAxisRendererTwoLine(
+                XAxisRendererRainfallChart(
                     barChart.viewPortHandler,
                     barChart.xAxis,
                     barChart.getTransformer(YAxis.AxisDependency.RIGHT),
@@ -259,9 +259,9 @@ class MainActivity : AppCompatActivity() {
         scrollView.setOnScrollChangeListener { _, _, scrollY, _, _ ->
             val headerHeight = headerView.height
             if (scrollY >= headerHeight) {
-                headerView.setBackgroundColor("#B3000000".toColorInt())
+                headerView.setBackgroundColor("#0E3752".toColorInt())
             } else {
-                headerView.setBackgroundColor("#00000000".toColorInt())
+                headerView.setBackgroundColor("#F20E3752".toColorInt())
             }
         }
     }
@@ -641,8 +641,8 @@ class MainActivity : AppCompatActivity() {
                     val day = calendar.get(Calendar.DAY_OF_MONTH)
                     val month = calendar.get(Calendar.MONTH) + 1
                     val dayOfWeek = WeatherUtil.getDayOfWeek(dataModel[i].date)
-
-                    textView.text = "$dayOfWeek\n$day/$month"
+                    if (i == 0) textView.text = "Hôm nay"
+                    else textView.text = "$dayOfWeek\n$day/$month"
                 }
 
                 if (parentView.getChildAt(1) is ImageView) {

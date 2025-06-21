@@ -131,16 +131,15 @@ public class WeatherUtil {
             case 86:
                 return "Tuyết rào nặng";
             case 95:
-                return "Dông";
+                return "Giông";
             case 96:
-                return "Dông kèm mưa đá nhẹ";
+                return "Giông kèm mưa đá nhẹ";
             case 99:
-                return "Dông kèm mưa đá nặng";
+                return "Giông kèm mưa đá nặng";
             default:
                 return "Không xác định";
         }
     }
-
 
     public static String getWeatherIconName(int code, boolean isDay) {
         int iconCode;

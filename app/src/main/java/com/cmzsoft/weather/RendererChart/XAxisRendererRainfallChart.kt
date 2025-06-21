@@ -6,7 +6,7 @@ import com.github.mikephil.charting.utils.MPPointF
 import com.github.mikephil.charting.utils.Transformer
 import com.github.mikephil.charting.utils.ViewPortHandler
 
-class XAxisRendererTwoLine(
+class XAxisRendererRainfallChart(
     viewPortHandler: ViewPortHandler,
     xAxis: XAxis,
     trans: Transformer,
