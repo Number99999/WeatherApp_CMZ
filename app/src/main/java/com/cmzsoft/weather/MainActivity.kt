@@ -2,16 +2,10 @@ package com.cmzsoft.weather
 
 import XAxisRendererTwoLine
 import android.Manifest
-import android.animation.ValueAnimator
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.content.Context
+import android.Manifest.permission.POST_NOTIFICATIONS
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
-import android.graphics.Canvas
 import android.graphics.Color
-import android.location.Location
 import android.os.Build
 import android.os.Bundle
 import android.view.Gravity
@@ -29,10 +23,7 @@ import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
-import androidx.cardview.widget.CardView
 import androidx.core.app.ActivityCompat
-import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.toColorInt
 import androidx.core.view.get
@@ -42,7 +33,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.cmzsoft.weather.APICall.RequestAPI
 import com.cmzsoft.weather.CustomAdapter.TitleChartDegreeAdapter
-import com.cmzsoft.weather.CustomView.SunArcView
 import com.cmzsoft.weather.FrameWork.Data.LocalStorageManager
 import com.cmzsoft.weather.Manager.AdManager
 import com.cmzsoft.weather.Model.DataHourWeatherModel
@@ -51,8 +41,11 @@ import com.cmzsoft.weather.Model.FakeGlobal
 import com.cmzsoft.weather.Model.LocationWeatherModel
 import com.cmzsoft.weather.Model.NavMenuModel
 import com.cmzsoft.weather.Model.NightDayTempModel
+import com.cmzsoft.weather.Model.NotificationModel
 import com.cmzsoft.weather.Model.Object.KeysStorage
+import com.cmzsoft.weather.Model.Object.PermissionModel
 import com.cmzsoft.weather.Model.TitleChartItemModel
+import com.cmzsoft.weather.NotificationApp.NotiManager
 import com.cmzsoft.weather.RendererChart.CustomLineChartRenderer
 import com.cmzsoft.weather.RendererChart.RainfallRendererBarChart
 import com.cmzsoft.weather.Service.DatabaseService
@@ -71,7 +64,6 @@ import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.github.mikephil.charting.formatter.ValueFormatter
-import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.model.LatLng
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
@@ -109,36 +101,19 @@ class MainActivity : AppCompatActivity() {
         }
 
         initValiable()
-
-        createNotificationChannel(this)
         RequestAcceptSendNotification();
-
         findViewById<ImageView>(R.id.add_location).setOnClickListener {
             val intent = Intent(this, ActivityChooseLocation::class.java);
             startActivity(intent)
         }
         this.getCurLocation();
         startAutoUpdateWeather()
-//        test()
-//        drawSunArcView()
-    }
-
-    private fun drawSunArcView() {
-        val sunArcView = findViewById<SunArcView>(R.id.sunArcView)
-
-        val animator = ValueAnimator.ofFloat(0f, 1f)
-        animator.duration = 5000
-        animator.addUpdateListener {
-            val value = it.animatedValue as Float
-            sunArcView.setSunPosition(value)
-        }
-        animator.start()
     }
 
     private fun initValiable() {
-        val context: Context = this
-        adManager = AdManager(context)
+        adManager = AdManager(applicationContext)
         showInterAds()
+        checkAndRequestPermissionNoti();
     }
 
     private fun onInitedLocation() {
@@ -554,7 +529,6 @@ class MainActivity : AppCompatActivity() {
 //                )
             })
     }
-
 
     private fun setUpDayTempChart(dataModel: List<NightDayTempModel>) {
         val lineChart = findViewById<LineChart>(R.id.chart_temp_at_day)
@@ -1090,10 +1064,6 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
-    fun dpToPx(dp: Int): Int {
-        return Math.round(dp * resources.displayMetrics.density)
-    }
-
     private fun startAutoUpdateWeather() {
         val now = java.util.Calendar.getInstance()
         val second = now.get(java.util.Calendar.SECOND)
@@ -1124,25 +1094,23 @@ class MainActivity : AppCompatActivity() {
         handler.removeCallbacks(updateRunnableTime)
     }
 
-
     override fun onDestroy() {
         super.onDestroy()
         handler.removeCallbacks(updateRunnable) // Dừng lặp khi Activity bị huỷ
     }
 
-    private val NOTIFICATION_PERMISSION_REQUEST_CODE = 1001
     private fun RequestAcceptSendNotification() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             if (checkSelfPermission(android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
                 requestPermissions(
                     arrayOf(android.Manifest.permission.POST_NOTIFICATIONS),
-                    NOTIFICATION_PERMISSION_REQUEST_CODE
+                    PermissionModel.REQUEST_NOTIFICATION
                 )
             } else {
-                sendNotification()
+
             }
         } else {
-            sendNotification()
+
         }
     }
 
@@ -1164,59 +1132,18 @@ class MainActivity : AppCompatActivity() {
         requestCode: Int, permissions: Array<String>, grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == NOTIFICATION_PERMISSION_REQUEST_CODE) {
-            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                sendNotification()
-            } else {
-                Toast.makeText(
-                    this, "Quyền thông báo bị từ chối", Toast.LENGTH_SHORT
-                ).show()
+        when (requestCode) {
+            PermissionModel.REQUEST_NOTIFICATION -> {
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    NotiManager.createNotificationChannel(applicationContext)
+                } else {
+                    Toast.makeText(
+                        this, "Quyền thông báo bị từ chối", Toast.LENGTH_SHORT
+                    ).show()
+                }
             }
         }
     }
-
-    private val CHANNEL_ID = "cmz.soft.weather"
-
-    private val CHANNEL_NAME = "My Channel"
-
-    private val CHANNEL_DESCRIPTION = "Channel for app notifications"
-
-    fun createNotificationChannel(context: Context) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val importance = NotificationManager.IMPORTANCE_DEFAULT
-            val channel = NotificationChannel(CHANNEL_ID, CHANNEL_NAME, importance).apply {
-                description = CHANNEL_DESCRIPTION
-            }
-            val notificationManager =
-                context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            notificationManager.createNotificationChannel(channel)
-        }
-    }
-
-    private fun getLastLocation() {
-        val fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-        if (ActivityCompat.checkSelfPermission(
-                this, Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                this, Manifest.permission.ACCESS_COARSE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-
-            return
-        }
-        fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
-            if (location != null) {
-                val latitude = location.latitude
-                val longitude = location.longitude
-                Toast.makeText(this, "Lat: $latitude, Lon: $longitude", Toast.LENGTH_SHORT).show()
-            } else {
-                Toast.makeText(this, "Không lấy được vị trí!", Toast.LENGTH_SHORT).show()
-            }
-        }.addOnFailureListener {
-            Toast.makeText(this, "Lỗi lấy vị trí!", Toast.LENGTH_SHORT).show()
-        }
-    }
-
 
     private fun setIsRainInNextTwoHours() {
         lifecycleScope.launch {
@@ -1242,34 +1169,23 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun sendNotification() {
-        return
-        val builder = NotificationCompat.Builder(this, CHANNEL_ID)
-            .setSmallIcon(R.drawable.icon_correct_location).setContentTitle("Thông báo từ Weath")
-            .setContentText("test 1 2 3 1 2 3").setPriority(NotificationCompat.PRIORITY_DEFAULT)
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            if (ContextCompat.checkSelfPermission(
-                    this, android.Manifest.permission.POST_NOTIFICATIONS
+    private fun checkAndRequestPermissionNoti() {
+        val local = LocalStorageManager.getObject<NavMenuModel>(
+            KeysStorage.navMenuModel,
+            NavMenuModel::class.java
+        )
+        if (local != null && local.notification) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && ContextCompat.checkSelfPermission(
+                    applicationContext,
+                    POST_NOTIFICATIONS
                 ) == PackageManager.PERMISSION_GRANTED
             ) {
-                with(NotificationManagerCompat.from(this)) {
-                    notify(1001, builder.build())
-                }
-            } else {
-                requestPermissions(
+                ActivityCompat.requestPermissions(
+                    this,
                     arrayOf(android.Manifest.permission.POST_NOTIFICATIONS),
-                    NOTIFICATION_PERMISSION_REQUEST_CODE
+                    PermissionModel.REQUEST_NOTIFICATION
                 )
-            }
-        } else {
-            try {
-                with(NotificationManagerCompat.from(this)) {
-                    notify(1001, builder.build())
-                }
-            } catch (e: Exception) {
-                Toast.makeText(this, e.toString(), Toast.LENGTH_LONG).show()
-            }
+            } else NotiManager.createNotificationChannel(applicationContext)
         }
     }
 
@@ -1294,6 +1210,11 @@ class MainActivity : AppCompatActivity() {
         switchNoti.setOnClickListener {
             safeData.notification = switchNoti.isChecked
             LocalStorageManager.putObject(KeysStorage.navMenuModel, safeData)
+            LocalStorageManager.putObject(
+                KeysStorage.noti, NotificationModel(
+                    safeData.notification, safeData.notification, safeData.notification
+                )
+            )
         }
 
         switchDaily.setOnClickListener {
@@ -1331,55 +1252,6 @@ class MainActivity : AppCompatActivity() {
         val adapter = TitleChartDegreeAdapter(listData)
         rc_view.adapter = adapter
         rc_view.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-
-//        val itemCount = listData.size
-
-//        rc_view.addItemDecoration(object : RecyclerView.ItemDecoration() {
-//            override fun getItemOffsets(
-//                outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State
-//            ) {
-//                val position = parent.getChildAdapterPosition(view)
-//                if (position == RecyclerView.NO_POSITION) return
-//
-//                outRect.left = if (position == 0) -7 else 0
-//                outRect.right = if (position == itemCount - 1) 8 else 0
-//            }
-//        })
-    }
-
-    fun test() {
-        val bitmap = createLineChartBitmap()
-        if (bitmap == null) {
-            println("BITMAP NULLLLLLLLL")
-            return;
-        }
-        val notificationManager =
-            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        val channelId = "chart_channel"
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel =
-                NotificationChannel(channelId, "Biểu đồ", NotificationManager.IMPORTANCE_DEFAULT)
-            notificationManager.createNotificationChannel(channel)
-        }
-
-        val notification =
-            NotificationCompat.Builder(this, channelId).setContentTitle("Thống kê hôm nay")
-                .setContentText("Biểu đồ thể hiện dữ liệu").setSmallIcon(R.drawable.icon_weather_1)
-                .setStyle(NotificationCompat.BigPictureStyle().bigPicture(bitmap)).setOngoing(true)
-                .build()
-
-        notificationManager.notify(2001, notification)
-
-    }
-
-    fun createLineChartBitmap(): Bitmap? {
-        val chartView = findViewById<CardView>(R.id.chartCard)
-        if (chartView.width == 0 || chartView.height == 0) return null
-        val bitmap = Bitmap.createBitmap(chartView.width, chartView.height, Bitmap.Config.ARGB_8888)
-        val canvas = Canvas(bitmap)
-        chartView.draw(canvas)
-        return bitmap
     }
 
     override fun onResume() {
