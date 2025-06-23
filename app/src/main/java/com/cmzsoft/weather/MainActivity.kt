@@ -7,8 +7,6 @@ import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
-import android.graphics.Canvas
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
@@ -27,7 +25,6 @@ import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
-import androidx.cardview.widget.CardView
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
@@ -111,6 +108,18 @@ class MainActivity : AppCompatActivity() {
         this.getCurLocation()
         startAutoUpdateWeather()
         loadNativeAds()
+        setupEventButton()
+    }
+
+//    init {
+//        setupEventButton()
+//    }
+//
+    private fun setupEventButton() {
+        findViewById<LinearLayout>(R.id.contain_map_weather).setOnClickListener {
+            val change = Intent(this, ActivityRadarWeatherMap::class.java);
+            startActivity(change)
+        }
     }
 
     private fun initValiable() {
@@ -1231,15 +1240,6 @@ class MainActivity : AppCompatActivity() {
             }
             linearContainer.addView(view)
         }
-    }
-
-    fun createLineChartBitmap(): Bitmap? {
-        val chartView = findViewById<CardView>(R.id.chartCard)
-        if (chartView.width == 0 || chartView.height == 0) return null
-        val bitmap = Bitmap.createBitmap(chartView.width, chartView.height, Bitmap.Config.ARGB_8888)
-        val canvas = Canvas(bitmap)
-        chartView.draw(canvas)
-        return bitmap
     }
 
     override fun onResume() {

@@ -288,6 +288,7 @@
                     android:visibility="visible" />
 
                 <LinearLayout
+                    android:id="@+id/contain_map_weather"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="#19415b"

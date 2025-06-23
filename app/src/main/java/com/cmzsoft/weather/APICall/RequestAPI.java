@@ -233,7 +233,6 @@ public class RequestAPI {
 
     public JSONObject GetTempInAWeek(double lat, double lon) {
         String urlString = "https://api.open-meteo.com/v1/forecast?latitude=" + lat + "&longitude=" + lon + "&hourly=precipitation_probability,temperature_2m,weathercode&timezone=auto";
-        System.out.println("STRINGGGGGGGGGGGGGG " + urlString);
         try {
             URL url = new URL(urlString);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();

@@ -14,6 +14,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
+import androidx.compose.ui.layout.FirstBaseline
 import androidx.core.app.ActivityCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
@@ -24,7 +25,6 @@ import com.cmzsoft.weather.Manager.AdManager
 import com.cmzsoft.weather.Model.FakeGlobal
 import com.cmzsoft.weather.Model.Object.KeysStorage
 import com.cmzsoft.weather.Model.Object.PermissionModel
-
 
 class ActivityRequestLocation : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,7 +42,6 @@ class ActivityRequestLocation : AppCompatActivity() {
         findViewById<ScrollView>(R.id.request_location_1).visibility = View.VISIBLE
         findViewById<ScrollView>(R.id.request_location_2).visibility = View.GONE
         findViewById<ScrollView>(R.id.request_location_3).visibility = View.GONE
-
         this.loadNativeAds()
     }
 
@@ -117,7 +116,9 @@ class ActivityRequestLocation : AppCompatActivity() {
     private fun loadNativeAds() {
         var adMgr = AdManager.getInstance(this@ActivityRequestLocation);
         adMgr.loadNativeClickAd(findViewById<FrameLayout>(R.id.ad_container), onAdLoaded = {
-        }, onAdFailed = { println("onAdFailed") }, onAdImpression = {
+
+        }, onAdFailed = {
+            println("onAdFailed") }, onAdImpression = {
         })
     }
 
