@@ -15,11 +15,11 @@ import android.location.Location
 import android.os.Build
 import android.os.Bundle
 import android.view.Gravity
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.FrameLayout
-import android.widget.HorizontalScrollView
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
@@ -38,21 +38,16 @@ import androidx.core.graphics.toColorInt
 import androidx.core.view.get
 import androidx.core.view.isEmpty
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.cmzsoft.weather.APICall.RequestAPI
-import com.cmzsoft.weather.CustomAdapter.TitleChartDegreeAdapter
 import com.cmzsoft.weather.CustomView.SunArcView
 import com.cmzsoft.weather.FrameWork.Data.LocalStorageManager
 import com.cmzsoft.weather.Manager.AdManager
-import com.cmzsoft.weather.Model.DataHourWeatherModel
 import com.cmzsoft.weather.Model.DataWeatherPerHourModel
 import com.cmzsoft.weather.Model.FakeGlobal
 import com.cmzsoft.weather.Model.LocationWeatherModel
 import com.cmzsoft.weather.Model.NavMenuModel
 import com.cmzsoft.weather.Model.NightDayTempModel
 import com.cmzsoft.weather.Model.Object.KeysStorage
-import com.cmzsoft.weather.Model.TitleChartItemModel
 import com.cmzsoft.weather.RendererChart.CustomLineChartRenderer
 import com.cmzsoft.weather.RendererChart.RainfallRendererBarChart
 import com.cmzsoft.weather.Service.DatabaseService
@@ -641,13 +636,13 @@ class MainActivity : AppCompatActivity() {
                     val day = calendar.get(Calendar.DAY_OF_MONTH)
                     val month = calendar.get(Calendar.MONTH) + 1
                     val dayOfWeek = WeatherUtil.getDayOfWeek(dataModel[i].date)
-                    if (i == 0) textView.text = "Hôm nay"
+                    if (i == 0) textView.text = "Hôm nay\n$day/$month"
                     else textView.text = "$dayOfWeek\n$day/$month"
                 }
 
                 if (parentView.getChildAt(1) is ImageView) {
                     val iconName = WeatherUtil.getWeatherIconName(
-                        dataModel.get(i).iconID, true
+                        dataModel[i].iconID, true
                     )
                     val resId = resources.getIdentifier(iconName, "drawable", packageName)
                     if (resId != 0) {
@@ -901,45 +896,19 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupLineChartInUI(arrInfo: List<DataWeatherPerHourModel>) {
         try {
-//            val arrInfo = parseWeatherData(hour.getJSONObject("hourly"))
             setupTitleChartDegree(arrInfo)
-
             setupChart(arrInfo)
-            setupScrollSync()
         } catch (e: Exception) {
             Toast.makeText(this, e.message.toString(), Toast.LENGTH_SHORT).show()
             e.printStackTrace()
         }
     }
 
-    private fun parseWeatherData(hourly: JSONObject): List<DataHourWeatherModel> {
-        val arrInfo = mutableListOf<DataHourWeatherModel>()
-        val calendar = Calendar.getInstance()
-        val curHour = calendar.get(Calendar.HOUR_OF_DAY);
-        val arrTime = hourly.getJSONArray("time");
-        val arrTemp = hourly.getJSONArray("temperature_2m")
-        val arrPop = hourly.getJSONArray("precipitation_probability")
-        val arrWeatherCode = hourly.getJSONArray("weathercode")
-        for (i in curHour until curHour + 24) {
-            val s = arrTime.getString(i)
-            val tempC = arrTemp.getDouble(i).toFloat()
-            var h = curHour + i
-            if (h >= 24) h -= 24
-            val w = arrWeatherCode.getInt(i)
-            arrInfo.add(
-                DataHourWeatherModel(
-                    0, s.takeLast(5), tempC.roundToInt(), tempC.roundToInt(), h in 6..18, w
-                )
-            )
-        }
-        return arrInfo
-    }
-
     private fun setupChart(arrInfo: List<DataWeatherPerHourModel>) {
         try {
             val entries = ArrayList<Entry>()
             arrInfo.forEachIndexed { i, model ->
-                entries.add(Entry(i.toFloat(), model.tempC.toFloat()))
+                entries.add(Entry(i.toFloat(), model.tempC.toFloat()/3))
             }
             val dataSet = createLineDataSet(entries)
             val lineChart = findViewById<LineChart>(R.id.lineChart)
@@ -957,7 +926,7 @@ class MainActivity : AppCompatActivity() {
             dataSet.valueTextColor = Color.WHITE
             dataSet.mode = LineDataSet.Mode.CUBIC_BEZIER
             dataSet.setDrawCircles(false)
-            dataSet.color = Color.parseColor("#f6ce1e")
+            dataSet.color = "#f6ce1e".toColorInt()
 
             lineChart.requestLayout()
             lineChart.data = LineData(dataSet)
@@ -1022,10 +991,10 @@ class MainActivity : AppCompatActivity() {
             val data = lineChart.data
             data?.dataSets?.forEach { set ->
                 (set as LineDataSet).setDrawValues(true)
-                (set as LineDataSet).valueFormatter = object : ValueFormatter() {
+                set.valueFormatter = object : ValueFormatter() {
                     override fun getPointLabel(entry: Entry?): String {
                         if (entry != null) {
-                            return entry.y.roundToInt().toString() + "°C"
+                            return (entry.y * 3).roundToInt().toString() + "°C"
                         } else return ""
                     }
                 }
@@ -1035,7 +1004,6 @@ class MainActivity : AppCompatActivity() {
             e.printStackTrace()
         }
     }
-
 
     private fun createLineDataSet(entries: List<Entry>): LineDataSet {
         return LineDataSet(entries, "Nhiệt độ (°C)").apply {
@@ -1059,35 +1027,35 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupScrollSync() {
-        val lineChartScrollView = findViewById<HorizontalScrollView>(R.id.scroll_char)
-        val recyclerView = findViewById<RecyclerView>(R.id.rc_title_chart)
-
-        var isScrollingChart = false
-        var isScrollingRecycler = false
-
-        lineChartScrollView.setOnScrollChangeListener { _, scrollX, _, _, _ ->
-            if (!isScrollingRecycler) {
-                isScrollingChart = true
-                val rvScrollX = recyclerView.computeHorizontalScrollOffset()
-                val diff = scrollX - rvScrollX
-                if (diff != 0) {
-                    recyclerView.scrollBy(diff, 0)
-                }
-                isScrollingChart = false
-            }
-        }
-
-        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(rv: RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(rv, dx, dy)
-                if (!isScrollingChart) {
-                    isScrollingRecycler = true
-                    val scrollX = recyclerView.computeHorizontalScrollOffset()
-                    lineChartScrollView.scrollTo(scrollX, 0)
-                    isScrollingRecycler = false
-                }
-            }
-        })
+//        val lineChartScrollView = findViewById<HorizontalScrollView>(R.id.scroll_char)
+//        val recyclerView = findViewById<RecyclerView>(R.id.rc_title_chart)
+//
+//        var isScrollingChart = false
+//        var isScrollingRecycler = false
+//
+//        lineChartScrollView.setOnScrollChangeListener { _, scrollX, _, _, _ ->
+//            if (!isScrollingRecycler) {
+//                isScrollingChart = true
+//                val rvScrollX = recyclerView.computeHorizontalScrollOffset()
+//                val diff = scrollX - rvScrollX
+//                if (diff != 0) {
+//                    recyclerView.scrollBy(diff, 0)
+//                }
+//                isScrollingChart = false
+//            }
+//        }
+//
+//        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+//            override fun onScrolled(rv: RecyclerView, dx: Int, dy: Int) {
+//                super.onScrolled(rv, dx, dy)
+//                if (!isScrollingChart) {
+//                    isScrollingRecycler = true
+//                    val scrollX = recyclerView.computeHorizontalScrollOffset()
+//                    lineChartScrollView.scrollTo(scrollX, 0)
+//                    isScrollingRecycler = false
+//                }
+//            }
+//        })
     }
 
     fun dpToPx(dp: Int): Int {
@@ -1314,23 +1282,44 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupTitleChartDegree(arr: List<DataWeatherPerHourModel>) {
-        val rc_view = findViewById<RecyclerView>(R.id.rc_title_chart)
-        val listData = mutableListOf<TitleChartItemModel>()
-        for (item in arr) {
-            listData.add(
-                TitleChartItemModel(
-                    item.time.substring(item.time.length - 5),
-                    null,
-                    item.iconCode,
-                    item.isDay,
-                    item.changeRain
-                )
-            )
+        val linearContainer = findViewById<LinearLayout>(R.id.contain_title_chart)
+        linearContainer.removeAllViews()
+        for (i in 0 until 26) {
+            val view =
+                LayoutInflater.from(this).inflate(R.layout.title_chart_item, linearContainer, false)
+
+            view.findViewById<TextView>(R.id.txt_time)?.text = "${arr[i].time}"
+            view.findViewById<TextView>(R.id.txt_rainfall_rate)?.text = "${arr[i].changeRain}%"
+            val nameIcon = WeatherUtil.getWeatherIconName(arr[i].iconCode, arr[i].isDay)
+            val resId = resources.getIdentifier(nameIcon, "drawable", packageName)
+
+            val weatherIconView = view.findViewById<ImageView>(R.id.icon_status_weather)
+            if (resId != 0) {
+                weatherIconView.setImageResource(resId)
+            } else {
+                weatherIconView.setImageResource(R.drawable.sunny)
+            }
+            linearContainer.addView(view)
         }
 
-        val adapter = TitleChartDegreeAdapter(listData)
-        rc_view.adapter = adapter
-        rc_view.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+//        val rc_view = findViewById<RecyclerView>(R.id.rc_title_chart)
+//        val listData = mutableListOf<TitleChartItemModel>()
+//        for (item in arr) {
+//            listData.add(
+//                TitleChartItemModel(
+//                    item.time.substring(item.time.length - 5),
+//                    null,
+//                    item.iconCode,
+//                    item.isDay,
+//                    item.changeRain
+//                )
+//            )
+//        }
+//        println("SIZEEEEEEEEEEEEEEEE ${listData.size}")
+//
+//        val adapter = TitleChartDegreeAdapter(listData)
+//        rc_view.adapter = adapter
+//        rc_view.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
 
 //        val itemCount = listData.size
 

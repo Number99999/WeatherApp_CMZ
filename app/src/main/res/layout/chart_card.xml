@@ -24,25 +24,51 @@
                 android:layout_height="wrap_content"
                 android:paddingBottom="4dp" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rc_title_chart"
-                android:layout_width="wrap_content"
-                android:layout_height="80dp"
-                android:layout_marginStart="@dimen/margin_4dp"
-                android:layout_marginEnd="@dimen/margin_4dp"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
-
             <HorizontalScrollView
                 android:id="@+id/scroll_char"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fillViewport="true"
                 android:scrollbars="none">
-                <com.github.mikephil.charting.charts.LineChart
-                    android:id="@+id/lineChart"
-                    android:layout_width="0dp"
-                    android:layout_height="140dp"
-                    android:minWidth="1220dp" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <!--                    <androidx.recyclerview.widget.RecyclerView-->
+                    <!--                        android:id="@+id/rc_title_chart"-->
+                    <!--                        android:layout_width="wrap_content"-->
+                    <!--                        android:layout_height="80dp"-->
+                    <!--                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />-->
+
+                    <LinearLayout
+                        android:id="@+id/contain_title_chart"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal" />
+
+                    <com.github.mikephil.charting.charts.LineChart
+                        android:id="@+id/lineChart"
+                        android:layout_width="1280dp"
+                        android:layout_height="140dp"
+                        android:layout_marginStart="10dp" />
+                </LinearLayout>
+            </HorizontalScrollView>
+
+            <HorizontalScrollView
+                android:id="@+id/emoji_scroll"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fillViewport="true"
+                android:scrollbars="none">
+
+                <LinearLayout
+                    android:id="@+id/emojiContainer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="-8dp"
+                    android:orientation="horizontal" />
             </HorizontalScrollView>
 
             <TextView

@@ -61,6 +61,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/margin_4dp"
                                 android:text="25%" />
                         </LinearLayout>
 
@@ -119,6 +120,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/margin_4dp"
                                 android:text="25%" />
                         </LinearLayout>
 
@@ -177,6 +179,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/margin_4dp"
                                 android:text="25%" />
                         </LinearLayout>
 
@@ -235,6 +238,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/margin_4dp"
                                 android:text="25%" />
                         </LinearLayout>
 
@@ -293,6 +297,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/margin_4dp"
                                 android:text="25%" />
                         </LinearLayout>
 
@@ -351,6 +356,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/margin_4dp"
                                 android:text="25%" />
                         </LinearLayout>
 
@@ -409,6 +415,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/margin_4dp"
                                 android:text="25%" />
                         </LinearLayout>
 
