@@ -2,7 +2,6 @@ package com.cmzsoft.weather
 
 import XAxisRendererRainfallChart
 import android.Manifest
-import android.animation.ValueAnimator
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
@@ -11,7 +10,6 @@ import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
-import android.location.Location
 import android.os.Build
 import android.os.Bundle
 import android.view.Gravity
@@ -39,7 +37,6 @@ import androidx.core.view.get
 import androidx.core.view.isEmpty
 import androidx.lifecycle.lifecycleScope
 import com.cmzsoft.weather.APICall.RequestAPI
-import com.cmzsoft.weather.CustomView.SunArcView
 import com.cmzsoft.weather.FrameWork.Data.LocalStorageManager
 import com.cmzsoft.weather.Manager.AdManager
 import com.cmzsoft.weather.Model.DataWeatherPerHourModel
@@ -66,7 +63,6 @@ import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.github.mikephil.charting.formatter.ValueFormatter
-import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.model.LatLng
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
@@ -112,22 +108,9 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, ActivityChooseLocation::class.java);
             startActivity(intent)
         }
-        this.getCurLocation();
+        this.getCurLocation()
         startAutoUpdateWeather()
-//        test()
-//        drawSunArcView()
-    }
-
-    private fun drawSunArcView() {
-        val sunArcView = findViewById<SunArcView>(R.id.sunArcView)
-
-        val animator = ValueAnimator.ofFloat(0f, 1f)
-        animator.duration = 5000
-        animator.addUpdateListener {
-            val value = it.animatedValue as Float
-            sunArcView.setSunPosition(value)
-        }
-        animator.start()
+        loadNativeAds()
     }
 
     private fun initValiable() {
@@ -550,6 +533,14 @@ class MainActivity : AppCompatActivity() {
             })
     }
 
+    private fun loadNativeAds() {
+        var adMgr = AdManager.getInstance(this@MainActivity);
+        adMgr.loadNativeClickAd(findViewById<FrameLayout>(R.id.ad_container), onAdLoaded = {
+            println("onAdLoaded")
+        }, onAdFailed = { println("onAdFailed") }, onAdImpression = {
+            println("onAdImpression")
+        })
+    }
 
     private fun setUpDayTempChart(dataModel: List<NightDayTempModel>) {
         val lineChart = findViewById<LineChart>(R.id.chart_temp_at_day)
@@ -908,7 +899,7 @@ class MainActivity : AppCompatActivity() {
         try {
             val entries = ArrayList<Entry>()
             arrInfo.forEachIndexed { i, model ->
-                entries.add(Entry(i.toFloat(), model.tempC.toFloat()/3))
+                entries.add(Entry(i.toFloat(), model.tempC.toFloat() / 3))
             }
             val dataSet = createLineDataSet(entries)
             val lineChart = findViewById<LineChart>(R.id.lineChart)
@@ -1026,42 +1017,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun setupScrollSync() {
-//        val lineChartScrollView = findViewById<HorizontalScrollView>(R.id.scroll_char)
-//        val recyclerView = findViewById<RecyclerView>(R.id.rc_title_chart)
-//
-//        var isScrollingChart = false
-//        var isScrollingRecycler = false
-//
-//        lineChartScrollView.setOnScrollChangeListener { _, scrollX, _, _, _ ->
-//            if (!isScrollingRecycler) {
-//                isScrollingChart = true
-//                val rvScrollX = recyclerView.computeHorizontalScrollOffset()
-//                val diff = scrollX - rvScrollX
-//                if (diff != 0) {
-//                    recyclerView.scrollBy(diff, 0)
-//                }
-//                isScrollingChart = false
-//            }
-//        }
-//
-//        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-//            override fun onScrolled(rv: RecyclerView, dx: Int, dy: Int) {
-//                super.onScrolled(rv, dx, dy)
-//                if (!isScrollingChart) {
-//                    isScrollingRecycler = true
-//                    val scrollX = recyclerView.computeHorizontalScrollOffset()
-//                    lineChartScrollView.scrollTo(scrollX, 0)
-//                    isScrollingRecycler = false
-//                }
-//            }
-//        })
-    }
-
-    fun dpToPx(dp: Int): Int {
-        return Math.round(dp * resources.displayMetrics.density)
-    }
-
     private fun startAutoUpdateWeather() {
         val now = java.util.Calendar.getInstance()
         val second = now.get(java.util.Calendar.SECOND)
@@ -1160,31 +1115,6 @@ class MainActivity : AppCompatActivity() {
             notificationManager.createNotificationChannel(channel)
         }
     }
-
-    private fun getLastLocation() {
-        val fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-        if (ActivityCompat.checkSelfPermission(
-                this, Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                this, Manifest.permission.ACCESS_COARSE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-
-            return
-        }
-        fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
-            if (location != null) {
-                val latitude = location.latitude
-                val longitude = location.longitude
-                Toast.makeText(this, "Lat: $latitude, Lon: $longitude", Toast.LENGTH_SHORT).show()
-            } else {
-                Toast.makeText(this, "Không lấy được vị trí!", Toast.LENGTH_SHORT).show()
-            }
-        }.addOnFailureListener {
-            Toast.makeText(this, "Lỗi lấy vị trí!", Toast.LENGTH_SHORT).show()
-        }
-    }
-
 
     private fun setIsRainInNextTwoHours() {
         lifecycleScope.launch {
@@ -1301,65 +1231,6 @@ class MainActivity : AppCompatActivity() {
             }
             linearContainer.addView(view)
         }
-
-//        val rc_view = findViewById<RecyclerView>(R.id.rc_title_chart)
-//        val listData = mutableListOf<TitleChartItemModel>()
-//        for (item in arr) {
-//            listData.add(
-//                TitleChartItemModel(
-//                    item.time.substring(item.time.length - 5),
-//                    null,
-//                    item.iconCode,
-//                    item.isDay,
-//                    item.changeRain
-//                )
-//            )
-//        }
-//        println("SIZEEEEEEEEEEEEEEEE ${listData.size}")
-//
-//        val adapter = TitleChartDegreeAdapter(listData)
-//        rc_view.adapter = adapter
-//        rc_view.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-
-//        val itemCount = listData.size
-
-//        rc_view.addItemDecoration(object : RecyclerView.ItemDecoration() {
-//            override fun getItemOffsets(
-//                outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State
-//            ) {
-//                val position = parent.getChildAdapterPosition(view)
-//                if (position == RecyclerView.NO_POSITION) return
-//
-//                outRect.left = if (position == 0) -7 else 0
-//                outRect.right = if (position == itemCount - 1) 8 else 0
-//            }
-//        })
-    }
-
-    fun test() {
-        val bitmap = createLineChartBitmap()
-        if (bitmap == null) {
-            println("BITMAP NULLLLLLLLL")
-            return;
-        }
-        val notificationManager =
-            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        val channelId = "chart_channel"
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel =
-                NotificationChannel(channelId, "Biểu đồ", NotificationManager.IMPORTANCE_DEFAULT)
-            notificationManager.createNotificationChannel(channel)
-        }
-
-        val notification =
-            NotificationCompat.Builder(this, channelId).setContentTitle("Thống kê hôm nay")
-                .setContentText("Biểu đồ thể hiện dữ liệu").setSmallIcon(R.drawable.icon_weather_1)
-                .setStyle(NotificationCompat.BigPictureStyle().bigPicture(bitmap)).setOngoing(true)
-                .build()
-
-        notificationManager.notify(2001, notification)
-
     }
 
     fun createLineChartBitmap(): Bitmap? {
