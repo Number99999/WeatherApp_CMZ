@@ -14,15 +14,16 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
-import androidx.compose.ui.layout.FirstBaseline
 import androidx.core.app.ActivityCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import com.cmzsoft.weather.CustomView.PermissionDialogFragment
 import com.cmzsoft.weather.FrameWork.Data.LocalStorageManager
+import com.cmzsoft.weather.FrameWork.EventApp.FirebaseManager
 import com.cmzsoft.weather.Manager.AdManager
 import com.cmzsoft.weather.Model.FakeGlobal
+import com.cmzsoft.weather.Model.Object.KeyEventFirebase
 import com.cmzsoft.weather.Model.Object.KeysStorage
 import com.cmzsoft.weather.Model.Object.PermissionModel
 
@@ -116,9 +117,13 @@ class ActivityRequestLocation : AppCompatActivity() {
     private fun loadNativeAds() {
         var adMgr = AdManager.getInstance(this@ActivityRequestLocation);
         adMgr.loadNativeClickAd(findViewById<FrameLayout>(R.id.ad_container), onAdLoaded = {
-
+            FirebaseManager.getInstance(context = this)
+                .sendEvent(KeyEventFirebase.navPermission, "loaded", true)
         }, onAdFailed = {
-            println("onAdFailed") }, onAdImpression = {
+            println("onAdFailed")
+            FirebaseManager.getInstance(context = this)
+                .sendEvent(KeyEventFirebase.navPermission, "loaded", true)
+        }, onAdImpression = {
         })
     }
 

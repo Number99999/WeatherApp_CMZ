@@ -35,12 +35,14 @@ import androidx.core.view.isEmpty
 import androidx.lifecycle.lifecycleScope
 import com.cmzsoft.weather.APICall.RequestAPI
 import com.cmzsoft.weather.FrameWork.Data.LocalStorageManager
+import com.cmzsoft.weather.FrameWork.EventApp.FirebaseManager
 import com.cmzsoft.weather.Manager.AdManager
 import com.cmzsoft.weather.Model.DataWeatherPerHourModel
 import com.cmzsoft.weather.Model.FakeGlobal
 import com.cmzsoft.weather.Model.LocationWeatherModel
 import com.cmzsoft.weather.Model.NavMenuModel
 import com.cmzsoft.weather.Model.NightDayTempModel
+import com.cmzsoft.weather.Model.Object.KeyEventFirebase
 import com.cmzsoft.weather.Model.Object.KeysStorage
 import com.cmzsoft.weather.RendererChart.CustomLineChartRenderer
 import com.cmzsoft.weather.RendererChart.RainfallRendererBarChart
@@ -111,7 +113,7 @@ class MainActivity : AppCompatActivity() {
         setupEventButton()
     }
 
-//    init {
+    //    init {
 //        setupEventButton()
 //    }
 //
@@ -480,7 +482,6 @@ class MainActivity : AppCompatActivity() {
         for ((date, idxList) in dailyMap) {
             val dayHours = mutableListOf<Int>()
             val nightHours = mutableListOf<Int>()
-            // Giả sử: 6h (06:00) đến trước 18h (18:00) là ban ngày, còn lại là ban đêm
             for (idx in idxList) {
                 val hour = timeArr.getString(idx).substring(11, 13).toInt()
                 if (hour in 6 until 19) {
@@ -529,8 +530,12 @@ class MainActivity : AppCompatActivity() {
             onAdFailedToShow = {
 //                analyticsHelper.logShowInterstitialFailed(ScreenName.HOME)
 //                dismissAdLoadingDialog()
+                FirebaseManager.getInstance(this)
+                    .sendEvent(KeyEventFirebase.interHomeLoad, "loaded", false)
             },
             onAdStartShowing = {
+                FirebaseManager.getInstance(this)
+                    .sendEvent(KeyEventFirebase.interHomeLoad, "loaded", true)
 //                ALog.d("themd", "onAdStartShowing")
 //                showAdLoadingDialog()
             },
@@ -760,7 +765,7 @@ class MainActivity : AppCompatActivity() {
 
         setupAdapterSettingDialog(
             R.id.fake_spinner_atm,
-            listOf("mmHg", "inHg", "psi", "bar", "mbar", "hpa", "atm"),
+            listOf("mmHg", "inHg", "psi", "bar", "mbar", "hpa", "presure"),
             R.id.txt_atm_model
         )
 

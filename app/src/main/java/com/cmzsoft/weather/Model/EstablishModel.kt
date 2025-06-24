@@ -6,7 +6,7 @@ data class EstablishModel(
     var rainfall: String = "mm",
     var visibility: String = "km",
     var winSpeed: String = "mph",
-    var atm: String = "mmHg",
+    var presure: String = "mmHg",
     var dateForm: String = "DD/MM/YYYY",
     var is24h: Boolean = true
 )

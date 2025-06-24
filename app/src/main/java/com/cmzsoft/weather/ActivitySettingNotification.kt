@@ -1,14 +1,23 @@
 package com.cmzsoft.weather
 
-import android.content.Intent
 import android.os.Bundle
 import android.widget.ImageView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.cmzsoft.weather.CustomAdapter.CustomLayoutAdapter
+import com.cmzsoft.weather.FrameWork.Data.LocalStorageManager
+import com.cmzsoft.weather.FrameWork.EventApp.FirebaseManager
+import com.cmzsoft.weather.Model.NotificationModel
+import com.cmzsoft.weather.Model.Object.KeyEventFirebase
+import com.cmzsoft.weather.Model.Object.KeysStorage
 
 class ActivitySettingNotification : AppCompatActivity() {
+    private var _safeData: NotificationModel
+    private var _firstData: NotificationModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -19,18 +28,60 @@ class ActivitySettingNotification : AppCompatActivity() {
             insets
         }
         setupBtnBack()
+        setupAdapter()
+    }
+
+    init {
+        _safeData =
+            LocalStorageManager.getObject(KeysStorage.settingNoti, NotificationModel::class.java)
+                ?: NotificationModel()
+        _firstData = _safeData.copy()
+    }
+
+    private fun setupAdapter() {
+        val rec = findViewById<RecyclerView>(R.id.recyclerView)
+        val l = mutableListOf<CustomLayoutItem>(
+            CustomLayoutItem("Thông báo", R.drawable.icon_notification, _safeData.notification),
+            CustomLayoutItem("Báo động thời tiết", R.drawable.icon_warning, _safeData.warning),
+            CustomLayoutItem(
+                "Thời tiết hàng ngày",
+                R.drawable.icon_small_cloud,
+                _safeData.weatherDaily
+            )
+        )
+        val adapter = CustomLayoutAdapter(l) { title, checked ->
+            when (title) {
+                "Thông báo" -> _safeData.notification = checked
+                "Báo động thời tiết" -> _safeData.warning = checked
+                "Thời tiết hàng ngày" -> _safeData.weatherDaily = checked
+            }
+            LocalStorageManager.putObject(KeysStorage.settingNoti, _safeData)
+        }
+
+        rec.adapter = adapter
+        adapter.notifyDataSetChanged()
+        rec.layoutManager = LinearLayoutManager(this)
     }
 
     private fun setupBtnBack() {
-
         val btn = findViewById<ImageView>(R.id.backButton)
         btn.setOnClickListener {
-//            val changePage = Intent(this, activity_setting_scene::class.java);
-//            startActivity(changePage);
+            sendEvenIfChange()
             finish()
         }
-
     }
 
-
+    private fun sendEvenIfChange() {
+        val ins = FirebaseManager.getInstance(this)
+        if (_safeData.notification != _firstData.notification) ins.sendEvent(
+            KeyEventFirebase.settingNoti,
+            "type",
+            _safeData.notification
+        )
+        if (_safeData.weatherDaily != _firstData.weatherDaily) ins.sendEvent(
+            KeyEventFirebase.settingDailyWeather,
+            "type",
+            _safeData.weatherDaily
+        )
+    }
 }

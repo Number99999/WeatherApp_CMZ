@@ -263,25 +263,22 @@ class AdManager @Inject constructor(
     }
 
     private fun displayNativeAd(nativeAdView: NativeAdView, nativeAd: NativeAd, view: View) {
-        // Gán các thành phần quảng cáo vào NativeAdView
         val headlineView = nativeAdView.findViewById<TextView>(R.id.ad_headline)
         val bodyView = nativeAdView.findViewById<TextView>(R.id.ad_body)
         val callToActionView = nativeAdView.findViewById<Button>(R.id.ad_call_to_action)
         val mediaView = nativeAdView.findViewById<MediaView>(R.id.ad_media)
         headlineView.isSelected = true
-        // Gán dữ liệu quảng cáo
+
         headlineView.text = nativeAd.headline
         bodyView.text = nativeAd.body
         callToActionView.text = nativeAd.callToAction ?: "Hành động"
         mediaView.mediaContent = nativeAd.mediaContent
 
-        // Đăng ký các thành phần với NativeAdView
         nativeAdView.headlineView = headlineView
         nativeAdView.bodyView = bodyView
         nativeAdView.callToActionView = callToActionView
         nativeAdView.mediaView = mediaView
 
-        // Gán NativeAd vào NativeAdView
         nativeAdView.setNativeAd(nativeAd)
     }
 
