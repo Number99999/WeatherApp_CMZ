@@ -136,26 +136,29 @@ public class LocationWeatherService extends SQLiteOpenHelper {
     }
 
 
-    public boolean changeDefaultLocation(LocationWeatherModel wModel) {
+    public boolean changeDefaultLocation(LocationWeatherModel wModel, boolean isDefauld) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         try {
             db.beginTransaction();
 
             String updateQuery = "UPDATE " + TABLE_NAME + " SET isDefault = 0 WHERE isDefault = 1";
-            wModel.setIsDefaultLocation(1);
             db.execSQL(updateQuery);
             boolean insertOrUpdateSuccess = false;
-            boolean isExist = checkIsExistLocationInDb(wModel);
-            if (!isExist) {
-                insertOrUpdateSuccess = this.insertLocationWeather(wModel);
-            } else {
-                insertOrUpdateSuccess = updateLocation(wModel);
-            }
+            if (!isDefauld) {
+                wModel.setIsDefaultLocation(1);
 
-            if (insertOrUpdateSuccess) {
-                db.setTransactionSuccessful();
-            }
+                boolean isExist = checkIsExistLocationInDb(wModel);
+                if (!isExist) {
+                    insertOrUpdateSuccess = this.insertLocationWeather(wModel);
+                } else {
+                    insertOrUpdateSuccess = updateLocation(wModel);
+                }
+
+                if (insertOrUpdateSuccess) {
+                    db.setTransactionSuccessful();
+                }
+            } else insertOrUpdateSuccess = true;
             db.endTransaction();
             return insertOrUpdateSuccess;
         } catch (Exception e) {

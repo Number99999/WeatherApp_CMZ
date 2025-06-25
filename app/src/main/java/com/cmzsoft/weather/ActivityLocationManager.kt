@@ -50,26 +50,20 @@ class ActivityLocationManager : AppCompatActivity() {
     private fun setupAdapter() {
         var listModel: List<LocationWeatherModel> =
             DatabaseService.getInstance(this).locationWeatherService.getAllLocationWeather();
-        for (i in listModel) println("Loaded ${i}")
-
         val recyclerView = findViewById<RecyclerView>(R.id.recycler_view)
         var newList = listModel.toMutableList();
 
         var adapter = ItemLocationManagerAdapter(listModel.toMutableList())
 
-        recyclerView.adapter = adapter
-        recyclerView.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
-
         findViewById<TextView>(R.id.btn_edit).setOnClickListener {
             adapter.btnEditClicked();
         }
 
-        if (ActivityCompat.checkSelfPermission(
-                this, Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(
-                this, Manifest.permission.ACCESS_COARSE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
+        if (LocationService.checkPermissionLocation() == false) {
+            recyclerView.adapter = adapter
+            recyclerView.layoutManager =
+                LinearLayoutManager(this@ActivityLocationManager, RecyclerView.VERTICAL, false)
+            adapter.notifyDataSetChanged()
             lifecycleScope.launch {
                 for (item in newList) {
                     val requestAPI = RequestAPI.getInstance()
@@ -85,16 +79,38 @@ class ActivityLocationManager : AppCompatActivity() {
                     val resId = resources.getIdentifier(iconName, "drawable", packageName)
                     item.weather = resId.toString()
                     adapter.notifyItemChanged(newList.indexOf(item))
+                    recyclerView.adapter = adapter
+                    recyclerView.layoutManager = LinearLayoutManager(
+                        this@ActivityLocationManager,
+                        RecyclerView.VERTICAL,
+                        false
+                    )
+                    adapter.notifyDataSetChanged()
                 }
             }
         } else {
+            if (ActivityCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                ) != PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                return
+            }
             LocationService.getCurrentLocation(object : GetCurrentLocationCallback {
                 @Override
                 override fun onLocationReceived(address: LocationWeatherModel) {
-
                     newList.add(0, address);
+                    println("onLocationReceived ${newList.size}")
                     adapter = ItemLocationManagerAdapter(newList.toMutableList())
                     recyclerView.adapter = adapter
+                    recyclerView.layoutManager = LinearLayoutManager(
+                        this@ActivityLocationManager,
+                        RecyclerView.VERTICAL,
+                        false
+                    )
                     adapter.notifyDataSetChanged()
                     recyclerView.scrollToPosition(0)
 
@@ -120,6 +136,13 @@ class ActivityLocationManager : AppCompatActivity() {
                 }
 
                 override fun onError(exception: Exception) {
+                    recyclerView.adapter = adapter
+                    recyclerView.layoutManager = LinearLayoutManager(
+                        this@ActivityLocationManager,
+                        RecyclerView.VERTICAL,
+                        false
+                    )
+                    adapter.notifyDataSetChanged()
                     exception.printStackTrace();
                 }
             })

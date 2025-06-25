@@ -256,4 +256,9 @@ public class WeatherUtil {
         String targetTimeZone = FakeGlobal.getInstance().curLocation.getTimeZone();
         return WeatherUtil.convertTimeDeviceToTimezone(hourMinute, targetTimeZone);
     }
+
+    public static float convertToCurTypeTemp(float in){
+
+        return 0f;
+    }
 }

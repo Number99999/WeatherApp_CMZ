@@ -14,6 +14,7 @@ import com.cmzsoft.weather.Model.FakeGlobal
 import com.cmzsoft.weather.Model.LocationWeatherModel
 import com.cmzsoft.weather.R
 import com.cmzsoft.weather.Service.DatabaseService
+import com.cmzsoft.weather.Service.LocationService
 
 class ItemLocationManagerAdapter(private var items: MutableList<LocationWeatherModel>) :
     RecyclerView.Adapter<ItemLocationManagerAdapter.ViewHolder>() {
@@ -46,7 +47,9 @@ class ItemLocationManagerAdapter(private var items: MutableList<LocationWeatherM
             View.GONE
         }
         if (position == 0) {
-            holder.title.text = "${item.name} (Vị trí của bạn)";
+            if (LocationService.checkPermissionLocation()) holder.title.text =
+                "${item.name} (Vị trí của bạn)"
+            else "${item.name}"
             if (defaultAdd == null) {
                 holder.txtDefault.visibility = View.VISIBLE
             }

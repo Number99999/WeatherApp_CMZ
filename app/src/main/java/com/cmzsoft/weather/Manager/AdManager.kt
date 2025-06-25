@@ -187,7 +187,7 @@ class AdManager @Inject constructor(
     }
 
     fun loadNativeClickAd(
-        container: ViewGroup, // Container để chứa NativeAdView
+        container: ViewGroup, // Container để chứa NativeAdViewR
         onAdLoaded: (NativeAd) -> Unit,
         onAdFailed: (String) -> Unit,
         onAdImpression: () -> Unit
@@ -209,11 +209,11 @@ class AdManager @Inject constructor(
             .withAdListener(object : AdListener() {
                 override fun onAdFailedToLoad(error: LoadAdError) {
                     container.addView(view)
-                    onAdFailed(error.message)
+//                    onAdFailed(error.message)
                 }
 
                 override fun onAdImpression() {
-                    super.onAdImpression()
+//                    super.onAdImpression()
                     onAdImpression()
                 }
             })
@@ -231,14 +231,10 @@ class AdManager @Inject constructor(
         val inflater = LayoutInflater.from(context)
         val view = inflater.inflate(R.layout.native_ad_layout, container, false)
         val adView = view.findViewById<NativeAdView>(R.id.native_ad_view_intro)
-//        val shimmerViewContainer =
-//            view.findViewById<com.facebook.shimmer.ShimmerFrameLayout>(R.id.shimmer_view_container)
         val adLoader = AdLoader.Builder(context, AdUnitIds.NATIVE)
             .forNativeAd { nativeAd ->
                 container.removeAllViews()
                 displayNativeAd(adView, nativeAd, view)
-//                shimmerViewContainer.stopShimmer()
-//                shimmerViewContainer.visibility = View.GONE
                 adView.visibility = View.VISIBLE
                 adView.setNativeAd(nativeAd)
 

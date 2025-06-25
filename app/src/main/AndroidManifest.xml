@@ -74,6 +74,9 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyAE_6F6J92mVoin5BvwysIpafryT0gUyRs" />
+        <meta-data
+            android:name="com.google.android.gms.ads.flag.NATIVE_AD_DEBUGGER_ENABLED"
+            android:value="false" />
 
         <provider
             android:name="androidx.startup.InitializationProvider"

@@ -24,9 +24,9 @@ class LoadingAppActivity : AppCompatActivity() {
     }
 
     fun activeActivity() {
-        var changePage = Intent(this, ActivityTutorial::class.java);
-        startActivity(changePage);
-        return
+//        var changePage = Intent(this, ActivityTutorial::class.java);
+//        startActivity(changePage);
+//        return
         if (LocalStorageManager.getString(KeysStorage.isFirstOpenApp) == null) {
             var changePage = Intent(this, ActivityRequestLocation::class.java);
             startActivity(changePage);
@@ -37,5 +37,4 @@ class LoadingAppActivity : AppCompatActivity() {
             finish()
         }
     }
-
 }

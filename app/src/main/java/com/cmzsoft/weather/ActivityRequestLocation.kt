@@ -189,7 +189,7 @@ class ActivityRequestLocation : AppCompatActivity() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == PermissionModel.REQUEST_LOCATION) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                val changePage = Intent(this, MainActivity::class.java);
+                val changePage = Intent(this, ActivityTutorial::class.java);
                 changePage.putExtra("FROM_REQUEST_LOCATION", true);
                 startActivity(changePage);
             } else {

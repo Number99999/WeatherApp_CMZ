@@ -8,12 +8,10 @@ import com.google.gson.Gson;
 
 public class LocalStorageManager {
     private static final String PREF_NAME = "com.cmz.weather";
-    private static Context _appContext;
     private static SharedPreferences _prefs;
 
     public static void init(Context appContext) {
-        _appContext = appContext;
-        _prefs = _appContext.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+        _prefs = appContext.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
     }
 
     public static void putString(String key, String value) {

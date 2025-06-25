@@ -1,5 +1,6 @@
 package com.cmzsoft.weather.Model;
 
+import org.json.JSONObject;
 public class FakeGlobal {
     private static FakeGlobal instance;
 
@@ -11,8 +12,8 @@ public class FakeGlobal {
 
     public boolean isFirstLoadActivity = true;
     public boolean userAcceptRequestNotifi;
+    public JSONObject responseAPI;
     //endregion
-
 
     public static FakeGlobal getInstance() {
         if (instance == null) {

@@ -132,21 +132,13 @@ class MainActivity : AppCompatActivity() {
 
     private fun onInitedLocation() {
         UpdateWeatherInfor()
-        setupLineChart()
-        initEventNavBar()
-        setupLineChartDayNight()
-        eventScrollMain()
-        setupHeaderWithStatusBar()
-        setupDataRainfallChart()
+
     }
 
     private fun setupDataRainfallChart() {
         lifecycleScope.launch {
             val resultAPI = withContext(Dispatchers.IO) {
-                RequestAPI.getInstance().GetPOPNextWeek(
-                    FakeGlobal.getInstance().curLocation.latitude,
-                    FakeGlobal.getInstance().curLocation.longitude
-                )
+                RequestAPI.getInstance().GetPOPNextWeek()
             }
             val arrTime = resultAPI.getJSONObject("hourly").getJSONArray("time")
             val arrRainSum =
@@ -349,6 +341,16 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun getCurLocation() {
+        val defaultAdd =
+            DatabaseService.getInstance(this@MainActivity).locationWeatherService.getDefaultLocationWeather();
+        if (defaultAdd != null) {
+            this@MainActivity.curLocation =
+                LatLng(defaultAdd.latitude, defaultAdd.longitude);
+            FakeGlobal.getInstance().curLocation = defaultAdd;
+            this.onInitedLocation()
+            return;
+        }
+
         if (ActivityCompat.checkSelfPermission(
                 this, Manifest.permission.ACCESS_FINE_LOCATION
             ) != PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(
@@ -360,26 +362,19 @@ class MainActivity : AppCompatActivity() {
         }
         if (!FakeGlobal.getInstance().isFirstLoadActivity) return;
         FakeGlobal.getInstance().isFirstLoadActivity = false;
+
         LocationService.getCurrentLocation(object : GetCurrentLocationCallback {
             override fun onLocationReceived(add: LocationWeatherModel) {
-                val defaultAdd =
-                    DatabaseService.getInstance(this@MainActivity).locationWeatherService.getDefaultLocationWeather();
-                if (defaultAdd != null) {
-                    this@MainActivity.curLocation =
-                        LatLng(defaultAdd.latitude, defaultAdd.longitude);
-                    FakeGlobal.getInstance().curLocation = defaultAdd;
-                } else {
-                    this@MainActivity.curLocation = LatLng(add.latitude, add.longitude);
-                    FakeGlobal.getInstance().curLocation = add;
-                }
-
+                this@MainActivity.curLocation = LatLng(add.latitude, add.longitude);
+                FakeGlobal.getInstance().curLocation = add;
                 this@MainActivity.onInitedLocation();
             }
 
             override fun onError(exception: Exception) {
                 Toast.makeText(
-                    this@MainActivity, "Error: ${exception.message}", Toast.LENGTH_SHORT
+                    this@MainActivity, "Can't get your location", Toast.LENGTH_SHORT
                 ).show()
+                this@MainActivity.onInitedLocation();
             }
         })
     }
@@ -394,8 +389,17 @@ class MainActivity : AppCompatActivity() {
                     FakeGlobal.getInstance().curLocation.longitude
                 )
             }
+            FakeGlobal.getInstance().responseAPI = result
+            FakeGlobal.getInstance().curLocation.setTimeZone(result.getString("timezone_abbreviation"))
+
             updateDataOnMainInfo(result)
             setIsRainInNextTwoHours()
+            setupLineChart()
+            initEventNavBar()
+            setupLineChartDayNight()
+            eventScrollMain()
+            setupHeaderWithStatusBar()
+            setupDataRainfallChart()
         }
     }
 
@@ -452,13 +456,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupLineChartDayNight() {
-        lifecycleScope.launch {
-            val requestAPI = RequestAPI.getInstance()
-            val dataInWeek = withContext(Dispatchers.IO) {
-                requestAPI.GetTempInAWeek(curLocation.latitude, curLocation.longitude)
-            }
-            initChartDayNightTemp(dataInWeek)
-        }
+        initChartDayNightTemp(FakeGlobal.getInstance().responseAPI)
     }
 
     private fun initChartDayNightTemp(data: JSONObject) {
@@ -468,12 +466,11 @@ class MainActivity : AppCompatActivity() {
         val weatherCodeArr = hourly.getJSONArray("weathercode")
         val rainProbArr = hourly.getJSONArray("precipitation_probability")
 
-        // Map từng ngày: ngày -> list các chỉ số giờ trong ngày đó
-        val dailyMap = mutableMapOf<String, MutableList<Int>>() // ngày (yyyy-MM-dd) -> list chỉ số
+        val dailyMap = mutableMapOf<String, MutableList<Int>>()
 
         for (i in 0 until timeArr.length()) {
-            val timeStr = timeArr.getString(i)         // "2024-06-09T13:00"
-            val dateStr = timeStr.substring(0, 10)     // "2024-06-09"
+            val timeStr = timeArr.getString(i)
+            val dateStr = timeStr.substring(0, 10)
             dailyMap.getOrPut(dateStr) { mutableListOf() }.add(i)
         }
 
@@ -516,7 +513,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun showInterAds() {
-//        println("show inter ads")
+        if (LocalStorageManager.getString(KeysStorage.isFirstOpenApp) == "false") return;
+        LocalStorageManager.putString(KeysStorage.isFirstOpenApp, "false")
         adManager.showInterstitialAdIfEligible(
             this,
             minIntervalMillis = 60_000L,
@@ -563,9 +561,9 @@ class MainActivity : AppCompatActivity() {
         }
 
         val dataSetDay = LineDataSet(entries, "").apply {
-            color = Color.parseColor("#32a0e9")
+            color = "#32a0e9".toColorInt()
             setDrawCircles(true)
-            setCircleColor(Color.parseColor("#32a0e9"))
+            setCircleColor("#32a0e9".toColorInt())
             setDrawValues(false)
             lineWidth = 2.5f
             circleRadius = 5f
@@ -1038,7 +1036,7 @@ class MainActivity : AppCompatActivity() {
 
         updateRunnable = Runnable {
             UpdateWeatherInfor()
-            handler.postDelayed(updateRunnable, 900_000)
+            handler.postDelayed(updateRunnable, 3600_000)
         }
 
 
@@ -1051,7 +1049,7 @@ class MainActivity : AppCompatActivity() {
             UpdateWeatherInfor()
             UpdateCurrentTime()
             handler.postDelayed(updateRunnableTime, 60_000)
-            handler.postDelayed(updateRunnable, 900_000)
+            handler.postDelayed(updateRunnable, 3600_000)
         }, delayToNextMinute.toLong())
     }
 
@@ -1256,17 +1254,14 @@ class MainActivity : AppCompatActivity() {
             } else {
                 hideCustomNav()
                 if (FakeGlobal.getInstance().curLocation != null) {
-                    if (FakeGlobal.getInstance().flagIsChooseDefaultLocation && DatabaseService.getInstance(
-                            applicationContext
-                        ).locationWeatherService.checkIsExistLocationInDb(FakeGlobal.getInstance().curLocation)
-                    ) {
-                        FakeGlobal.getInstance().flagIsChooseDefaultLocation = false
+
+                    if (curLocation.latitude != FakeGlobal.getInstance().curLocation.latitude || curLocation.longitude != FakeGlobal.getInstance().curLocation.longitude) {
+                        curLocation = LatLng(
+                            FakeGlobal.getInstance().curLocation.latitude,
+                            FakeGlobal.getInstance().curLocation.longitude
+                        )
                         this.showConfirmDefault()
                     }
-                    curLocation = LatLng(
-                        FakeGlobal.getInstance().curLocation.latitude,
-                        FakeGlobal.getInstance().curLocation.longitude
-                    )
 
                     if (::updateRunnable.isInitialized) {
                         handler.removeCallbacks(updateRunnable)
@@ -1293,6 +1288,13 @@ class MainActivity : AppCompatActivity() {
         }
         findViewById<Button>(R.id.rej_set_default_2).setOnClickListener {
             contain.visibility = View.GONE
+        }
+
+        if (FakeGlobal.getInstance().flagIsChooseDefaultLocation && DatabaseService.getInstance(
+                applicationContext
+            ).locationWeatherService.checkIsExistLocationInDb(FakeGlobal.getInstance().curLocation)
+        ) {
+            DatabaseService.getInstance(this).locationWeatherService.defaultLocationWeather
         }
 
         findViewById<Button>(R.id.btn_accept_set_default).setOnClickListener {

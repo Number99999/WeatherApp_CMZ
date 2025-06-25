@@ -18,11 +18,10 @@
 
         <ImageView
             android:id="@+id/btn_back"
-            android:layout_width="@dimen/widget_size_60"
+            android:layout_width="@dimen/widget_size_30"
             android:layout_height="@dimen/widget_size_25"
             android:layout_marginStart="@dimen/margin_8dp"
-            android:layout_marginTop="@dimen/margin_8dp"
-            android:background="@color/blue_600"
+            android:layout_marginTop="@dimen/margin_20dp"
             android:src="@drawable/icon_back" />
     </RelativeLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
