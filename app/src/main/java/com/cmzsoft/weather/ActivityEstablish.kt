@@ -1,10 +1,12 @@
 package com.cmzsoft.weather
 
 
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageButton
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.annotation.RequiresApi
@@ -40,6 +42,10 @@ class ActivityEstablish : AppCompatActivity() {
         setupSpinnerWindSpeed()
         setupSpinnerAtm()
         setupTimeFormat()
+        findViewById<LinearLayout>(R.id.contain_noti).setOnClickListener {
+            val t = Intent(this, ActivitySettingNotification::class.java)
+            startActivity(t)
+        }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             setupSpinnerDateForm()
         }
@@ -197,12 +203,36 @@ class ActivityEstablish : AppCompatActivity() {
     }
 
     private fun sendEvenIfChange() {
-        val ins =  FirebaseManager.getInstance(this)
-        if(_safeData.typeTemp != _firstData.typeTemp) ins.sendEvent(KeyEventFirebase.settingTemp, "type", _safeData.typeTemp);
-        if(_safeData.rainfall != _firstData.rainfall) ins.sendEvent(KeyEventFirebase.settingRain, "type", _safeData.rainfall);
-        if(_safeData.visibility != _firstData.visibility) ins.sendEvent(KeyEventFirebase.settingSpeed, "type", _safeData.visibility);
-        if(_safeData.winSpeed != _firstData.winSpeed) ins.sendEvent(KeyEventFirebase.settingWindSpeed, "type", _safeData.winSpeed);
-        if(_safeData.presure != _firstData.presure) ins.sendEvent(KeyEventFirebase.settingPresure, "type", _safeData.presure);
-        if(_safeData.dateForm != _firstData.dateForm) ins.sendEvent(KeyEventFirebase.settingTime, "type", _safeData.dateForm);
+        val ins = FirebaseManager.getInstance(this)
+        if (_safeData.typeTemp != _firstData.typeTemp) ins.sendEvent(
+            KeyEventFirebase.settingTemp,
+            "type",
+            _safeData.typeTemp
+        );
+        if (_safeData.rainfall != _firstData.rainfall) ins.sendEvent(
+            KeyEventFirebase.settingRain,
+            "type",
+            _safeData.rainfall
+        );
+        if (_safeData.visibility != _firstData.visibility) ins.sendEvent(
+            KeyEventFirebase.settingSpeed,
+            "type",
+            _safeData.visibility
+        );
+        if (_safeData.winSpeed != _firstData.winSpeed) ins.sendEvent(
+            KeyEventFirebase.settingWindSpeed,
+            "type",
+            _safeData.winSpeed
+        );
+        if (_safeData.presure != _firstData.presure) ins.sendEvent(
+            KeyEventFirebase.settingPresure,
+            "type",
+            _safeData.presure
+        );
+        if (_safeData.dateForm != _firstData.dateForm) ins.sendEvent(
+            KeyEventFirebase.settingTime,
+            "type",
+            _safeData.dateForm
+        );
     }
 }

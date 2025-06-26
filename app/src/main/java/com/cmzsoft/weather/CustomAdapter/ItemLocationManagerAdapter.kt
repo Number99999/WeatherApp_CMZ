@@ -41,6 +41,7 @@ class ItemLocationManagerAdapter(private var items: MutableList<LocationWeatherM
         val context = holder.itemView.context
         val defaultAdd =
             DatabaseService.getInstance(context.applicationContext).locationWeatherService.getDefaultLocationWeather();
+        println("defaultAdd.toString() ${defaultAdd.toString()}")
         holder.txtDefault.visibility = if (item.isDefaultLocation == 1) {
             View.VISIBLE
         } else {
@@ -53,17 +54,27 @@ class ItemLocationManagerAdapter(private var items: MutableList<LocationWeatherM
             if (defaultAdd == null) {
                 holder.txtDefault.visibility = View.VISIBLE
             }
-        } else holder.title.text = item.name
-        holder.fullPath.text = item.fullPathLocation.replace("${item.name}, ", "")
 
-        holder.contain.setOnClickListener {
-            if (item.isEdit == true) return@setOnClickListener
-            FakeGlobal.getInstance().flagIsChooseDefaultLocation = true
-            FakeGlobal.getInstance().curLocation = item
-            val changeIntent = Intent(context, MainActivity::class.java)
-            changeIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
-            context.startActivity(changeIntent)
+            holder.contain.setOnClickListener {
+                if (item.isEdit == true) return@setOnClickListener
+                FakeGlobal.getInstance().flagIsChooseDefaultLocation = true
+                FakeGlobal.getInstance().curLocation = item
+                val changeIntent = Intent(context, MainActivity::class.java)
+                changeIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
+                context.startActivity(changeIntent)
+            }
+        } else {
+            holder.title.text = item.name
+            holder.contain.setOnClickListener {
+                if (item.isEdit == true) return@setOnClickListener
+                FakeGlobal.getInstance().curLocation = item
+                FakeGlobal.getInstance().flagIsChooseDefaultLocation = false
+                val changeIntent = Intent(context, MainActivity::class.java)
+                changeIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
+                context.startActivity(changeIntent)
+            }
         }
+        holder.fullPath.text = item.fullPathLocation.replace("${item.name}, ", "")
         val btn_delete = holder.itemView.findViewById<ImageView>(R.id.btn_delete)
         btn_delete.visibility = if (item.isEdit) View.VISIBLE else View.GONE
         btn_delete.setOnClickListener {

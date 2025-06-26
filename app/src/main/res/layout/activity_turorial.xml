@@ -121,7 +121,7 @@
                         android:layout_alignParentBottom="true"
                         android:layout_marginBottom="@dimen/widget_size_20"
                         android:gravity="center_horizontal"
-                        android:text="Real time weather tracking"
+                        android:text="Weekly forecast"
                         android:textSize="@dimen/margin_16dp" />
                 </RelativeLayout>
 

@@ -94,10 +94,6 @@ class MainActivity : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(R.layout.activity_main)
 
-        if (intent.getBooleanExtra("FROM_REQUEST_LOCATION", false)) {
-            this.showSettingsDialog();
-        }
-
         initValiable()
 
         createNotificationChannel(this)
@@ -344,8 +340,7 @@ class MainActivity : AppCompatActivity() {
         val defaultAdd =
             DatabaseService.getInstance(this@MainActivity).locationWeatherService.getDefaultLocationWeather();
         if (defaultAdd != null) {
-            this@MainActivity.curLocation =
-                LatLng(defaultAdd.latitude, defaultAdd.longitude);
+            this@MainActivity.curLocation = LatLng(defaultAdd.latitude, defaultAdd.longitude);
             FakeGlobal.getInstance().curLocation = defaultAdd;
             this.onInitedLocation()
             return;
@@ -513,7 +508,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun showInterAds() {
-        if (LocalStorageManager.getString(KeysStorage.isFirstOpenApp) == "false") return;
+        if (LocalStorageManager.getString(KeysStorage.isFirstOpenApp) != "false") {
+            showSettingsDialog()
+            return;
+        }
         LocalStorageManager.putString(KeysStorage.isFirstOpenApp, "false")
         adManager.showInterstitialAdIfEligible(
             this,
@@ -1298,7 +1296,10 @@ class MainActivity : AppCompatActivity() {
         }
 
         findViewById<Button>(R.id.btn_accept_set_default).setOnClickListener {
-            if (FakeGlobal.getInstance().isCurrentLocation == false) DatabaseService.getInstance(
+            if (FakeGlobal.getInstance().flagIsChooseDefaultLocation) DatabaseService.getInstance(
+                applicationContext
+            ).locationWeatherService.setDontDefaultAll()
+            else if (FakeGlobal.getInstance().isCurrentLocation == false) DatabaseService.getInstance(
                 applicationContext
             ).locationWeatherService.changeDefaultLocation(
                 FakeGlobal.getInstance().curLocation

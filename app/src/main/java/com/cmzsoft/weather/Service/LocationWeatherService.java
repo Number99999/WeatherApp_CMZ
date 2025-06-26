@@ -135,32 +135,41 @@ public class LocationWeatherService extends SQLiteOpenHelper {
         return result > 0;
     }
 
-
-    public boolean changeDefaultLocation(LocationWeatherModel wModel, boolean isDefauld) {
+    public boolean changeDefaultLocation(LocationWeatherModel wModel) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         try {
             db.beginTransaction();
-
             String updateQuery = "UPDATE " + TABLE_NAME + " SET isDefault = 0 WHERE isDefault = 1";
             db.execSQL(updateQuery);
             boolean insertOrUpdateSuccess = false;
-            if (!isDefauld) {
-                wModel.setIsDefaultLocation(1);
+            wModel.setIsDefaultLocation(1);
+            boolean isExist = checkIsExistLocationInDb(wModel);
+            if (!isExist) {
+                insertOrUpdateSuccess = this.insertLocationWeather(wModel);
+            } else {
+                insertOrUpdateSuccess = updateLocation(wModel);
+            }
 
-                boolean isExist = checkIsExistLocationInDb(wModel);
-                if (!isExist) {
-                    insertOrUpdateSuccess = this.insertLocationWeather(wModel);
-                } else {
-                    insertOrUpdateSuccess = updateLocation(wModel);
-                }
-
-                if (insertOrUpdateSuccess) {
-                    db.setTransactionSuccessful();
-                }
-            } else insertOrUpdateSuccess = true;
+            if (insertOrUpdateSuccess) {
+                db.setTransactionSuccessful();
+            }
             db.endTransaction();
             return insertOrUpdateSuccess;
+        } catch (Exception e) {
+            e.printStackTrace();
+            db.endTransaction();
+            return false;
+        }
+    }
+
+    public boolean setDontDefaultAll() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        try {
+            db.beginTransaction();
+            String updateQuery = "UPDATE " + TABLE_NAME + " SET isDefault = 0 WHERE isDefault = 1";
+            db.execSQL(updateQuery);
+            return true;
         } catch (Exception e) {
             e.printStackTrace();
             db.endTransaction();

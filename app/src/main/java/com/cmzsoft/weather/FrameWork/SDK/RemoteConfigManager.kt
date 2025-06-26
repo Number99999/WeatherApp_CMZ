@@ -95,7 +95,6 @@ class RemoteConfigManager private constructor() {
 
 }
 
-
 /* how to use
     val configManager = RemoteConfigManager.getInstance()
 

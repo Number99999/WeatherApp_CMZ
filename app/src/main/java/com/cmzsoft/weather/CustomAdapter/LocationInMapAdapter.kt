@@ -52,7 +52,7 @@ class LocationInMapAdapter(private val items: List<LocationInMapModel>) :
                     FakeGlobal.getInstance().curLocation
                 );
             }
-            FakeGlobal.getInstance().flagIsChooseDefaultLocation = true
+//            FakeGlobal.getInstance().flagIsChooseDefaultLocation = true
             val changeIntent = Intent(context, MainActivity::class.java);
             changeIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
             context.startActivity(changeIntent)
