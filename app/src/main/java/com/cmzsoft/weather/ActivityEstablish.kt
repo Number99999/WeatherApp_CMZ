@@ -52,7 +52,6 @@ class ActivityEstablish : AppCompatActivity() {
     }
 
     private fun setupTimeFormat() {
-//        is24h
         val sw = findViewById<SwitchCompat>(R.id.switchTemperature)
         sw.isChecked = _safeData.is24h
         sw.setOnClickListener {
@@ -70,7 +69,6 @@ class ActivityEstablish : AppCompatActivity() {
     private fun initEventBack() {
         val button = findViewById<ImageButton>(R.id.backButton);
         button.setOnClickListener {
-            sendEvenIfChange()
             finish()
         }
     }

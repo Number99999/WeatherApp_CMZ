@@ -257,8 +257,49 @@ public class WeatherUtil {
         return WeatherUtil.convertTimeDeviceToTimezone(hourMinute, targetTimeZone);
     }
 
-    public static float convertToCurTypeTemp(float in){
+    public static int convertToCurTypeTemp(double in, String data) {
+        if (data.equals("C")) return (int) in;
+        return (int) (in * 9 / 5) + 32;
+    }
 
-        return 0f;
+
+    // 1 miles = 1.60934km
+    public static double convertWindirToCurType(double in, String data) {
+        double out = in;
+        switch (data) {
+            case "mph": {
+                out = in / 1.60934;
+                break;
+            }
+            case "km/h": {
+                out = in;
+                break;
+            }
+            case "m/s": {
+                out = in / 3.6;
+                break;
+            }
+        }
+        out = Math.round(out * 100.0) / 100.0;
+        return out;
+    }
+
+    public static String convertHourToCurType(String str, boolean is24h) {
+
+        if (is24h) return str;
+        String out = "";
+        int h = Integer.parseInt(str.substring(0, 2));
+        int m = Integer.parseInt(str.substring(3));
+        if (h == 0) {
+            out = "12:" + String.format("%02d", m) + " AM";
+        } else if (h == 12) {
+            out = "12:" + String.format("%02d", m) + " PM";
+        } else if (h > 12) {
+            out = (h - 12) + ":" + String.format("%02d", m) + " PM";
+        } else {
+            out = h + ":" + String.format("%02d", m) + " AM";
+        }
+
+        return out;
     }
 }

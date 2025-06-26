@@ -2,6 +2,7 @@ package com.cmzsoft.weather
 
 import XAxisRendererRainfallChart
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
@@ -38,6 +39,7 @@ import com.cmzsoft.weather.FrameWork.Data.LocalStorageManager
 import com.cmzsoft.weather.FrameWork.EventApp.FirebaseManager
 import com.cmzsoft.weather.Manager.AdManager
 import com.cmzsoft.weather.Model.DataWeatherPerHourModel
+import com.cmzsoft.weather.Model.EstablishModel
 import com.cmzsoft.weather.Model.FakeGlobal
 import com.cmzsoft.weather.Model.LocationWeatherModel
 import com.cmzsoft.weather.Model.NavMenuModel
@@ -76,6 +78,7 @@ import java.util.Calendar
 import java.util.Locale
 import kotlin.math.roundToInt
 
+@SuppressLint("SetTextI18n")
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     lateinit var adManager: AdManager
@@ -88,12 +91,16 @@ class MainActivity : AppCompatActivity() {
     private var updateCurTimeJob: Job? = null
     private var curLocation: LatLng = LatLng(21.0, 105.875)
     private var isFirstResume = true
+    private var _dataEstablish: EstablishModel;
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_main)
 
+        if (intent.getBooleanExtra("FROM_REQUEST_LOCATION", false) == true) {
+            this.showSettingsDialog();
+        }
         initValiable()
 
         createNotificationChannel(this)
@@ -109,10 +116,13 @@ class MainActivity : AppCompatActivity() {
         setupEventButton()
     }
 
-    //    init {
-//        setupEventButton()
-//    }
-//
+    init {
+        _dataEstablish = LocalStorageManager.getObject<EstablishModel>(
+            KeysStorage.establish,
+            EstablishModel::class.java
+        )
+    }
+
     private fun setupEventButton() {
         findViewById<LinearLayout>(R.id.contain_map_weather).setOnClickListener {
             val change = Intent(this, ActivityRadarWeatherMap::class.java);
@@ -128,7 +138,6 @@ class MainActivity : AppCompatActivity() {
 
     private fun onInitedLocation() {
         UpdateWeatherInfor()
-
     }
 
     private fun setupDataRainfallChart() {
@@ -280,10 +289,10 @@ class MainActivity : AppCompatActivity() {
             startActivity(changePage);
         }
 
-        findViewById<LinearLayout>(R.id.nav_notification).setOnClickListener {
-            val changePage = Intent(this, ActivitySettingNotification::class.java)
-            startActivity(changePage)
-        }
+//        findViewById<LinearLayout>(R.id.nav_notification).setOnClickListener {
+//            val changePage = Intent(this, ActivitySettingNotification::class.java)
+//            startActivity(changePage)
+//        }
 
         findViewById<LinearLayout>(R.id.nav_location).setOnClickListener {
             val changePage = Intent(this, ActivityLocationManager::class.java)
@@ -404,7 +413,8 @@ class MainActivity : AppCompatActivity() {
             val txtDegree = findViewById<TextView>(R.id.temperature)
             val currentWeather = result.getJSONObject("current_weather")
             val tempC = currentWeather.getDouble("temperature")
-            txtDegree.text = tempC.roundToInt().toString()
+            txtDegree.text =
+                WeatherUtil.convertToCurTypeTemp(tempC, _dataEstablish.typeTemp).toString()
 
             UpdateCurrentTime()
             val txtWeatherStatus = findViewById<TextView>(R.id.weatherStatus)
@@ -427,7 +437,12 @@ class MainActivity : AppCompatActivity() {
 
             val txtWindKph = findViewById<TextView>(R.id.wind_kph)
             var wind_kph = currentWeather.getDouble("windspeed")
-            txtWindKph.text = "Hướng gió\n" + windDir + " - " + wind_kph + "km/h"
+            txtWindKph.text = "Hướng gió\n$windDir - ${
+                WeatherUtil.convertWindirToCurType(
+                    wind_kph,
+                    _dataEstablish.winSpeed
+                )
+            } ${_dataEstablish.winSpeed}"
 
             val uv = result.getJSONObject("hourly").getJSONArray("uv_index").get(curHour)
             val txtUv = findViewById<TextView>(R.id.txt_uv)
@@ -438,8 +453,20 @@ class MainActivity : AppCompatActivity() {
             findViewById<TextView>(R.id.txt_humidity).text = "Độ ẩm\n$humidity%"
 
             val feelsLike =
-                result.getJSONObject("hourly").getJSONArray("apparent_temperature").get(curHour)
-            findViewById<TextView>(R.id.txt_feel_like).text = "Môi trường:\n$feelsLike℃"
+                result.getJSONObject("hourly").getJSONArray("apparent_temperature")
+                    .get(curHour) as Double
+
+            if (_dataEstablish.typeTemp.equals("C")) {
+                findViewById<ImageView>(R.id.icon_char_temp).setImageResource(R.drawable.char_c)
+            } else
+                findViewById<ImageView>(R.id.icon_char_temp).setImageResource(R.drawable.char_f)
+            findViewById<TextView>(R.id.txt_feel_like).text =
+                "Môi trường:\n${
+                    WeatherUtil.convertToCurTypeTemp(
+                        feelsLike,
+                        _dataEstablish.typeTemp
+                    )
+                }°${_dataEstablish.typeTemp}"
 
             if (FakeGlobal.getInstance()?.curLocation?.name != null) {
                 val txtCity = findViewById<TextView>(R.id.cityName);
@@ -485,11 +512,16 @@ class MainActivity : AppCompatActivity() {
 
             val rainDay = dayHours.maxOfOrNull { rainProbArr.optDouble(it, 0.0) }?.toInt() ?: 0
             val rainNight = nightHours.maxOfOrNull { rainProbArr.optDouble(it, 0.0) }?.toInt() ?: 0
-            val tempDay = dayHours.maxOfOrNull { tempArr.optDouble(it, 0.0) }?.toFloat() ?: 0f
-            val tempNight = nightHours.maxOfOrNull { tempArr.optDouble(it, 0.0) }?.toFloat() ?: 0f
+            var tempDay = dayHours.maxOfOrNull { tempArr.optDouble(it, 0.0) }?.toFloat() ?: 0f
+            var tempNight = nightHours.maxOfOrNull { tempArr.optDouble(it, 0.0) }?.toFloat() ?: 0f
             val iconID = dayHours.maxByOrNull { tempArr.optDouble(it, 0.0) }
                 ?.let { weatherCodeArr.optInt(it, 0) } ?: 0
 
+            tempDay = WeatherUtil.convertToCurTypeTemp(tempDay.toDouble(), _dataEstablish.typeTemp)
+                .toFloat()
+            tempNight =
+                WeatherUtil.convertToCurTypeTemp(tempNight.toDouble(), _dataEstablish.typeTemp)
+                    .toFloat()
             val m = NightDayTempModel(
                 date = date,
                 rainDay = rainDay,
@@ -508,10 +540,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun showInterAds() {
-        if (LocalStorageManager.getString(KeysStorage.isFirstOpenApp) != "false") {
-            showSettingsDialog()
-            return;
-        }
         LocalStorageManager.putString(KeysStorage.isFirstOpenApp, "false")
         adManager.showInterstitialAdIfEligible(
             this,
@@ -720,7 +748,12 @@ class MainActivity : AppCompatActivity() {
 
             val weekdays = arrayOf("Chủ nhật", "Thứ 2", "Thứ 3", "Thứ 4", "Thứ 5", "Thứ 6", "Thứ 7")
             val weekdayStr = weekdays[weekday - 1]
-            val formatted = "${timeConverted.substring(11)} - $weekdayStr, $day tháng $month $year"
+            val formatted = "${
+                WeatherUtil.convertHourToCurType(
+                    timeConverted.substring(11),
+                    _dataEstablish.is24h
+                )
+            } - $weekdayStr, $day tháng $month $year"
             textView.text = formatted
         } catch (e: ParseException) {
             e.printStackTrace()
@@ -909,7 +942,15 @@ class MainActivity : AppCompatActivity() {
         try {
             val entries = ArrayList<Entry>()
             arrInfo.forEachIndexed { i, model ->
-                entries.add(Entry(i.toFloat(), model.tempC.toFloat() / 3))
+                entries.add(
+                    Entry(
+                        i.toFloat(),
+                        WeatherUtil.convertToCurTypeTemp(
+                            model.tempC.toDouble(),
+                            _dataEstablish.typeTemp
+                        ).toFloat() / 3
+                    )
+                )
             }
             val dataSet = createLineDataSet(entries)
             val lineChart = findViewById<LineChart>(R.id.lineChart)
@@ -995,7 +1036,8 @@ class MainActivity : AppCompatActivity() {
                 set.valueFormatter = object : ValueFormatter() {
                     override fun getPointLabel(entry: Entry?): String {
                         if (entry != null) {
-                            return (entry.y * 3).roundToInt().toString() + "°C"
+                            return (entry.y * 3).roundToInt()
+                                .toString() + "°${_dataEstablish.typeTemp}"
                         } else return ""
                     }
                 }
@@ -1228,7 +1270,10 @@ class MainActivity : AppCompatActivity() {
             val view =
                 LayoutInflater.from(this).inflate(R.layout.title_chart_item, linearContainer, false)
 
-            view.findViewById<TextView>(R.id.txt_time)?.text = "${arr[i].time}"
+            view.findViewById<TextView>(R.id.txt_time)?.text = "${
+                WeatherUtil.convertHourToCurType(arr[i].time, _dataEstablish.is24h)
+                    .replace(" ", "\n")
+            }"
             view.findViewById<TextView>(R.id.txt_rainfall_rate)?.text = "${arr[i].changeRain}%"
             val nameIcon = WeatherUtil.getWeatherIconName(arr[i].iconCode, arr[i].isDay)
             val resId = resources.getIdentifier(nameIcon, "drawable", packageName)
@@ -1243,6 +1288,13 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun reloadData() {
+        _dataEstablish = LocalStorageManager.getObject<EstablishModel>(
+            KeysStorage.establish,
+            EstablishModel::class.java
+        )
+    }
+
     override fun onResume() {
         super.onResume()
         try {
@@ -1251,6 +1303,8 @@ class MainActivity : AppCompatActivity() {
                 return
             } else {
                 hideCustomNav()
+                reloadData();
+                UpdateWeatherInfor();
                 if (FakeGlobal.getInstance().curLocation != null) {
 
                     if (curLocation.latitude != FakeGlobal.getInstance().curLocation.latitude || curLocation.longitude != FakeGlobal.getInstance().curLocation.longitude) {

@@ -33,6 +33,7 @@ class LoadingAppActivity : AppCompatActivity() {
             finish()
         } else {
             var changePage = Intent(this, MainActivity::class.java);
+            changePage.putExtra("FROM_REQUEST_LOCATION", false)
             startActivity(changePage);
             finish()
         }

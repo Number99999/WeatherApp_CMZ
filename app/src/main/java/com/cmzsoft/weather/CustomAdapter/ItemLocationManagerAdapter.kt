@@ -41,7 +41,6 @@ class ItemLocationManagerAdapter(private var items: MutableList<LocationWeatherM
         val context = holder.itemView.context
         val defaultAdd =
             DatabaseService.getInstance(context.applicationContext).locationWeatherService.getDefaultLocationWeather();
-        println("defaultAdd.toString() ${defaultAdd.toString()}")
         holder.txtDefault.visibility = if (item.isDefaultLocation == 1) {
             View.VISIBLE
         } else {
@@ -74,7 +73,7 @@ class ItemLocationManagerAdapter(private var items: MutableList<LocationWeatherM
                 context.startActivity(changeIntent)
             }
         }
-        holder.fullPath.text = item.fullPathLocation.replace("${item.name}, ", "")
+        holder.fullPath.text = shortPathLocation(item.fullPathLocation)
         val btn_delete = holder.itemView.findViewById<ImageView>(R.id.btn_delete)
         btn_delete.visibility = if (item.isEdit) View.VISIBLE else View.GONE
         btn_delete.setOnClickListener {
@@ -105,5 +104,11 @@ class ItemLocationManagerAdapter(private var items: MutableList<LocationWeatherM
         }
         // update RecyclerView
         notifyDataSetChanged()  // Hoặc notifyItemChanged() nếu cần thay đổi cho từng item
+    }
+
+    private fun shortPathLocation(fullPath: String): String {
+        val spl = fullPath.split(", ");
+        if (spl.size >= 2) return spl.get(spl.size - 2) + ", " + spl.get(spl.size - 1);
+        return fullPath;
     }
 }
