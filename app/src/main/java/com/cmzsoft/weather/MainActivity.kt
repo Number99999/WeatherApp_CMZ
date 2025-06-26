@@ -2,7 +2,6 @@ package com.cmzsoft.weather
 
 import XAxisRendererRainfallChart
 import android.Manifest
-import android.annotation.SuppressLint
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
@@ -78,7 +77,6 @@ import java.util.Calendar
 import java.util.Locale
 import kotlin.math.roundToInt
 
-@SuppressLint("SetTextI18n")
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     lateinit var adManager: AdManager
@@ -91,7 +89,9 @@ class MainActivity : AppCompatActivity() {
     private var updateCurTimeJob: Job? = null
     private var curLocation: LatLng = LatLng(21.0, 105.875)
     private var isFirstResume = true
-    private var _dataEstablish: EstablishModel;
+    private var _dataEstablish: EstablishModel = LocalStorageManager.getObject<EstablishModel>(
+        KeysStorage.establish, EstablishModel::class.java
+    ) ?: EstablishModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -118,9 +118,8 @@ class MainActivity : AppCompatActivity() {
 
     init {
         _dataEstablish = LocalStorageManager.getObject<EstablishModel>(
-            KeysStorage.establish,
-            EstablishModel::class.java
-        )
+            KeysStorage.establish, EstablishModel::class.java
+        ) ?: EstablishModel();
     }
 
     private fun setupEventButton() {
@@ -400,7 +399,7 @@ class MainActivity : AppCompatActivity() {
             setIsRainInNextTwoHours()
             setupLineChart()
             initEventNavBar()
-            setupLineChartDayNight()
+            initChartDayNightTemp(FakeGlobal.getInstance().responseAPI)
             eventScrollMain()
             setupHeaderWithStatusBar()
             setupDataRainfallChart()
@@ -439,8 +438,7 @@ class MainActivity : AppCompatActivity() {
             var wind_kph = currentWeather.getDouble("windspeed")
             txtWindKph.text = "Hướng gió\n$windDir - ${
                 WeatherUtil.convertWindirToCurType(
-                    wind_kph,
-                    _dataEstablish.winSpeed
+                    wind_kph, _dataEstablish.winSpeed
                 )
             } ${_dataEstablish.winSpeed}"
 
@@ -452,91 +450,89 @@ class MainActivity : AppCompatActivity() {
                 result.getJSONObject("hourly").getJSONArray("relative_humidity_2m").get(curHour)
             findViewById<TextView>(R.id.txt_humidity).text = "Độ ẩm\n$humidity%"
 
-            val feelsLike =
-                result.getJSONObject("hourly").getJSONArray("apparent_temperature")
-                    .get(curHour) as Double
+            val feelsLike = result.getJSONObject("hourly").getJSONArray("apparent_temperature")
+                .get(curHour) as Double
 
             if (_dataEstablish.typeTemp.equals("C")) {
                 findViewById<ImageView>(R.id.icon_char_temp).setImageResource(R.drawable.char_c)
-            } else
-                findViewById<ImageView>(R.id.icon_char_temp).setImageResource(R.drawable.char_f)
-            findViewById<TextView>(R.id.txt_feel_like).text =
-                "Môi trường:\n${
-                    WeatherUtil.convertToCurTypeTemp(
-                        feelsLike,
-                        _dataEstablish.typeTemp
-                    )
-                }°${_dataEstablish.typeTemp}"
+            } else findViewById<ImageView>(R.id.icon_char_temp).setImageResource(R.drawable.char_f)
+            findViewById<TextView>(R.id.txt_feel_like).text = "Môi trường:\n${
+                WeatherUtil.convertToCurTypeTemp(
+                    feelsLike, _dataEstablish.typeTemp
+                )
+            }°${_dataEstablish.typeTemp}"
 
             if (FakeGlobal.getInstance()?.curLocation?.name != null) {
                 val txtCity = findViewById<TextView>(R.id.cityName);
                 txtCity.text = FakeGlobal.getInstance().curLocation.name;
             }
         } catch (e: Exception) {
-            Toast.makeText(this@MainActivity, e.message.toString(), Toast.LENGTH_SHORT).show()
+//            Toast.makeText(this@MainActivity, e.message.toString(), Toast.LENGTH_SHORT).show()
         }
-    }
-
-    private fun setupLineChartDayNight() {
-        initChartDayNightTemp(FakeGlobal.getInstance().responseAPI)
     }
 
     private fun initChartDayNightTemp(data: JSONObject) {
-        val hourly = data.getJSONObject("hourly")
-        val timeArr = hourly.getJSONArray("time")
-        val tempArr = hourly.getJSONArray("temperature_2m")
-        val weatherCodeArr = hourly.getJSONArray("weathercode")
-        val rainProbArr = hourly.getJSONArray("precipitation_probability")
+        try {
+            val hourly = data.getJSONObject("hourly")
+            val timeArr = hourly.getJSONArray("time")
+            val tempArr = hourly.getJSONArray("temperature_2m")
+            val weatherCodeArr = hourly.getJSONArray("weathercode")
+            val rainProbArr = hourly.getJSONArray("precipitation_probability")
 
-        val dailyMap = mutableMapOf<String, MutableList<Int>>()
+            val dailyMap = mutableMapOf<String, MutableList<Int>>()
 
-        for (i in 0 until timeArr.length()) {
-            val timeStr = timeArr.getString(i)
-            val dateStr = timeStr.substring(0, 10)
-            dailyMap.getOrPut(dateStr) { mutableListOf() }.add(i)
-        }
-
-        val listData = mutableListOf<NightDayTempModel>()
-
-        for ((date, idxList) in dailyMap) {
-            val dayHours = mutableListOf<Int>()
-            val nightHours = mutableListOf<Int>()
-            for (idx in idxList) {
-                val hour = timeArr.getString(idx).substring(11, 13).toInt()
-                if (hour in 6 until 19) {
-                    dayHours.add(idx)
-                } else {
-                    nightHours.add(idx)
-                }
+            for (i in 0 until timeArr.length()) {
+                val timeStr = timeArr.getString(i)
+                val dateStr = timeStr.substring(0, 10)
+                dailyMap.getOrPut(dateStr) { mutableListOf() }.add(i)
             }
 
-            val rainDay = dayHours.maxOfOrNull { rainProbArr.optDouble(it, 0.0) }?.toInt() ?: 0
-            val rainNight = nightHours.maxOfOrNull { rainProbArr.optDouble(it, 0.0) }?.toInt() ?: 0
-            var tempDay = dayHours.maxOfOrNull { tempArr.optDouble(it, 0.0) }?.toFloat() ?: 0f
-            var tempNight = nightHours.maxOfOrNull { tempArr.optDouble(it, 0.0) }?.toFloat() ?: 0f
-            val iconID = dayHours.maxByOrNull { tempArr.optDouble(it, 0.0) }
-                ?.let { weatherCodeArr.optInt(it, 0) } ?: 0
+            val listData = mutableListOf<NightDayTempModel>()
 
-            tempDay = WeatherUtil.convertToCurTypeTemp(tempDay.toDouble(), _dataEstablish.typeTemp)
-                .toFloat()
-            tempNight =
-                WeatherUtil.convertToCurTypeTemp(tempNight.toDouble(), _dataEstablish.typeTemp)
-                    .toFloat()
-            val m = NightDayTempModel(
-                date = date,
-                rainDay = rainDay,
-                rainNight = rainNight,
-                tempDay = tempDay,
-                tempNight = tempNight,
-                iconID = iconID
-            )
-            listData.add(m)
+            for ((date, idxList) in dailyMap) {
+                val dayHours = mutableListOf<Int>()
+                val nightHours = mutableListOf<Int>()
+                for (idx in idxList) {
+                    val hour = timeArr.getString(idx).substring(11, 13).toInt()
+                    if (hour in 6 until 19) {
+                        dayHours.add(idx)
+                    } else {
+                        nightHours.add(idx)
+                    }
+                }
+
+                val rainDay = dayHours.maxOfOrNull { rainProbArr.optDouble(it, 0.0) }?.toInt() ?: 0
+                val rainNight =
+                    nightHours.maxOfOrNull { rainProbArr.optDouble(it, 0.0) }?.toInt() ?: 0
+                var tempDay = dayHours.maxOfOrNull { tempArr.optDouble(it, 0.0) }?.toFloat() ?: 0f
+                var tempNight =
+                    nightHours.maxOfOrNull { tempArr.optDouble(it, 0.0) }?.toFloat() ?: 0f
+                val iconID = dayHours.maxByOrNull { tempArr.optDouble(it, 0.0) }
+                    ?.let { weatherCodeArr.optInt(it, 0) } ?: 0
+
+                tempDay =
+                    WeatherUtil.convertToCurTypeTemp(tempDay.toDouble(), _dataEstablish.typeTemp)
+                        .toFloat()
+                tempNight =
+                    WeatherUtil.convertToCurTypeTemp(tempNight.toDouble(), _dataEstablish.typeTemp)
+                        .toFloat()
+                val m = NightDayTempModel(
+                    date = date,
+                    rainDay = rainDay,
+                    rainNight = rainNight,
+                    tempDay = tempDay,
+                    tempNight = tempNight,
+                    iconID = iconID
+                )
+                listData.add(m)
+            }
+            this.setUpDayTempChart(listData)
+            this.setUpNightTempChart(listData)
+            this.setupRecycleNight(listData)
+            this.setupRecycleDay(listData)
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
-
-        this.setUpDayTempChart(listData)
-        this.setUpNightTempChart(listData)
-        this.setupRecycleNight(listData)
-        this.setupRecycleDay(listData)
     }
 
     fun showInterAds() {
@@ -691,7 +687,7 @@ class MainActivity : AppCompatActivity() {
                 if (parentView.getChildAt(3) is ViewGroup) {
                     val t = (parentView.getChildAt(3) as ViewGroup).getChildAt(1);
                     if (t is TextView) t.text =
-                        (dataModel[i].tempDay.roundToInt()).toString() + "°C";
+                        (dataModel[i].tempDay.roundToInt()).toString() + "°${_dataEstablish.typeTemp}";
                 }
             }
         }
@@ -706,7 +702,7 @@ class MainActivity : AppCompatActivity() {
                 if (parentView.getChildAt(0) is ViewGroup) {
                     val t = (parentView.getChildAt(0) as ViewGroup).getChildAt(1)
                     if (t is TextView) {
-                        t.text = dataModel[i].tempNight.roundToInt().toString() + "°C";
+                        t.text = dataModel[i].tempNight.roundToInt().toString() + "°${_dataEstablish.typeTemp}";
                     }
                 }
 
@@ -750,8 +746,7 @@ class MainActivity : AppCompatActivity() {
             val weekdayStr = weekdays[weekday - 1]
             val formatted = "${
                 WeatherUtil.convertHourToCurType(
-                    timeConverted.substring(11),
-                    _dataEstablish.is24h
+                    timeConverted.substring(11), _dataEstablish.is24h
                 )
             } - $weekdayStr, $day tháng $month $year"
             textView.text = formatted
@@ -933,7 +928,7 @@ class MainActivity : AppCompatActivity() {
             setupTitleChartDegree(arrInfo)
             setupChart(arrInfo)
         } catch (e: Exception) {
-            Toast.makeText(this, e.message.toString(), Toast.LENGTH_SHORT).show()
+//            Toast.makeText(this, e.message.toString(), Toast.LENGTH_SHORT).show()
             e.printStackTrace()
         }
     }
@@ -944,10 +939,8 @@ class MainActivity : AppCompatActivity() {
             arrInfo.forEachIndexed { i, model ->
                 entries.add(
                     Entry(
-                        i.toFloat(),
-                        WeatherUtil.convertToCurTypeTemp(
-                            model.tempC.toDouble(),
-                            _dataEstablish.typeTemp
+                        i.toFloat(), WeatherUtil.convertToCurTypeTemp(
+                            model.tempC.toDouble(), _dataEstablish.typeTemp
                         ).toFloat() / 3
                     )
                 )
@@ -976,7 +969,7 @@ class MainActivity : AppCompatActivity() {
 
             lineChart.invalidate()
         } catch (e: Exception) {
-            Toast.makeText(this@MainActivity, e.message, Toast.LENGTH_SHORT).show()
+//            Toast.makeText(this@MainActivity, e.message, Toast.LENGTH_SHORT).show()
             e.printStackTrace()
         }
     }
@@ -1043,7 +1036,7 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         } catch (e: Exception) {
-            Toast.makeText(this@MainActivity, e.message, Toast.LENGTH_SHORT).show()
+//            Toast.makeText(this@MainActivity, e.message, Toast.LENGTH_SHORT).show()
             e.printStackTrace()
         }
     }
@@ -1218,7 +1211,7 @@ class MainActivity : AppCompatActivity() {
                     notify(1001, builder.build())
                 }
             } catch (e: Exception) {
-                Toast.makeText(this, e.toString(), Toast.LENGTH_LONG).show()
+//                Toast.makeText(this, e.toString(), Toast.LENGTH_LONG).show()
             }
         }
     }
@@ -1290,8 +1283,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun reloadData() {
         _dataEstablish = LocalStorageManager.getObject<EstablishModel>(
-            KeysStorage.establish,
-            EstablishModel::class.java
+            KeysStorage.establish, EstablishModel::class.java
         )
     }
 
@@ -1306,13 +1298,12 @@ class MainActivity : AppCompatActivity() {
                 reloadData();
                 UpdateWeatherInfor();
                 if (FakeGlobal.getInstance().curLocation != null) {
-
                     if (curLocation.latitude != FakeGlobal.getInstance().curLocation.latitude || curLocation.longitude != FakeGlobal.getInstance().curLocation.longitude) {
                         curLocation = LatLng(
                             FakeGlobal.getInstance().curLocation.latitude,
                             FakeGlobal.getInstance().curLocation.longitude
                         )
-                        this.showConfirmDefault()
+                        if (FakeGlobal.getInstance().isShowConfirmDefault) this.showConfirmDefault()
                     }
 
                     if (::updateRunnable.isInitialized) {

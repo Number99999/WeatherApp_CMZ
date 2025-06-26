@@ -15,14 +15,13 @@ import com.cmzsoft.weather.Model.Object.KeysStorage
 import com.cmzsoft.weather.R
 import com.cmzsoft.weather.Utils.WeatherUtil
 
-@SuppressLint("SetTextI18n")
 class WeatherItemAdapter(
     private val items: List<DataWeatherPerHourModel>
 ) : RecyclerView.Adapter<WeatherItemAdapter.ViewHolder>() {
 
     private var _dataEstablish: EstablishModel = LocalStorageManager.getObject<EstablishModel>(
         KeysStorage.establish, EstablishModel::class.java
-    )
+    )?: EstablishModel()
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val txtTime: TextView = itemView.findViewById(R.id.txt_item_time_weather_per_hour)

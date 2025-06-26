@@ -81,20 +81,16 @@ class ActivityLocationManager : AppCompatActivity() {
                     adapter.notifyItemChanged(newList.indexOf(item))
                     recyclerView.adapter = adapter
                     recyclerView.layoutManager = LinearLayoutManager(
-                        this@ActivityLocationManager,
-                        RecyclerView.VERTICAL,
-                        false
+                        this@ActivityLocationManager, RecyclerView.VERTICAL, false
                     )
                     adapter.notifyDataSetChanged()
                 }
             }
         } else {
             if (ActivityCompat.checkSelfPermission(
-                    this,
-                    Manifest.permission.ACCESS_FINE_LOCATION
+                    this, Manifest.permission.ACCESS_FINE_LOCATION
                 ) != PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(
-                    this,
-                    Manifest.permission.ACCESS_COARSE_LOCATION
+                    this, Manifest.permission.ACCESS_COARSE_LOCATION
                 ) != PackageManager.PERMISSION_GRANTED
             ) {
                 return
@@ -107,9 +103,7 @@ class ActivityLocationManager : AppCompatActivity() {
                     adapter = ItemLocationManagerAdapter(newList.toMutableList())
                     recyclerView.adapter = adapter
                     recyclerView.layoutManager = LinearLayoutManager(
-                        this@ActivityLocationManager,
-                        RecyclerView.VERTICAL,
-                        false
+                        this@ActivityLocationManager, RecyclerView.VERTICAL, false
                     )
                     adapter.notifyDataSetChanged()
                     recyclerView.scrollToPosition(0)
@@ -127,8 +121,7 @@ class ActivityLocationManager : AppCompatActivity() {
                                 currentWeather.getInt("weathercode"),
                                 currentWeather.getInt("is_day") == 1
                             )
-                            val resId =
-                                resources.getIdentifier(iconName, "drawable", packageName)
+                            val resId = resources.getIdentifier(iconName, "drawable", packageName)
                             item.weather = resId.toString()
                             adapter.notifyItemChanged(newList.indexOf(item))
                         }
@@ -138,9 +131,7 @@ class ActivityLocationManager : AppCompatActivity() {
                 override fun onError(exception: Exception) {
                     recyclerView.adapter = adapter
                     recyclerView.layoutManager = LinearLayoutManager(
-                        this@ActivityLocationManager,
-                        RecyclerView.VERTICAL,
-                        false
+                        this@ActivityLocationManager, RecyclerView.VERTICAL, false
                     )
                     adapter.notifyDataSetChanged()
                     exception.printStackTrace();

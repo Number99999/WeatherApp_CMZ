@@ -27,9 +27,9 @@ public class LocalStorageManager {
         _prefs.edit().putString(key, json).apply();
     }
 
-    public static <T> T getObject(String key, Class<T> clazz) {
+    public static <T> T getObject(String key, Class<T> clazz) throws IllegalAccessException, InstantiationException {
         String json = _prefs.getString(key, null);
-        return (json == null) ? null : new Gson().fromJson(json, clazz);
+        return (json == null) ? clazz.newInstance() : new Gson().fromJson(json, clazz);
     }
 
     public static void remove(String key) {

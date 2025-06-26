@@ -34,6 +34,7 @@ class LoadingAppActivity : AppCompatActivity() {
         } else {
             var changePage = Intent(this, MainActivity::class.java);
             changePage.putExtra("FROM_REQUEST_LOCATION", false)
+            changePage.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
             startActivity(changePage);
             finish()
         }

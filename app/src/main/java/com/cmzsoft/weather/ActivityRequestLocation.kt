@@ -143,8 +143,6 @@ class ActivityRequestLocation : AppCompatActivity() {
         val btn = findViewById<Button>(R.id.btn_accept_when_use_app)
         btn.setOnClickListener {
             showCustomPermissionDialog()
-//            val changePage = Intent(this, MainActivity::class.java);
-//            startActivity(changePage);
         }
     }
 

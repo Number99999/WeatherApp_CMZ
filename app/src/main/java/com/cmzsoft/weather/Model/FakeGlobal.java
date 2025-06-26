@@ -11,6 +11,7 @@ public class FakeGlobal {
     public boolean userAcceptRequestLocation;
 
     public boolean isFirstLoadActivity = true;
+    public boolean isShowConfirmDefault = false;
     public boolean userAcceptRequestNotifi;
     public JSONObject responseAPI;
     //endregion

@@ -47,9 +47,14 @@ class ItemLocationManagerAdapter(private var items: MutableList<LocationWeatherM
             View.GONE
         }
         if (position == 0) {
-            if (LocationService.checkPermissionLocation()) holder.title.text =
-                "${item.name} (Vị trí của bạn)"
-            else "${item.name}"
+            val isExis =
+                DatabaseService.getInstance(holder.itemView.context).locationWeatherService.checkIsExistLocationInDb(
+                    item
+                )
+            val isCurrent = LocationService.checkPermissionLocation() && isExis == false
+            if (isCurrent) {
+                holder.title.text = "${item.name} (Vị trí của bạn)"
+            } else holder.title.text = "${item.name}"
             if (defaultAdd == null) {
                 holder.txtDefault.visibility = View.VISIBLE
             }
@@ -69,6 +74,7 @@ class ItemLocationManagerAdapter(private var items: MutableList<LocationWeatherM
                 FakeGlobal.getInstance().curLocation = item
                 FakeGlobal.getInstance().flagIsChooseDefaultLocation = false
                 val changeIntent = Intent(context, MainActivity::class.java)
+                FakeGlobal.getInstance().isShowConfirmDefault = true
                 changeIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
                 context.startActivity(changeIntent)
             }
@@ -85,9 +91,8 @@ class ItemLocationManagerAdapter(private var items: MutableList<LocationWeatherM
         }
         if (item.weather != null && item.weather.isNotEmpty()) {
             val weatherIcon = item.weather.toIntOrNull()
-            if (weatherIcon != null)
-                holder.itemView.findViewById<ImageView>(R.id.icon_status)
-                    .setImageResource(weatherIcon);
+            if (weatherIcon != null) holder.itemView.findViewById<ImageView>(R.id.icon_status)
+                .setImageResource(weatherIcon);
         }
 
         val btn_drag = holder.itemView.findViewById<ImageView>(R.id.btn_drag_to_move)
