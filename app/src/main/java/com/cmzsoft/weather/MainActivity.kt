@@ -43,6 +43,7 @@ import com.cmzsoft.weather.Model.FakeGlobal
 import com.cmzsoft.weather.Model.LocationWeatherModel
 import com.cmzsoft.weather.Model.NavMenuModel
 import com.cmzsoft.weather.Model.NightDayTempModel
+import com.cmzsoft.weather.Model.NotificationModel
 import com.cmzsoft.weather.Model.Object.KeyEventFirebase
 import com.cmzsoft.weather.Model.Object.KeysStorage
 import com.cmzsoft.weather.RendererChart.CustomLineChartRenderer
@@ -327,10 +328,10 @@ class MainActivity : AppCompatActivity() {
             shareAppLink()
         }
 
-        findViewById<LinearLayout>(R.id.nav_choose_theme).setOnClickListener {
-            val changePage = Intent(this, ActivitySettingTheme::class.java)
-            startActivity(changePage)
-        }
+//        findViewById<LinearLayout>(R.id.nav_choose_theme).setOnClickListener {
+//            val changePage = Intent(this, ActivitySettingTheme::class.java)
+//            startActivity(changePage)
+//        }
     }
 
     private fun shareAppLink() {
@@ -370,6 +371,7 @@ class MainActivity : AppCompatActivity() {
             override fun onLocationReceived(add: LocationWeatherModel) {
                 this@MainActivity.curLocation = LatLng(add.latitude, add.longitude);
                 FakeGlobal.getInstance().curLocation = add;
+                println("getCurLocation curLocation $defaultAdd")
                 this@MainActivity.onInitedLocation();
             }
 
@@ -702,7 +704,8 @@ class MainActivity : AppCompatActivity() {
                 if (parentView.getChildAt(0) is ViewGroup) {
                     val t = (parentView.getChildAt(0) as ViewGroup).getChildAt(1)
                     if (t is TextView) {
-                        t.text = dataModel[i].tempNight.roundToInt().toString() + "°${_dataEstablish.typeTemp}";
+                        t.text = dataModel[i].tempNight.roundToInt()
+                            .toString() + "°${_dataEstablish.typeTemp}";
                     }
                 }
 
@@ -744,11 +747,17 @@ class MainActivity : AppCompatActivity() {
 
             val weekdays = arrayOf("Chủ nhật", "Thứ 2", "Thứ 3", "Thứ 4", "Thứ 5", "Thứ 6", "Thứ 7")
             val weekdayStr = weekdays[weekday - 1]
-            val formatted = "${
+            var formatted = "";
+            when (_dataEstablish.dateForm) {
+                "DD/MM/YYYY" -> formatted = "$day/$month/$year"
+                "MM/DD/YYYY" -> formatted = "$month/$day/$year"
+                "YYYY/MM/DD" -> formatted = "$year/$month/$day"
+            }
+            formatted = "${
                 WeatherUtil.convertHourToCurType(
                     timeConverted.substring(11), _dataEstablish.is24h
                 )
-            } - $weekdayStr, $day tháng $month $year"
+            } - $weekdayStr, ${formatted}"
             textView.text = formatted
         } catch (e: ParseException) {
             e.printStackTrace()
@@ -1237,6 +1246,11 @@ class MainActivity : AppCompatActivity() {
         switchNoti.setOnClickListener {
             safeData.notification = switchNoti.isChecked
             LocalStorageManager.putObject(KeysStorage.navMenuModel, safeData)
+            val _otherData = LocalStorageManager.getObject<NotificationModel>(
+                KeysStorage.settingNoti, NotificationModel::class.java
+            )
+            _otherData.notification = safeData.notification
+            LocalStorageManager.putObject(KeysStorage.settingNoti, _otherData)
         }
 
         switchDaily.setOnClickListener {
@@ -1298,12 +1312,14 @@ class MainActivity : AppCompatActivity() {
                 reloadData();
                 UpdateWeatherInfor();
                 if (FakeGlobal.getInstance().curLocation != null) {
+                    if (FakeGlobal.getInstance().isShowConfirmDefault) {
+                        showConfirmDefault()
+                    }
                     if (curLocation.latitude != FakeGlobal.getInstance().curLocation.latitude || curLocation.longitude != FakeGlobal.getInstance().curLocation.longitude) {
                         curLocation = LatLng(
                             FakeGlobal.getInstance().curLocation.latitude,
                             FakeGlobal.getInstance().curLocation.longitude
                         )
-                        if (FakeGlobal.getInstance().isShowConfirmDefault) this.showConfirmDefault()
                     }
 
                     if (::updateRunnable.isInitialized) {
@@ -1322,6 +1338,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun showConfirmDefault() {
+        FakeGlobal.getInstance().isShowConfirmDefault = false;
         val contain = findViewById<FrameLayout>(R.id.popup_confirm_defaul)
         contain.visibility = View.VISIBLE;
         findViewById<TextView>(R.id.txt_title_popup_confirm_defaul).text =
@@ -1333,12 +1350,12 @@ class MainActivity : AppCompatActivity() {
             contain.visibility = View.GONE
         }
 
-        if (FakeGlobal.getInstance().flagIsChooseDefaultLocation && DatabaseService.getInstance(
-                applicationContext
-            ).locationWeatherService.checkIsExistLocationInDb(FakeGlobal.getInstance().curLocation)
-        ) {
-            DatabaseService.getInstance(this).locationWeatherService.defaultLocationWeather
-        }
+//        if (FakeGlobal.getInstance().flagIsChooseDefaultLocation && DatabaseService.getInstance(
+//                applicationContext
+//            ).locationWeatherService.checkIsExistLocationInDb(FakeGlobal.getInstance().curLocation)
+//        ) {
+//            DatabaseService.getInstance(this).locationWeatherService.defaultLocationWeather
+//        }
 
         findViewById<Button>(R.id.btn_accept_set_default).setOnClickListener {
             if (FakeGlobal.getInstance().flagIsChooseDefaultLocation) DatabaseService.getInstance(

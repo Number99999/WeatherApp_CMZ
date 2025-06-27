@@ -111,7 +111,6 @@ public class LocationWeatherService extends SQLiteOpenHelper {
 
     public boolean updateLocation(LocationWeatherModel lwModel) {
         SQLiteDatabase db = this.getWritableDatabase();
-        System.out.println("updateLocation " + lwModel.toString() + " " + lwModel.getIsDefaultLocation());
         String updateQuery = "UPDATE " + TABLE_NAME + " SET " +
                 "name = ?, " +
                 "latitude = ?, " +
@@ -137,7 +136,6 @@ public class LocationWeatherService extends SQLiteOpenHelper {
 
     public boolean changeDefaultLocation(LocationWeatherModel wModel) {
         SQLiteDatabase db = this.getWritableDatabase();
-
         try {
             db.beginTransaction();
             String updateQuery = "UPDATE " + TABLE_NAME + " SET isDefault = 0 WHERE isDefault = 1";
@@ -166,13 +164,11 @@ public class LocationWeatherService extends SQLiteOpenHelper {
     public boolean setDontDefaultAll() {
         SQLiteDatabase db = this.getWritableDatabase();
         try {
-            db.beginTransaction();
             String updateQuery = "UPDATE " + TABLE_NAME + " SET isDefault = 0 WHERE isDefault = 1";
             db.execSQL(updateQuery);
             return true;
         } catch (Exception e) {
             e.printStackTrace();
-            db.endTransaction();
             return false;
         }
     }

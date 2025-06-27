@@ -181,7 +181,7 @@ class ActivityEstablish : AppCompatActivity() {
             "DD/MM/YYYY" -> DateTimeFormatter.ofPattern("dd/MM/yyyy")
             "MM/DD/YYYY" -> DateTimeFormatter.ofPattern("MM/dd/yyyy")
             "YYYY/MM/DD" -> DateTimeFormatter.ofPattern("yyyy/MM/dd")
-            else -> DateTimeFormatter.ofPattern("yyyy-MM-dd")
+            else -> DateTimeFormatter.ofPattern("DD/MM/YYYY")
         }
         findViewById<TextView>(R.id.txt_time_model).text = currentDate.format(formatter)
         (spinner.parent as View).setOnClickListener {
@@ -191,7 +191,7 @@ class ActivityEstablish : AppCompatActivity() {
                 "DD/MM/YYYY" -> DateTimeFormatter.ofPattern("dd/MM/yyyy")
                 "MM/DD/YYYY" -> DateTimeFormatter.ofPattern("MM/dd/yyyy")
                 "YYYY/MM/DD" -> DateTimeFormatter.ofPattern("yyyy/MM/dd")
-                else -> DateTimeFormatter.ofPattern("yyyy-MM-dd")
+                else -> DateTimeFormatter.ofPattern("DD/MM/YYYY")
             }
             findViewById<TextView>(R.id.txt_time_model).text = currentDate.format(formatter)
             spinner.text = items[i]
@@ -232,5 +232,10 @@ class ActivityEstablish : AppCompatActivity() {
             "type",
             _safeData.dateForm
         );
+    }
+
+    override fun onPause() {
+        sendEvenIfChange()
+        super.onPause()
     }
 }

@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.cmzsoft.weather.CustomAdapter.CustomLayoutAdapter
 import com.cmzsoft.weather.FrameWork.Data.LocalStorageManager
 import com.cmzsoft.weather.FrameWork.EventApp.FirebaseManager
+import com.cmzsoft.weather.Model.NavMenuModel
 import com.cmzsoft.weather.Model.NotificationModel
 import com.cmzsoft.weather.Model.Object.KeyEventFirebase
 import com.cmzsoft.weather.Model.Object.KeysStorage
@@ -44,9 +45,7 @@ class ActivitySettingNotification : AppCompatActivity() {
             CustomLayoutItem("Thông báo", R.drawable.icon_notification, _safeData.notification),
             CustomLayoutItem("Báo động thời tiết", R.drawable.icon_warning, _safeData.warning),
             CustomLayoutItem(
-                "Thời tiết hàng ngày",
-                R.drawable.icon_small_cloud,
-                _safeData.weatherDaily
+                "Thời tiết hàng ngày", R.drawable.icon_small_cloud, _safeData.weatherDaily
             )
         )
         val adapter = CustomLayoutAdapter(l) { title, checked ->
@@ -55,7 +54,13 @@ class ActivitySettingNotification : AppCompatActivity() {
                 "Báo động thời tiết" -> _safeData.warning = checked
                 "Thời tiết hàng ngày" -> _safeData.weatherDaily = checked
             }
+            val _otherData = LocalStorageManager.getObject<NavMenuModel>(
+                KeysStorage.navMenuModel, NavMenuModel::class.java
+            )
+            _otherData.notification = checked;
             LocalStorageManager.putObject(KeysStorage.settingNoti, _safeData)
+            LocalStorageManager.putObject(KeysStorage.navMenuModel, _otherData)
+
         }
 
         rec.adapter = adapter
@@ -74,14 +79,10 @@ class ActivitySettingNotification : AppCompatActivity() {
     private fun sendEvenIfChange() {
         val ins = FirebaseManager.getInstance(this)
         if (_safeData.notification != _firstData.notification) ins.sendEvent(
-            KeyEventFirebase.settingNoti,
-            "type",
-            _safeData.notification
+            KeyEventFirebase.settingNoti, "type", _safeData.notification
         )
         if (_safeData.weatherDaily != _firstData.weatherDaily) ins.sendEvent(
-            KeyEventFirebase.settingDailyWeather,
-            "type",
-            _safeData.weatherDaily
+            KeyEventFirebase.settingDailyWeather, "type", _safeData.weatherDaily
         )
     }
 }

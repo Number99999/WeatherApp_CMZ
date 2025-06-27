@@ -302,4 +302,54 @@ public class WeatherUtil {
 
         return out;
     }
+
+    public static String convertDateToCurType(String str, String format) {
+        if (str == null || str.isEmpty()) {
+            return "";
+        }
+
+        String[] parts = str.split("-");
+        if (parts.length != 3) {
+            return "";
+        }
+
+        String year = parts[0];
+        String month = parts[1];
+        String day = parts[2];
+
+        if (!year.matches("\\d{4}") || !month.matches("\\d{2}") || !day.matches("\\d{2}")) {
+            return "";
+        }
+
+        try {
+            int y = Integer.parseInt(year);
+            int m = Integer.parseInt(month);
+            int d = Integer.parseInt(day);
+
+            if (m < 1 || m > 12 || d < 1 || d > 31) {
+                return "";
+            }
+
+        } catch (NumberFormatException e) {
+            return "";
+        }
+
+        String result = "";
+        switch (format) {
+            case "DD/MM/YYYY":
+                result = day + "/" + month + "/" + year;
+                break;
+            case "MM/DD/YYYY":
+                result = month + "/" + day + "/" + year;
+                break;
+            case "YYYY/MM/DD":
+                result = year + "/" + month + "/" + day;
+                break;
+            default:
+                result = str;
+                break;
+        }
+
+        return result;
+    }
 }

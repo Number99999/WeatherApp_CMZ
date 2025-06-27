@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.core.view.isGone
 import androidx.recyclerview.widget.RecyclerView
 import com.cmzsoft.weather.MainActivity
 import com.cmzsoft.weather.Model.FakeGlobal
@@ -66,15 +67,16 @@ class ItemLocationManagerAdapter(private var items: MutableList<LocationWeatherM
                 val changeIntent = Intent(context, MainActivity::class.java)
                 changeIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
                 context.startActivity(changeIntent)
+                FakeGlobal.getInstance().isShowConfirmDefault = (holder.txtDefault.isGone)
             }
         } else {
             holder.title.text = item.name
             holder.contain.setOnClickListener {
                 if (item.isEdit == true) return@setOnClickListener
+                FakeGlobal.getInstance().isShowConfirmDefault = item.isDefaultLocation == 0
                 FakeGlobal.getInstance().curLocation = item
                 FakeGlobal.getInstance().flagIsChooseDefaultLocation = false
                 val changeIntent = Intent(context, MainActivity::class.java)
-                FakeGlobal.getInstance().isShowConfirmDefault = true
                 changeIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
                 context.startActivity(changeIntent)
             }
