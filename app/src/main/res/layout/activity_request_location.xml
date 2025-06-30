@@ -317,11 +317,15 @@
                         android:text="Cho phép quyền" />
 
                     <androidx.appcompat.widget.SwitchCompat
+                        android:layout_marginEnd="@dimen/margin_8dp"
                         android:id="@+id/switch_accept"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="@dimen/margin_8dp"
-                        android:checked="true" />
+                        android:checked="true"
+                        android:thumb="@drawable/custom_switch_thumb"
+                        android:track="@drawable/custom_switch_track"
+                        app:thumbTint="@null"
+                        app:trackTint="@null" />
                 </LinearLayout>
 
                 <TextView

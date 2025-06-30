@@ -236,7 +236,8 @@
                     android:layout_height="48dp"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
-                    android:padding="8dp">
+                    android:padding="8dp"
+                    android:visibility="visible">
 
                     <ImageView
                         android:layout_width="24dp"

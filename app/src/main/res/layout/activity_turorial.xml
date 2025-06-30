@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_blue_1"
+    android:fitsSystemWindows="true"
+    tools:context=".ActivityTutorial">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/back_tut2"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:src="@drawable/tut5"
+                android:visibility="gone" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:visibility="visible">
+
+                <RelativeLayout
+                    android:id="@+id/contain_tut1"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/widget_size_300"
+                    android:maxHeight="@dimen/widget_size_280"
+                    android:visibility="gone">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:adjustViewBounds="true"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/tut3" />
+
+                    <ImageView
+                        android:layout_width="@dimen/widget_size_250"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/widget_size_90"
+                        android:layout_marginTop="@dimen/widget_size_50"
+                        android:adjustViewBounds="true"
+                        android:gravity="center_vertical"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/tut1" />
+
+                    <ImageView
+                        android:layout_width="@dimen/widget_size_125"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/widget_size_55"
+                        android:layout_marginTop="@dimen/widget_size_79"
+                        android:adjustViewBounds="true"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/tut2" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:layout_marginBottom="@dimen/widget_size_20"
+                        android:gravity="center_horizontal"
+                        android:text="Real time weather tracking"
+                        android:textSize="@dimen/margin_16dp" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/contain_tut2"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/widget_size_300"
+                    android:maxHeight="@dimen/widget_size_280"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:layout_marginBottom="@dimen/widget_size_20"
+                        android:gravity="center_horizontal"
+                        android:text="Global weather map"
+                        android:textSize="@dimen/margin_16dp" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/contain_tut3"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/widget_size_300"
+                    android:maxHeight="@dimen/widget_size_280"
+                    android:visibility="visible">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:adjustViewBounds="true"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/tut3" />
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:adjustViewBounds="true"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/tut6" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:layout_marginBottom="@dimen/widget_size_20"
+                        android:gravity="center_horizontal"
+                        android:text="Weekly forecast"
+                        android:textSize="@dimen/margin_16dp" />
+                </RelativeLayout>
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/tut4" />
+
+                    <Button
+                        android:id="@+id/btn_next"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/widget_size_10"
+                        android:layout_marginTop="@dimen/widget_size_55"
+                        android:layout_marginEnd="@dimen/widget_size_10"
+                        android:background="@drawable/background_btn_blue"
+                        android:text="Next"
+                        android:textSize="@dimen/font_size_16"
+                        app:backgroundTint="@null" />
+
+                    <FrameLayout
+                        android:id="@+id/ad_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom" />
+                </FrameLayout>
+            </LinearLayout>
+        </RelativeLayout>
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

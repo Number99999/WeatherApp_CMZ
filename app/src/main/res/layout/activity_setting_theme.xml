@@ -5,20 +5,32 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#09599C">  <!-- Màu nền xanh giống ảnh -->
-
-    <!-- Toolbar -->
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="0dp"
-        android:layout_height="56dp"
-        android:background="#09599C"
-        android:title="Chủ đề"
-        android:titleTextColor="@android:color/white"
+    <RelativeLayout
+        android:id="@+id/headerLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_20dp"
+        android:gravity="center"
+        android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:navigationContentDescription="Back"
-        app:titleCentered="true" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:layout_width="@dimen/widget_size_30"
+            android:layout_height="@dimen/widget_size_30"
+            android:layout_marginStart="@dimen/margin_8dp"
+            android:src="@drawable/icon_back" />
+
+        <TextView
+            android:id="@+id/btn_back"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="Chủ đề"
+            android:textSize="@dimen/font_size_20" />
+    </RelativeLayout>
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout"
@@ -27,13 +39,21 @@
         android:background="#09599C"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintTop_toBottomOf="@id/headerLayout"
         app:tabIndicatorColor="#FFFFFF"
         app:tabSelectedTextColor="#FFFFFF"
         app:tabTextColor="#7A9FBF" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
+        android:id="@+id/recyclerViewIcon"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tabLayout" />
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewNoti"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"

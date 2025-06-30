@@ -69,7 +69,9 @@ public class LocationService {
                         } catch (IOException e) {
                             callback.onError(e);
                         }
-                    } else callback.onError(new Exception("Location is null"));
+                    } else {
+                        callback.onError(new Exception("Location is null"));
+                    }
                 }
             });
         }

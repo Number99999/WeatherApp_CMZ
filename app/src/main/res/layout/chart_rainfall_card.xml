@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/margin_4dp"
     app:cardBackgroundColor="#19415b">
 
     <LinearLayout
@@ -22,7 +23,8 @@
         <com.github.mikephil.charting.charts.BarChart
             android:id="@+id/barchart_rainfall"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/widget_size_250" />
+            android:layout_height="@dimen/widget_size_250"
+            android:layout_marginBottom="@dimen/margin_8dp" />
     </LinearLayout>
 
 </androidx.cardview.widget.CardView>

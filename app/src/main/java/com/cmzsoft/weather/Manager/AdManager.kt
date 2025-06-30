@@ -187,7 +187,7 @@ class AdManager @Inject constructor(
     }
 
     fun loadNativeClickAd(
-        container: ViewGroup, // Container để chứa NativeAdView
+        container: ViewGroup, // Container để chứa NativeAdViewR
         onAdLoaded: (NativeAd) -> Unit,
         onAdFailed: (String) -> Unit,
         onAdImpression: () -> Unit
@@ -209,11 +209,11 @@ class AdManager @Inject constructor(
             .withAdListener(object : AdListener() {
                 override fun onAdFailedToLoad(error: LoadAdError) {
                     container.addView(view)
-                    onAdFailed(error.message)
+//                    onAdFailed(error.message)
                 }
 
                 override fun onAdImpression() {
-                    super.onAdImpression()
+//                    super.onAdImpression()
                     onAdImpression()
                 }
             })
@@ -231,14 +231,10 @@ class AdManager @Inject constructor(
         val inflater = LayoutInflater.from(context)
         val view = inflater.inflate(R.layout.native_ad_layout, container, false)
         val adView = view.findViewById<NativeAdView>(R.id.native_ad_view_intro)
-//        val shimmerViewContainer =
-//            view.findViewById<com.facebook.shimmer.ShimmerFrameLayout>(R.id.shimmer_view_container)
         val adLoader = AdLoader.Builder(context, AdUnitIds.NATIVE)
             .forNativeAd { nativeAd ->
                 container.removeAllViews()
                 displayNativeAd(adView, nativeAd, view)
-//                shimmerViewContainer.stopShimmer()
-//                shimmerViewContainer.visibility = View.GONE
                 adView.visibility = View.VISIBLE
                 adView.setNativeAd(nativeAd)
 
@@ -263,25 +259,22 @@ class AdManager @Inject constructor(
     }
 
     private fun displayNativeAd(nativeAdView: NativeAdView, nativeAd: NativeAd, view: View) {
-        // Gán các thành phần quảng cáo vào NativeAdView
         val headlineView = nativeAdView.findViewById<TextView>(R.id.ad_headline)
         val bodyView = nativeAdView.findViewById<TextView>(R.id.ad_body)
         val callToActionView = nativeAdView.findViewById<Button>(R.id.ad_call_to_action)
         val mediaView = nativeAdView.findViewById<MediaView>(R.id.ad_media)
         headlineView.isSelected = true
-        // Gán dữ liệu quảng cáo
+
         headlineView.text = nativeAd.headline
         bodyView.text = nativeAd.body
         callToActionView.text = nativeAd.callToAction ?: "Hành động"
         mediaView.mediaContent = nativeAd.mediaContent
 
-        // Đăng ký các thành phần với NativeAdView
         nativeAdView.headlineView = headlineView
         nativeAdView.bodyView = bodyView
         nativeAdView.callToActionView = callToActionView
         nativeAdView.mediaView = mediaView
 
-        // Gán NativeAd vào NativeAdView
         nativeAdView.setNativeAd(nativeAd)
     }
 

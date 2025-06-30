@@ -52,118 +52,13 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-        <!--        <LinearLayout-->
-        <!--            android:layout_width="match_parent"-->
-        <!--            android:layout_height="wrap_content"-->
-        <!--            android:layout_marginStart="10dp"-->
-        <!--            android:layout_marginTop="15dp"-->
-        <!--            android:layout_marginEnd="10dp"-->
-        <!--            android:background="@drawable/background_blue_2"-->
-        <!--            android:orientation="vertical"-->
-        <!--            android:paddingTop="5dp"-->
-        <!--            android:paddingBottom="5dp">-->
-
-        <!--            <LinearLayout-->
-        <!--                android:layout_width="match_parent"-->
-        <!--                android:layout_height="56dp"-->
-        <!--                android:layout_marginTop="0dp"-->
-        <!--                android:gravity="center_vertical"-->
-        <!--                android:orientation="horizontal"-->
-        <!--                android:paddingStart="16dp"-->
-        <!--                android:paddingEnd="16dp">-->
-
-        <!--                <ImageView-->
-        <!--                    android:layout_width="40dp"-->
-        <!--                    android:layout_height="40dp"-->
-        <!--                    android:src="@drawable/icon_notification" />-->
-
-        <!--                <TextView-->
-        <!--                    android:layout_width="wrap_content"-->
-        <!--                    android:layout_height="wrap_content"-->
-        <!--                    android:layout_weight="1"-->
-        <!--                    android:text="Thông báo"-->
-        <!--                    android:textColor="@android:color/white"-->
-        <!--                    android:textSize="16sp" />-->
-
-        <!--                <androidx.appcompat.widget.SwitchCompat-->
-        <!--                    android:layout_width="wrap_content"-->
-        <!--                    android:layout_height="wrap_content"-->
-        <!--                    android:thumb="@drawable/custom_switch_thumb"-->
-        <!--                    android:track="@drawable/custom_switch_track"-->
-        <!--                    app:thumbTint="@null"-->
-        <!--                    app:trackTint="@null" />-->
-        <!--            </LinearLayout>-->
-
-        <!--            <LinearLayout-->
-        <!--                android:layout_width="match_parent"-->
-        <!--                android:layout_height="56dp"-->
-        <!--                android:layout_marginTop="0dp"-->
-        <!--                android:gravity="center_vertical"-->
-        <!--                android:orientation="horizontal"-->
-        <!--                android:paddingStart="16dp"-->
-        <!--                android:paddingEnd="16dp">-->
-
-        <!--                <ImageView-->
-        <!--                    android:layout_width="40dp"-->
-        <!--                    android:layout_height="40dp"-->
-        <!--                    android:src="@drawable/icon_warning" />-->
-
-        <!--                <TextView-->
-        <!--                    android:layout_width="wrap_content"-->
-        <!--                    android:layout_height="wrap_content"-->
-        <!--                    android:layout_weight="1"-->
-        <!--                    android:text="Báo động thời tiết"-->
-        <!--                    android:textColor="@android:color/white"-->
-        <!--                    android:textSize="16sp" />-->
-
-
-        <!--                &lt;!&ndash;                <androidx.appcompat.widget.SwitchCompat&ndash;&gt;-->
-        <!--                &lt;!&ndash;                    android:layout_width="56dp"&ndash;&gt;-->
-        <!--                &lt;!&ndash;                    android:layout_height="wrap_content"&ndash;&gt;-->
-        <!--                &lt;!&ndash;                    android:thumb="@drawable/custom_switch_thumb"&ndash;&gt;-->
-        <!--                &lt;!&ndash;                    android:track="@drawable/custom_switch_track" />&ndash;&gt;-->
-
-        <!--                <androidx.appcompat.widget.SwitchCompat-->
-        <!--                    android:layout_width="wrap_content"-->
-        <!--                    android:layout_height="wrap_content"-->
-        <!--                    android:thumb="@drawable/custom_switch_thumb"-->
-        <!--                    android:track="@drawable/custom_switch_track"-->
-        <!--                    app:thumbTint="@null"-->
-        <!--                    app:trackTint="@null" />-->
-        <!--            </LinearLayout>-->
-
-        <!--            <LinearLayout-->
-        <!--                android:layout_width="match_parent"-->
-        <!--                android:layout_height="56dp"-->
-        <!--                android:layout_marginTop="0dp"-->
-        <!--                android:gravity="center_vertical"-->
-        <!--                android:orientation="horizontal"-->
-        <!--                android:paddingStart="16dp"-->
-        <!--                android:paddingEnd="16dp">-->
-
-        <!--                <ImageView-->
-        <!--                    android:layout_width="40dp"-->
-        <!--                    android:layout_height="40dp"-->
-        <!--                    android:src="@drawable/icon_small_cloud" />-->
-
-        <!--                <TextView-->
-        <!--                    android:layout_width="wrap_content"-->
-        <!--                    android:layout_height="wrap_content"-->
-        <!--                    android:layout_weight="1"-->
-        <!--                    android:text="Thời tiết hàng ngày"-->
-        <!--                    android:textColor="@android:color/white"-->
-        <!--                    android:textSize="16sp" />-->
-
-        <!--                <androidx.appcompat.widget.SwitchCompat-->
-        <!--                    android:layout_width="wrap_content"-->
-        <!--                    android:layout_height="wrap_content"-->
-        <!--                    android:thumb="@drawable/custom_switch_thumb"-->
-        <!--                    android:track="@drawable/custom_switch_track"-->
-        <!--                    app:thumbTint="@null"-->
-        <!--                    app:trackTint="@null" />-->
-        <!--            </LinearLayout>-->
-        <!--        </LinearLayout>-->
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="10dp"
+            android:background="@drawable/background_blue_2"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

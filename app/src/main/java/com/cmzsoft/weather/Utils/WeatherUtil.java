@@ -141,7 +141,6 @@ public class WeatherUtil {
         }
     }
 
-
     public static String getWeatherIconName(int code, boolean isDay) {
         int iconCode;
         switch (code) {
@@ -256,5 +255,101 @@ public class WeatherUtil {
 
         String targetTimeZone = FakeGlobal.getInstance().curLocation.getTimeZone();
         return WeatherUtil.convertTimeDeviceToTimezone(hourMinute, targetTimeZone);
+    }
+
+    public static int convertToCurTypeTemp(double in, String data) {
+        if (data.equals("C")) return (int) in;
+        return (int) (in * 9 / 5) + 32;
+    }
+
+
+    // 1 miles = 1.60934km
+    public static double convertWindirToCurType(double in, String data) {
+        double out = in;
+        switch (data) {
+            case "mph": {
+                out = in / 1.60934;
+                break;
+            }
+            case "km/h": {
+                out = in;
+                break;
+            }
+            case "m/s": {
+                out = in / 3.6;
+                break;
+            }
+        }
+        out = Math.round(out * 100.0) / 100.0;
+        return out;
+    }
+
+    public static String convertHourToCurType(String str, boolean is24h) {
+
+        if (is24h) return str;
+        String out = "";
+        int h = Integer.parseInt(str.substring(0, 2));
+        int m = Integer.parseInt(str.substring(3));
+        if (h == 0) {
+            out = "12:" + String.format("%02d", m) + " AM";
+        } else if (h == 12) {
+            out = "12:" + String.format("%02d", m) + " PM";
+        } else if (h > 12) {
+            out = (h - 12) + ":" + String.format("%02d", m) + " PM";
+        } else {
+            out = h + ":" + String.format("%02d", m) + " AM";
+        }
+
+        return out;
+    }
+
+    public static String convertDateToCurType(String str, String format) {
+        if (str == null || str.isEmpty()) {
+            return "";
+        }
+
+        String[] parts = str.split("-");
+        if (parts.length != 3) {
+            return "";
+        }
+
+        String year = parts[0];
+        String month = parts[1];
+        String day = parts[2];
+
+        if (!year.matches("\\d{4}") || !month.matches("\\d{2}") || !day.matches("\\d{2}")) {
+            return "";
+        }
+
+        try {
+            int y = Integer.parseInt(year);
+            int m = Integer.parseInt(month);
+            int d = Integer.parseInt(day);
+
+            if (m < 1 || m > 12 || d < 1 || d > 31) {
+                return "";
+            }
+
+        } catch (NumberFormatException e) {
+            return "";
+        }
+
+        String result = "";
+        switch (format) {
+            case "DD/MM/YYYY":
+                result = day + "/" + month + "/" + year;
+                break;
+            case "MM/DD/YYYY":
+                result = month + "/" + day + "/" + year;
+                break;
+            case "YYYY/MM/DD":
+                result = year + "/" + month + "/" + day;
+                break;
+            default:
+                result = str;
+                break;
+        }
+
+        return result;
     }
 }

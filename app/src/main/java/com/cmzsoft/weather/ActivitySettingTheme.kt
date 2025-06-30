@@ -3,6 +3,7 @@ package com.cmzsoft.weather
 import android.graphics.Rect
 import android.os.Bundle
 import android.view.View
+import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -20,8 +21,12 @@ import com.google.android.material.tabs.TabLayout
 
 class ActivitySettingTheme : AppCompatActivity() {
     private lateinit var tabLayout: TabLayout
-    private lateinit var recyclerView: RecyclerView
+    private lateinit var recyclerViewIcon: RecyclerView
+    private lateinit var recyclerViewNoti: RecyclerView
     private lateinit var data: SettingThemeModel
+
+    private var adapterIcon: SettingThemeIconAdapter? = null
+    private var adapterNotification: SettingThemeNotificationAdapter? = null
     private var curTab: Int = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,11 +38,8 @@ class ActivitySettingTheme : AppCompatActivity() {
             insets
         }
 
-        recyclerView = findViewById<RecyclerView>(R.id.recyclerView)
-        recyclerView.layoutManager = GridLayoutManager(this, 2)
-        val spacing = resources.getDimensionPixelSize(R.dimen.widget_size_10)
-
-        recyclerView.addItemDecoration(GridSpacingItemDecoration(2, spacing, true))
+        findViewById<TextView>(R.id.btn_back).setOnClickListener { finish() }
+        setupFullRecycleView()
 
         tabLayout = findViewById<TabLayout>(R.id.tabLayout)
         tabLayout.addTab(tabLayout.newTab().setText("Biểu tượng"))
@@ -59,6 +61,18 @@ class ActivitySettingTheme : AppCompatActivity() {
         setupFirst()
     }
 
+    private fun setupFullRecycleView() {
+        val spacing = resources.getDimensionPixelSize(R.dimen.widget_size_10)
+
+        recyclerViewIcon = findViewById<RecyclerView>(R.id.recyclerViewIcon)
+        recyclerViewIcon.layoutManager = GridLayoutManager(this, 2)
+        recyclerViewIcon.addItemDecoration(GridSpacingItemDecoration(2, spacing, true))
+
+        recyclerViewNoti = findViewById<RecyclerView>(R.id.recyclerViewNoti)
+        recyclerViewNoti.layoutManager = GridLayoutManager(this, 2)
+        recyclerViewNoti.addItemDecoration(GridSpacingItemDecoration(2, spacing, true))
+    }
+
     init {
         data = LocalStorageManager.getObject<SettingThemeModel>(
             KeysStorage.settingTheme, SettingThemeModel::class.java
@@ -75,8 +89,13 @@ class ActivitySettingTheme : AppCompatActivity() {
             ItemThemeIconModel("3D", 3, R.drawable.theme_icon_4, false),
             ItemThemeIconModel("Phẳng chìm", 4, R.drawable.theme_icon_5, false),
         )
-        val adapter = SettingThemeIconAdapter(lst) { idx -> println("ZZZZZZZZZZZZZZZZZ ${idx}") }
-        recyclerView.adapter = adapter
+        if (adapterIcon == null) {
+            adapterIcon = SettingThemeIconAdapter(lst) { }
+            recyclerViewIcon.adapter = adapterIcon
+        }
+
+        recyclerViewIcon.visibility = View.VISIBLE
+        recyclerViewNoti.visibility = View.GONE
     }
 
     private fun onSelectTab(idx: Int) {
@@ -92,9 +111,13 @@ class ActivitySettingTheme : AppCompatActivity() {
                     ItemThemeIconModel("3D", 3, R.drawable.theme_icon_4, false),
                     ItemThemeIconModel("Phẳng chìm", 4, R.drawable.theme_icon_5, false),
                 )
-                val adapter =
-                    SettingThemeIconAdapter(lst) { idx -> println("ZZZZZZZZZZZZZZZZZ ${idx}") }
-                recyclerView.adapter = adapter
+                if (adapterIcon == null) {
+                    adapterIcon = SettingThemeIconAdapter(lst) { }
+                    recyclerViewIcon.adapter = adapterIcon
+                }
+
+                recyclerViewIcon.visibility = View.VISIBLE
+                recyclerViewNoti.visibility = View.GONE
             }
 
             2 -> {
@@ -113,9 +136,15 @@ class ActivitySettingTheme : AppCompatActivity() {
                         "Thời tiết hàng giờ", 4, R.drawable.theme_noti_5, "bg_14.png", false
                     )
                 )
-                val adapter =
-                    SettingThemeNotificationAdapter(lst) { idx -> println("ZZZZZZZZZZZZZZZZZ ${idx}") }
-                recyclerView.adapter = adapter
+
+                if (adapterNotification == null) {
+                    adapterNotification =
+                        SettingThemeNotificationAdapter(lst) { }
+                    recyclerViewNoti.adapter = adapterNotification
+                }
+
+                recyclerViewIcon.visibility = View.GONE
+                recyclerViewNoti.visibility = View.VISIBLE
             }
         }
     }

@@ -9,13 +9,14 @@ import androidx.core.view.WindowInsetsCompat
 import com.cmzsoft.weather.FrameWork.Data.LocalStorageManager
 import com.cmzsoft.weather.Model.Object.KeysStorage
 
+
 class LoadingAppActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_loading_app)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            var systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
@@ -23,19 +24,19 @@ class LoadingAppActivity : AppCompatActivity() {
     }
 
     fun activeActivity() {
-//        val changePage = Intent(this, ActivitySettingTheme::class.java);
+//        var changePage = Intent(this, ActivityTutorial::class.java);
 //        startActivity(changePage);
-//
 //        return
         if (LocalStorageManager.getString(KeysStorage.isFirstOpenApp) == null) {
-            val changePage = Intent(this, ActivityRequestLocation::class.java);
+            var changePage = Intent(this, ActivityRequestLocation::class.java);
             startActivity(changePage);
             finish()
         } else {
-            val changePage = Intent(this, MainActivity::class.java);
+            var changePage = Intent(this, MainActivity::class.java);
+            changePage.putExtra("FROM_REQUEST_LOCATION", false)
+            changePage.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
             startActivity(changePage);
             finish()
         }
     }
-
 }

@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.view.View
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
@@ -16,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.cmzsoft.weather.APICall.RequestAPI
 import com.cmzsoft.weather.CustomAdapter.ItemLocationManagerAdapter
+import com.cmzsoft.weather.Manager.NetworkManager
 import com.cmzsoft.weather.Model.LocationWeatherModel
 import com.cmzsoft.weather.Service.DatabaseService
 import com.cmzsoft.weather.Service.Interface.GetCurrentLocationCallback
@@ -37,7 +39,13 @@ class ActivityLocationManager : AppCompatActivity() {
         }
 
         addEventOnBtnBackClicked()
-        setupAdapter()
+        if (NetworkManager.getInstance(this).isConnected())
+            setupAdapter()
+        else {
+            findViewById<TextView>(R.id.txt_title).text = "Network not connected";
+            findViewById<TextView>(R.id.btn_edit).visibility = View.GONE;
+            findViewById<TextView>(R.id.btn_add_location).visibility = View.GONE;
+        }
         findViewById<TextView>(R.id.btn_add_location).setOnClickListener {
             val changePage = Intent(this, ActivityChooseLocation::class.java)
             changePage.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
@@ -50,26 +58,20 @@ class ActivityLocationManager : AppCompatActivity() {
     private fun setupAdapter() {
         var listModel: List<LocationWeatherModel> =
             DatabaseService.getInstance(this).locationWeatherService.getAllLocationWeather();
-        for (i in listModel) println("Loaded ${i}")
-
         val recyclerView = findViewById<RecyclerView>(R.id.recycler_view)
         var newList = listModel.toMutableList();
 
         var adapter = ItemLocationManagerAdapter(listModel.toMutableList())
 
-        recyclerView.adapter = adapter
-        recyclerView.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
-
         findViewById<TextView>(R.id.btn_edit).setOnClickListener {
             adapter.btnEditClicked();
         }
 
-        if (ActivityCompat.checkSelfPermission(
-                this, Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(
-                this, Manifest.permission.ACCESS_COARSE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
+        if (LocationService.checkPermissionLocation() == false) {
+            recyclerView.adapter = adapter
+            recyclerView.layoutManager =
+                LinearLayoutManager(this@ActivityLocationManager, RecyclerView.VERTICAL, false)
+            adapter.notifyDataSetChanged()
             lifecycleScope.launch {
                 for (item in newList) {
                     val requestAPI = RequestAPI.getInstance()
@@ -85,16 +87,32 @@ class ActivityLocationManager : AppCompatActivity() {
                     val resId = resources.getIdentifier(iconName, "drawable", packageName)
                     item.weather = resId.toString()
                     adapter.notifyItemChanged(newList.indexOf(item))
+                    recyclerView.adapter = adapter
+                    recyclerView.layoutManager = LinearLayoutManager(
+                        this@ActivityLocationManager, RecyclerView.VERTICAL, false
+                    )
+                    adapter.notifyDataSetChanged()
                 }
             }
         } else {
+            if (ActivityCompat.checkSelfPermission(
+                    this, Manifest.permission.ACCESS_FINE_LOCATION
+                ) != PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(
+                    this, Manifest.permission.ACCESS_COARSE_LOCATION
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                return
+            }
             LocationService.getCurrentLocation(object : GetCurrentLocationCallback {
                 @Override
                 override fun onLocationReceived(address: LocationWeatherModel) {
-
                     newList.add(0, address);
+                    println("onLocationReceived ${newList.size}")
                     adapter = ItemLocationManagerAdapter(newList.toMutableList())
                     recyclerView.adapter = adapter
+                    recyclerView.layoutManager = LinearLayoutManager(
+                        this@ActivityLocationManager, RecyclerView.VERTICAL, false
+                    )
                     adapter.notifyDataSetChanged()
                     recyclerView.scrollToPosition(0)
 
@@ -111,8 +129,7 @@ class ActivityLocationManager : AppCompatActivity() {
                                 currentWeather.getInt("weathercode"),
                                 currentWeather.getInt("is_day") == 1
                             )
-                            val resId =
-                                resources.getIdentifier(iconName, "drawable", packageName)
+                            val resId = resources.getIdentifier(iconName, "drawable", packageName)
                             item.weather = resId.toString()
                             adapter.notifyItemChanged(newList.indexOf(item))
                         }
@@ -120,6 +137,11 @@ class ActivityLocationManager : AppCompatActivity() {
                 }
 
                 override fun onError(exception: Exception) {
+                    recyclerView.adapter = adapter
+                    recyclerView.layoutManager = LinearLayoutManager(
+                        this@ActivityLocationManager, RecyclerView.VERTICAL, false
+                    )
+                    adapter.notifyDataSetChanged()
                     exception.printStackTrace();
                 }
             })

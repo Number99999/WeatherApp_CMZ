@@ -6,5 +6,5 @@ object KeysStorage {
     const val establish = "Establish"
     const val customLayout = "CustomLayout"
     const val settingTheme = "SettingTheme"
-    const val noti = "Notification"
+    const val settingNoti = "SettingNoti"
 }

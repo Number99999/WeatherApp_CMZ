@@ -793,6 +793,7 @@
                     app:layout_constraintTop_toBottomOf="@id/unitSettingsContainer">
 
                     <LinearLayout
+                        android:id="@+id/contain_noti"
                         android:layout_width="match_parent"
                         android:layout_height="56dp"
                         android:layout_marginTop="8dp"

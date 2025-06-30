@@ -20,11 +20,12 @@ import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import com.cmzsoft.weather.CustomView.PermissionDialogFragment
 import com.cmzsoft.weather.FrameWork.Data.LocalStorageManager
+import com.cmzsoft.weather.FrameWork.EventApp.FirebaseManager
 import com.cmzsoft.weather.Manager.AdManager
 import com.cmzsoft.weather.Model.FakeGlobal
+import com.cmzsoft.weather.Model.Object.KeyEventFirebase
 import com.cmzsoft.weather.Model.Object.KeysStorage
 import com.cmzsoft.weather.Model.Object.PermissionModel
-
 
 class ActivityRequestLocation : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,7 +43,6 @@ class ActivityRequestLocation : AppCompatActivity() {
         findViewById<ScrollView>(R.id.request_location_1).visibility = View.VISIBLE
         findViewById<ScrollView>(R.id.request_location_2).visibility = View.GONE
         findViewById<ScrollView>(R.id.request_location_3).visibility = View.GONE
-
         this.loadNativeAds()
     }
 
@@ -117,7 +117,13 @@ class ActivityRequestLocation : AppCompatActivity() {
     private fun loadNativeAds() {
         var adMgr = AdManager.getInstance(this@ActivityRequestLocation);
         adMgr.loadNativeClickAd(findViewById<FrameLayout>(R.id.ad_container), onAdLoaded = {
-        }, onAdFailed = { println("onAdFailed") }, onAdImpression = {
+            FirebaseManager.getInstance(context = this)
+                .sendEvent(KeyEventFirebase.navPermission, "loaded", true)
+        }, onAdFailed = {
+            println("onAdFailed")
+            FirebaseManager.getInstance(context = this)
+                .sendEvent(KeyEventFirebase.navPermission, "loaded", true)
+        }, onAdImpression = {
         })
     }
 
@@ -137,8 +143,6 @@ class ActivityRequestLocation : AppCompatActivity() {
         val btn = findViewById<Button>(R.id.btn_accept_when_use_app)
         btn.setOnClickListener {
             showCustomPermissionDialog()
-//            val changePage = Intent(this, MainActivity::class.java);
-//            startActivity(changePage);
         }
     }
 
@@ -183,7 +187,7 @@ class ActivityRequestLocation : AppCompatActivity() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == PermissionModel.REQUEST_LOCATION) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                val changePage = Intent(this, MainActivity::class.java);
+                val changePage = Intent(this, ActivityTutorial::class.java);
                 changePage.putExtra("FROM_REQUEST_LOCATION", true);
                 startActivity(changePage);
             } else {

@@ -1,4 +1,7 @@
 package com.cmzsoft.weather.Model;
+import com.google.gson.Gson;
+
+import org.json.JSONObject;
 
 public class FakeGlobal {
     private static FakeGlobal instance;
@@ -10,9 +13,10 @@ public class FakeGlobal {
     public boolean userAcceptRequestLocation;
 
     public boolean isFirstLoadActivity = true;
+    public boolean isShowConfirmDefault = false;
     public boolean userAcceptRequestNotifi;
+    public JSONObject responseAPI;
     //endregion
-
 
     public static FakeGlobal getInstance() {
         if (instance == null) {

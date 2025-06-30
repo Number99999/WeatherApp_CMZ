@@ -5,7 +5,7 @@
     android:layout_height="wrap_content">
 
     <LinearLayout
-        android:layout_width="@dimen/widget_size_46"
+        android:layout_width="50dp"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:orientation="vertical"
@@ -17,6 +17,8 @@
             android:id="@+id/txt_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
             android:text="15:00"
             android:textColor="#FFFFFF"
             android:textSize="12sp" />
@@ -27,7 +29,7 @@
             android:layout_height="30dp"
             android:layout_gravity="center"
             android:layout_marginTop="4dp"
-            android:src="@drawable/icon_weather_1" />
+            android:src="@drawable/sunny" />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -45,10 +47,9 @@
 
             <TextView
                 android:id="@+id/txt_rainfall_rate"
-                android:layout_width="wrap_content"
+                android:layout_width="25dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
-                android:maxWidth="@dimen/widget_size_25"
                 android:text="100%"
                 android:textColor="#FFFFFF"
                 android:textSize="10sp" />
