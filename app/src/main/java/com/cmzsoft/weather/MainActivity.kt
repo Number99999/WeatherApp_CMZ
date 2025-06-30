@@ -44,6 +44,7 @@ import com.cmzsoft.weather.Model.LocationWeatherModel
 import com.cmzsoft.weather.Model.NavMenuModel
 import com.cmzsoft.weather.Model.NightDayTempModel
 import com.cmzsoft.weather.Model.NotificationModel
+import com.cmzsoft.weather.Model.Object.FileNameJSON
 import com.cmzsoft.weather.Model.Object.KeyEventFirebase
 import com.cmzsoft.weather.Model.Object.KeysStorage
 import com.cmzsoft.weather.RendererChart.CustomLineChartRenderer
@@ -394,10 +395,22 @@ class MainActivity : AppCompatActivity() {
                     FakeGlobal.getInstance().curLocation.longitude
                 )
             }
-            FakeGlobal.getInstance().responseAPI = result
-            FakeGlobal.getInstance().curLocation.setTimeZone(result.getString("timezone_abbreviation"))
+            if (result != null) {
+                FakeGlobal.getInstance().responseAPI = result
+                LocalStorageManager.saveJsonObjectToFile(
+                    this@MainActivity, FileNameJSON.reponseAPI, result
+                )
+            } else FakeGlobal.getInstance().responseAPI =
+                LocalStorageManager.readJsonObjectFromFile(
+                    this@MainActivity, FileNameJSON.reponseAPI
+                )
+            FakeGlobal.getInstance().curLocation.setTimeZone(
+                FakeGlobal.getInstance().responseAPI.getString(
+                    "timezone_abbreviation"
+                )
+            )
 
-            updateDataOnMainInfo(result)
+            updateDataOnMainInfo(FakeGlobal.getInstance().responseAPI)
             setIsRainInNextTwoHours()
             setupLineChart()
             initEventNavBar()
@@ -571,10 +584,14 @@ class MainActivity : AppCompatActivity() {
 
     private fun loadNativeAds() {
         var adMgr = AdManager.getInstance(this@MainActivity);
-        adMgr.loadNativeClickAd(findViewById<FrameLayout>(R.id.ad_container), onAdLoaded = {
+        val container = findViewById<FrameLayout>(R.id.ad_container)
+        container.visibility = View.GONE
+        adMgr.loadNativeClickAd(container, onAdLoaded = {
             println("onAdLoaded")
+            container.visibility = View.VISIBLE
         }, onAdFailed = { println("onAdFailed") }, onAdImpression = {
             println("onAdImpression")
+            container.visibility = View.GONE
         })
     }
 

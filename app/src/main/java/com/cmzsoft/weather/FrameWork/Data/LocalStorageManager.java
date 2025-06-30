@@ -5,6 +5,15 @@ import android.content.SharedPreferences;
 
 import com.google.gson.Gson;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+
 
 public class LocalStorageManager {
     private static final String PREF_NAME = "com.cmz.weather";
@@ -38,5 +47,28 @@ public class LocalStorageManager {
 
     public static void clearAll(Context context) {
         _prefs.edit().clear().apply();
+    }
+
+    public static void saveJsonObjectToFile(Context context, String fileName, JSONObject jsonObject) {
+        try (FileOutputStream fos = context.openFileOutput(fileName, Context.MODE_PRIVATE)) {
+            fos.write(jsonObject.toString().getBytes(StandardCharsets.UTF_8));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static JSONObject readJsonObjectFromFile(Context context, String fileName) {
+        StringBuilder sb = new StringBuilder();
+        try (BufferedReader reader = new BufferedReader(
+                new InputStreamReader(context.openFileInput(fileName), StandardCharsets.UTF_8))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                sb.append(line);
+            }
+            return new JSONObject(sb.toString());
+        } catch (IOException | JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.cmzsoft.weather.CustomAdapter.LocationInMapAdapter
 import com.cmzsoft.weather.Manager.AdManager
+import com.cmzsoft.weather.Manager.NetworkManager
 import com.cmzsoft.weather.Model.LocationInMapModel
 import com.cmzsoft.weather.Model.LocationWeatherModel
 import com.cmzsoft.weather.Model.Object.PermissionModel
@@ -52,11 +53,21 @@ class ActivityChooseLocation : AppCompatActivity(), OnMapReadyCallback {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_choose_location)
         enableEdgeToEdge()
+
+        findViewById<ImageView>(R.id.btn_back_city).setOnClickListener { finish() }
+        val notificationTextView = findViewById<TextView>(R.id.txt_title)
+        notificationTextView.isSelected = true
+
+        if (NetworkManager.getInstance(this).isConnected() == false) {
+            handleNotConnection()
+            return;
+        }
+
         searchViewCity = findViewById(R.id.search_view_city)
-        val btnCloseTxtViewCity = searchViewCity.findViewById<ImageView>(
-            androidx.appcompat.R.id.search_close_btn
-        )
-        btnCloseTxtViewCity?.visibility = View.GONE
+//        val btnCloseTxtViewCity = searchViewCity.findViewById<ImageView>(
+//            androidx.appcompat.R.id.search_close_btn
+//        )
+//        btnCloseTxtViewCity?.visibility = View.GONE
         searchViewCity.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 searchLocation(query)
@@ -86,18 +97,19 @@ class ActivityChooseLocation : AppCompatActivity(), OnMapReadyCallback {
             findViewById<LinearLayout>(R.id.contain_city).visibility = View.VISIBLE
             findViewById<LinearLayout>(R.id.contain_map).visibility = View.GONE
         }
-        findViewById<ImageView>(R.id.btn_back_city).setOnClickListener { finish() }
 
         initEventOnTypingSearchViewMap()
         SetUpListBigCountry()
-
-        val notificationTextView = findViewById<TextView>(R.id.txt_title)
-        notificationTextView.isSelected = true
 
         findViewById<ImageView>(R.id.btn_close_title).setOnClickListener {
             (findViewById<ImageView>(R.id.btn_close_title).parent as View).visibility = View.GONE
         }
         this.loadNativeAds()
+    }
+
+    private fun handleNotConnection() {
+        findViewById<RecyclerView>(R.id.recyclerViewCity).visibility = View.GONE
+        findViewById<FrameLayout>(R.id.ad_container).visibility = View.GONE
     }
 
     private fun searchLocation(query: String?) {

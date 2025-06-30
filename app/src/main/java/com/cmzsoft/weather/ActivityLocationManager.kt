@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.view.View
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
@@ -16,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.cmzsoft.weather.APICall.RequestAPI
 import com.cmzsoft.weather.CustomAdapter.ItemLocationManagerAdapter
+import com.cmzsoft.weather.Manager.NetworkManager
 import com.cmzsoft.weather.Model.LocationWeatherModel
 import com.cmzsoft.weather.Service.DatabaseService
 import com.cmzsoft.weather.Service.Interface.GetCurrentLocationCallback
@@ -37,7 +39,13 @@ class ActivityLocationManager : AppCompatActivity() {
         }
 
         addEventOnBtnBackClicked()
-        setupAdapter()
+        if (NetworkManager.getInstance(this).isConnected())
+            setupAdapter()
+        else {
+            findViewById<TextView>(R.id.txt_title).text = "Network not connected";
+            findViewById<TextView>(R.id.btn_edit).visibility = View.GONE;
+            findViewById<TextView>(R.id.btn_add_location).visibility = View.GONE;
+        }
         findViewById<TextView>(R.id.btn_add_location).setOnClickListener {
             val changePage = Intent(this, ActivityChooseLocation::class.java)
             changePage.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
