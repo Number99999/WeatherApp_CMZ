@@ -74,7 +74,8 @@
                         android:layout_marginBottom="@dimen/widget_size_20"
                         android:gravity="center_horizontal"
                         android:text="Real time weather tracking"
-                        android:textSize="@dimen/margin_16dp" />
+                        android:textSize="@dimen/margin_20dp"
+                        android:textStyle="bold" />
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -91,7 +92,8 @@
                         android:layout_marginBottom="@dimen/widget_size_20"
                         android:gravity="center_horizontal"
                         android:text="Global weather map"
-                        android:textSize="@dimen/margin_16dp" />
+                        android:textSize="@dimen/margin_20dp"
+                        android:textStyle="bold" />
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -122,7 +124,8 @@
                         android:layout_marginBottom="@dimen/widget_size_20"
                         android:gravity="center_horizontal"
                         android:text="Weekly forecast"
-                        android:textSize="@dimen/margin_16dp" />
+                        android:textSize="@dimen/margin_20dp"
+                        android:textStyle="bold" />
                 </RelativeLayout>
 
                 <FrameLayout

@@ -6,11 +6,11 @@ plugins {
 }
 
 android {
-    namespace = "com.cmzsoft.weather"
+    namespace = "com.boom.weather"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.cmzsoft.weather"
+        applicationId = "com.boom.weather"
         minSdk = 24
         targetSdk = 35
         versionCode = 1

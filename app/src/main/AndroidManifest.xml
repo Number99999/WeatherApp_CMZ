@@ -29,7 +29,6 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -70,7 +69,7 @@
 
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-7340251527995818~8284130762" />
+            android:value="ca-app-pub-6234439167982040~2028788531" />
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyAE_6F6J92mVoin5BvwysIpafryT0gUyRs" />

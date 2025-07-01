@@ -97,12 +97,6 @@
                 android:textColor="@android:color/white"
                 android:textSize="14sp" />
 
-            <com.cmzsoft.weather.CustomView.SunArcView
-                android:id="@+id/sunArcView"
-                android:layout_width="@dimen/widget_size_300"
-                android:layout_height="@dimen/widget_size_200"
-                android:visibility="gone" />
-
             <TextView
                 android:id="@+id/txt_noti_rain"
                 android:layout_width="wrap_content"
