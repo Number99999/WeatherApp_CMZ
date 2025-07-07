@@ -54,7 +54,7 @@ class ItemLocationManagerAdapter(private var items: MutableList<LocationWeatherM
                 )
             val isCurrent = LocationService.checkPermissionLocation() && isExis == false
             if (isCurrent) {
-                holder.title.text = "${item.name} (Vị trí của bạn)"
+                holder.title.text = "${item.name} (Your location)"
             } else holder.title.text = "${item.name}"
             if (defaultAdd == null) {
                 holder.txtDefault.visibility = View.VISIBLE

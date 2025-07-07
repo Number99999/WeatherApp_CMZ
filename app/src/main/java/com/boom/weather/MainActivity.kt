@@ -111,6 +111,7 @@ class MainActivity : AppCompatActivity() {
         startAutoUpdateWeather()
         loadNativeAds()
         setupEventButton()
+        if (FakeGlobal.getInstance().responseAPI != null) updateBeforeReload()
     }
 
     init {
@@ -134,6 +135,17 @@ class MainActivity : AppCompatActivity() {
 
     private fun onInitedLocation() {
         UpdateWeatherInfor()
+    }
+
+    private fun updateBeforeReload() {
+        updateDataOnMainInfo(FakeGlobal.getInstance().responseAPI)
+        setIsRainInNextTwoHours()
+        setupLineChart()
+        initEventNavBar()
+        initChartDayNightTemp(FakeGlobal.getInstance().responseAPI)
+        eventScrollMain()
+        setupHeaderWithStatusBar()
+        setupDataRainfallChart()
     }
 
     private fun setupDataRainfallChart() {
@@ -324,6 +336,12 @@ class MainActivity : AppCompatActivity() {
             shareAppLink()
         }
 
+        findViewById<LinearLayout>(R.id.nav_layout_choose_language).setOnClickListener {
+            val changePage = Intent(this, ActivityChooseLanguage::class.java)
+            startActivity(changePage)
+            finish()
+        }
+
         findViewById<LinearLayout>(R.id.nav_choose_theme).visibility = View.GONE
 //        findViewById<LinearLayout>(R.id.nav_choose_theme).setOnClickListener {
 //            val changePage = Intent(this, ActivitySettingTheme::class.java)
@@ -446,8 +464,8 @@ class MainActivity : AppCompatActivity() {
                 WeatherUtil.degreeToShortDirection(currentWeather.getDouble("winddirection"))
 
             val txtWindKph = findViewById<TextView>(R.id.wind_kph)
-            var wind_kph = currentWeather.getDouble("windspeed")
-            txtWindKph.text = "Hướng gió\n$windDir - ${
+            val wind_kph = currentWeather.getDouble("windspeed")
+            txtWindKph.text = "${getString(R.string.string30)}\n$windDir - ${
                 WeatherUtil.convertWindirToCurType(
                     wind_kph, _dataEstablish.winSpeed
                 )
@@ -455,19 +473,23 @@ class MainActivity : AppCompatActivity() {
 
             val uv = result.getJSONObject("hourly").getJSONArray("uv_index").get(curHour)
             val txtUv = findViewById<TextView>(R.id.txt_uv)
-            txtUv.text = "UV:\n" + uv
+            txtUv.text = "UV:\n$uv"
 
             val humidity =
                 result.getJSONObject("hourly").getJSONArray("relative_humidity_2m").get(curHour)
-            findViewById<TextView>(R.id.txt_humidity).text = "Độ ẩm\n$humidity%"
+            findViewById<TextView>(R.id.txt_humidity).text =
+                "${getString(R.string.string31)}\n$humidity%"
 
             val feelsLike = result.getJSONObject("hourly").getJSONArray("apparent_temperature")
                 .get(curHour) as Double
 
-            if (_dataEstablish.typeTemp.equals("C")) {
+            if (_dataEstablish.typeTemp == "C") {
                 findViewById<ImageView>(R.id.icon_char_temp).setImageResource(R.drawable.char_c)
-            } else findViewById<ImageView>(R.id.icon_char_temp).setImageResource(R.drawable.char_f)
-            findViewById<TextView>(R.id.txt_feel_like).text = "Môi trường:\n${
+            } else {
+                findViewById<ImageView>(R.id.icon_char_temp).setImageResource(R.drawable.char_f)
+            }
+
+            findViewById<TextView>(R.id.txt_feel_like).text = "${getString(R.string.string19)}:\n${
                 WeatherUtil.convertToCurTypeTemp(
                     feelsLike, _dataEstablish.typeTemp
                 )
@@ -676,7 +698,7 @@ class MainActivity : AppCompatActivity() {
                     val day = calendar.get(Calendar.DAY_OF_MONTH)
                     val month = calendar.get(Calendar.MONTH) + 1
                     val dayOfWeek = WeatherUtil.getDayOfWeek(dataModel[i].date)
-                    if (i == 0) textView.text = "Hôm nay\n$day/$month"
+                    if (i == 0) textView.text = "${getString(R.string.string32)}\n$day/$month"
                     else textView.text = "$dayOfWeek\n$day/$month"
                 }
 
@@ -758,7 +780,15 @@ class MainActivity : AppCompatActivity() {
 
             val weekday = calendar.get(Calendar.DAY_OF_WEEK)
 
-            val weekdays = arrayOf("Chủ nhật", "Thứ 2", "Thứ 3", "Thứ 4", "Thứ 5", "Thứ 6", "Thứ 7")
+            val weekdays = arrayOf(
+                getString(R.string.string33),
+                getString(R.string.string34),
+                getString(R.string.string35),
+                getString(R.string.string36),
+                getString(R.string.string37),
+                getString(R.string.string38),
+                getString(R.string.string39)
+            )
             val weekdayStr = weekdays[weekday - 1]
             var formatted = "";
             when (_dataEstablish.dateForm) {
@@ -801,7 +831,9 @@ class MainActivity : AppCompatActivity() {
             R.id.fake_spinner_rain, listOf("mm", "cm", "in"), R.id.txt_rainfall_model
         )
         setupAdapterSettingDialog(
-            R.id.fake_spinner_visibility, listOf("km", "Dặm"), R.id.txt_visibilyty_model
+            R.id.fake_spinner_visibility,
+            listOf("km", getString(R.string.string28)),
+            R.id.txt_visibilyty_model
         )
         setupAdapterSettingDialog(
             R.id.fake_spinner_wind_speed,
@@ -811,12 +843,14 @@ class MainActivity : AppCompatActivity() {
 
         setupAdapterSettingDialog(
             R.id.fake_spinner_atm,
-            listOf("mmHg", "inHg", "psi", "bar", "mbar", "hpa", "presure"),
+            listOf("mmHg", "inHg", "psi", "bar", "mbar", "hpa"),
             R.id.txt_atm_model
         )
 
         setupAdapterSettingDialog(
-            R.id.fake_spinner_date_form, listOf("12 giờ", "24 giờ"), R.id.txt_time_model
+            R.id.fake_spinner_date_form,
+            listOf("12 ${getString(R.string.string29)}", "24 ${getString(R.string.string29)}"),
+            R.id.txt_time_model
         )
     }
 
@@ -1064,7 +1098,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun createLineDataSet(entries: List<Entry>): LineDataSet {
-        return LineDataSet(entries, "Nhiệt độ (°C)").apply {
+        return LineDataSet(entries, "${getString(R.string.string21)} (°C)").apply {
             valueTextSize = 15f
             valueTextColor = Color.WHITE
             lineWidth = 3f
@@ -1158,7 +1192,7 @@ class MainActivity : AppCompatActivity() {
                     NotiManager.createNotificationChannel(applicationContext)
                 } else {
                     Toast.makeText(
-                        this, "Quyền thông báo bị từ chối", Toast.LENGTH_SHORT
+                        this, getString(R.string.string40), Toast.LENGTH_SHORT
                     ).show()
                 }
             }
@@ -1182,22 +1216,20 @@ class MainActivity : AppCompatActivity() {
             }
             val txt = findViewById<TextView>(R.id.txt_noti_rain)
             if (isRain) {
-                txt.text = "Có mưa trong 120 phút"
+                txt.text = getString(R.string.string41)
             } else {
-                txt.text = "Không có mưa trong 120 phút"
+                txt.text = getString(R.string.string42)
             }
         }
     }
 
     private fun checkAndRequestPermissionNoti() {
         val local = LocalStorageManager.getObject<NavMenuModel>(
-            KeysStorage.navMenuModel,
-            NavMenuModel::class.java
+            KeysStorage.navMenuModel, NavMenuModel::class.java
         )
         if (local != null && local.notification) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && ContextCompat.checkSelfPermission(
-                    applicationContext,
-                    POST_NOTIFICATIONS
+                    applicationContext, POST_NOTIFICATIONS
                 ) == PackageManager.PERMISSION_GRANTED
             ) {
                 ActivityCompat.requestPermissions(

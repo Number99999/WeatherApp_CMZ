@@ -82,7 +82,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="20dp"
                     android:layout_marginEnd="20dp"
-                    android:text="Chúng tôi là một nhóm phát triển nhỏ và đã cam kết cung cấp cho bạn nhiều sản phẩm miễn phí và dễ sử dụng hơn. Hi vọng bạn sẽ có những đánh giá tốt 5 sao, đây sẽ là động lực lớn nhất để chúng tôi không ngừng nỗ lực nâng cao chất lượng!"
+                    android:text="@string/string85"
                     android:textColor="@color/black" />
 
                 <LinearLayout
@@ -131,15 +131,14 @@
                     android:paddingTop="20dp"
                     android:paddingBottom="20dp">
 
-
                     <Button
                         android:id="@+id/btn_accept_vote"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="20dp"
                         android:background="@drawable/background_btn_blue"
-                        android:text="Đánh giá"
+                        android:text="@string/string86"
                         app:backgroundTint="@null" />
+
                 </LinearLayout>
             </LinearLayout>
         </FrameLayout>

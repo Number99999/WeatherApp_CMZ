@@ -42,25 +42,25 @@ class ActivitySettingNotification : AppCompatActivity() {
     private fun setupAdapter() {
         val rec = findViewById<RecyclerView>(R.id.recyclerView)
         val l = mutableListOf<CustomLayoutItem>(
-            CustomLayoutItem("Thông báo", R.drawable.icon_notification, _safeData.notification),
-            CustomLayoutItem("Báo động thời tiết", R.drawable.icon_warning, _safeData.warning),
-            CustomLayoutItem(
-                "Thời tiết hàng ngày", R.drawable.icon_small_cloud, _safeData.weatherDaily
-            )
+            CustomLayoutItem("Notifications", R.drawable.icon_notification, _safeData.notification),
+            CustomLayoutItem("Weather Alerts", R.drawable.icon_warning, _safeData.warning),
+            CustomLayoutItem("Daily Weather", R.drawable.icon_small_cloud, _safeData.weatherDaily)
         )
+
         val adapter = CustomLayoutAdapter(l) { title, checked ->
             when (title) {
-                "Thông báo" -> _safeData.notification = checked
-                "Báo động thời tiết" -> _safeData.warning = checked
-                "Thời tiết hàng ngày" -> _safeData.weatherDaily = checked
+                "Notifications" -> _safeData.notification = checked
+                "Weather Alerts" -> _safeData.warning = checked
+                "Daily Weather" -> _safeData.weatherDaily = checked
             }
+
             val _otherData = LocalStorageManager.getObject<NavMenuModel>(
                 KeysStorage.navMenuModel, NavMenuModel::class.java
             )
-            _otherData.notification = checked;
+            _otherData.notification = checked
+
             LocalStorageManager.putObject(KeysStorage.settingNoti, _safeData)
             LocalStorageManager.putObject(KeysStorage.navMenuModel, _otherData)
-
         }
 
         rec.adapter = adapter

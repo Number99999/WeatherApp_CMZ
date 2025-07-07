@@ -34,7 +34,7 @@
                 android:layout_height="match_parent"
                 android:layout_centerInParent="true"
                 android:gravity="center"
-                android:text="Thiết lập"
+                android:text="@string/string56"
                 android:textColor="@android:color/white"
                 android:textSize="24sp" />
         </RelativeLayout>
@@ -53,7 +53,7 @@
                 android:layout_height="30dp"
                 android:alpha="0.7"
                 android:gravity="center_vertical"
-                android:text="Nâng cấp VIP" />
+                android:text="@string/string57" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -89,7 +89,7 @@
                         android:id="@+id/tvUpgrade"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Nâng cấp phiên bản VIP"
+                        android:text="@string/string58"
                         android:textColor="@android:color/white"
                         android:textSize="18sp"
                         android:textStyle="bold" />
@@ -100,7 +100,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="2dp"
                         android:alpha="0.8"
-                        android:text="Mua một lần"
+                        android:text="@string/string59"
                         android:textColor="@android:color/white"
                         android:textSize="14sp" />
                 </LinearLayout>
@@ -129,7 +129,7 @@
                         android:id="@+id/tvForever"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="/ Mãi Mãi"
+                        android:text="@string/string60"
                         android:textColor="#FFE155"
                         android:textSize="14sp"
                         android:textStyle="bold" />
@@ -153,7 +153,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="20dp"
                 android:alpha="0.7"
-                android:text="Cài đặt" />
+                android:text="@string/string56" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -186,7 +186,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Nhiệt độ"
+                            android:text="@string/string21"
                             android:textColor="@android:color/white"
                             android:textSize="16sp" />
 
@@ -194,7 +194,7 @@
                             android:id="@+id/txt_temp_model"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="độ C"
+                            android:text="°C"
                             android:textColor="#B0C4DE"
                             android:textSize="12sp" />
                     </LinearLayout>
@@ -263,7 +263,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Lượng mưa"
+                            android:text="@string/string22"
                             android:textColor="@android:color/white"
                             android:textSize="16sp" />
 
@@ -271,7 +271,7 @@
                             android:id="@+id/txt_rainfall_model"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Mi-li-mét"
+                            android:text="Millimeter"
                             android:textColor="#B0C4DE"
                             android:textSize="12sp" />
                     </LinearLayout>
@@ -346,7 +346,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Khả năng hiển thị"
+                            android:text="@string/string23"
                             android:textColor="@android:color/white"
                             android:textSize="16sp" />
 
@@ -422,7 +422,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Tốc độ gió"
+                            android:text="@string/string24"
                             android:textColor="@android:color/white"
                             android:textSize="16sp" />
 
@@ -430,7 +430,7 @@
                             android:id="@+id/txt_wind_speed_model"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Dặm một giờ"
+                            android:text="Miles per hour"
                             android:textColor="#B0C4DE"
                             android:textSize="12sp" />
                     </LinearLayout>
@@ -499,7 +499,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:popupBackground="@drawable/custom_spinner"
-                            android:text="Áp suất"
+                            android:text="@string/string25"
                             android:textColor="@android:color/white"
                             android:textSize="16sp" />
 
@@ -507,7 +507,7 @@
                             android:id="@+id/txt_atm_model"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Milimet thủy ngân"
+                            android:text="Millimeters of mercury"
                             android:textColor="#B0C4DE"
                             android:textSize="12sp" />
                     </LinearLayout>
@@ -566,7 +566,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:alpha="0.7"
-                android:text="Ngày &amp; Thời gian"
+                android:text="Date &amp; Time"
                 android:textColor="#B0C4DE"
                 android:textSize="14sp"
                 android:textStyle="bold"
@@ -603,7 +603,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:paddingStart="12dp"
-                        android:text="Sử dụng định dạng 24h"
+                        android:text="@string/string61"
                         android:textColor="@android:color/white"
                         android:textSize="16sp" />
 
@@ -642,7 +642,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:paddingStart="12dp"
-                            android:text="Định dạng ngày"
+                            android:text="@string/string62"
                             android:textColor="@android:color/white"
                             android:textSize="16sp" />
 
@@ -713,7 +713,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="20dp"
                     android:alpha="0.7"
-                    android:text="Chất lượng không khí" />
+                    android:text="Air quality" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -744,7 +744,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:paddingStart="12dp"
-                            android:text="Nguồn dữ liệu"
+                            android:text="@string/string63"
                             android:textColor="@android:color/white"
                             android:textSize="16sp" />
                     </LinearLayout>
@@ -768,7 +768,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:paddingStart="12dp"
-                            android:text="Tiêu chuẩn"
+                            android:text="@string/string64"
                             android:textColor="@android:color/white"
                             android:textSize="16sp" />
 
@@ -779,7 +779,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="20dp"
                     android:alpha="0.7"
-                    android:text="Tin nhắn" />
+                    android:text="@string/string65" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -811,7 +811,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:paddingStart="12dp"
-                            android:text="Thông báo"
+                            android:text="@string/string45"
                             android:textColor="@android:color/white"
                             android:textSize="16sp" />
                     </LinearLayout>

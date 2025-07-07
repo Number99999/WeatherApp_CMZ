@@ -38,7 +38,7 @@
                 android:gravity="center"
                 android:paddingTop="4dp"
                 android:paddingBottom="4dp"
-                android:text="Mặc định"
+                android:text="Default"
                 android:textColor="@android:color/black"
                 android:textSize="14sp" />
 

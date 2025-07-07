@@ -9,9 +9,9 @@ public final class BuildConfig {
     // Field from build type: debug
     public static final String APP_OPEN_AD_UNIT_ID = "ca-app-pub-4686550583292348/9306860367";
     // Field from build type: debug
-    public static final String BANNER_AD_UNIT_ID = "ca-app-pub-6234439167982040/4298076260";
+    public static final String BANNER_AD_UNIT_ID = "ca-app-pub-4686550583292348/1787462993";
     // Field from build type: debug
-    public static final String INTERSTITIAL_AD_UNIT_ID = "ca-app-pub-6234439167982040/1671912928";
+    public static final String INTERSTITIAL_AD_UNIT_ID = "ca-app-pub-4686550583292348/2933023704";
     // Field from build type: debug
     public static final String NATIVE_AD_UNIT_ID = "ca-app-pub-4686550583292348/4675117263";
 

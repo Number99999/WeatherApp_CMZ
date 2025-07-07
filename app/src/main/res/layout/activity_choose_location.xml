@@ -44,7 +44,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="#ffffff"
-                        android:queryHint="Nhập tên thành phố" />
+                        android:queryHint="Enter city name" />
 
                     <androidx.fragment.app.FragmentContainerView
                         android:id="@+id/map"
@@ -89,7 +89,7 @@
                     android:layout_marginTop="50dp"
                     android:layout_marginEnd="20dp"
                     android:background="@drawable/background_border_white"
-                    app:queryHint="Nhập tên thành phố" />
+                    app:queryHint="Enter city name" />
 
 
                 <ImageView
@@ -120,12 +120,13 @@
                     android:ellipsize="marquee"
                     android:focusable="true"
                     android:focusableInTouchMode="true"
+                    android:gravity="center"
                     android:marqueeRepeatLimit="marquee_forever"
                     android:maxLines="1"
                     android:minHeight="@dimen/widget_size_32"
                     android:scrollHorizontally="true"
                     android:singleLine="true"
-                    android:text="Vị trí thực tế của bạn, kết nối internet tốt sẽ giúp xác định chính xác vị trí"
+                    android:text="Your actual location, along with a stable internet connection, will help determine your position more accurately."
                     android:textColor="#fff" />
 
                 <ImageView

@@ -82,7 +82,7 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="4dp"
                 android:gravity="center_horizontal"
-                android:text="Nhiều mây"
+                android:text="Cloudy"
                 android:textColor="@android:color/white"
                 android:textSize="18sp" />
 
@@ -93,7 +93,7 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="8dp"
                 android:gravity="center_horizontal"
-                android:text="11:09 - Thứ 2, 21 Thg 4 2025"
+                android:text="11:09 - Mon, Apr 21, 2025"
                 android:textColor="@android:color/white"
                 android:textSize="14sp" />
 
@@ -103,7 +103,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="@dimen/margin_12dp"
-                android:text="Không có mưa trong 120 phút" />
+                android:text="No rain in the next 120 minutes" />
 
             <TextView
                 android:id="@+id/rainForecast"
@@ -179,7 +179,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="10dp"
                             android:gravity="left"
-                            android:text="Độ ẩm\n90%"
+                            android:text="Humidity\n90%"
                             android:textColor="@android:color/white" />
                     </LinearLayout>
                 </LinearLayout>
@@ -221,7 +221,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="10dp"
                             android:gravity="left"
-                            android:text="Gió: \nĐN • 9.8 mph"
+                            android:text="Wind:\nSE • 9.8 mph"
                             android:textColor="@android:color/white" />
                     </LinearLayout>
 
@@ -294,17 +294,17 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/margin_12dp"
                         android:layout_marginTop="@dimen/margin_8dp"
-                        android:text="BẢN ĐỒ"
+                        android:text="Map"
                         android:textSize="@dimen/font_size_16"
                         android:textStyle="bold" />
 
                     <ImageView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/margin_12dp"
                         android:adjustViewBounds="true"
                         android:scaleType="fitCenter"
-                        android:src="@drawable/img_map"
-                        android:layout_marginBottom="@dimen/margin_12dp"/>
+                        android:src="@drawable/img_map" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -374,7 +374,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:gravity="center"
-                            android:text="Hà Nội"
+                            android:text="New York"
                             android:textColor="@android:color/white"
                             android:textSize="24sp" />
 
@@ -459,7 +459,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="?android:attr/windowBackground"
-                    android:text="Không bao giờ"
+                    android:text="Never"
                     android:textColor="@color/bg_blue_1"
                     app:backgroundTint="@null"
                     app:backgroundTintMode="@null" />
@@ -469,7 +469,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="?android:attr/windowBackground"
-                    android:text="Huỷ bỏ"
+                    android:text="Cancel"
                     android:textColor="@color/bg_blue_1"
                     app:backgroundTint="@null"
                     app:backgroundTintMode="@null" />

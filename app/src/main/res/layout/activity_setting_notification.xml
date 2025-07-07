@@ -37,7 +37,7 @@
                 android:layout_height="match_parent"
                 android:layout_centerInParent="true"
                 android:gravity="center"
-                android:text="Thông báo"
+                android:text="@string/string45"
                 android:textColor="@android:color/white"
                 android:textSize="24sp" />
         </RelativeLayout>
@@ -47,7 +47,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_20dp"
             android:alpha="0.7"
-            android:text="Tin nhắn" />
+            android:text="@string/string65" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"

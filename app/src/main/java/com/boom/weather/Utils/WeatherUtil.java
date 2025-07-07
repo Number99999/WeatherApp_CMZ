@@ -37,41 +37,43 @@ public class WeatherUtil {
             LocalDate date = LocalDate.parse(dateStr, java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd"));
             switch (date.getDayOfWeek().getValue()) {
                 case 1:
-                    return "Th 2";
+                    return "Mon";
                 case 2:
-                    return "Th 3";
+                    return "Tue";
                 case 3:
-                    return "Th 4";
+                    return "Wed";
                 case 4:
-                    return "Th 5";
+                    return "Thu";
                 case 5:
-                    return "Th 6";
+                    return "Fri";
                 case 6:
-                    return "Th 7";
+                    return "Sat";
                 case 7:
-                    return "CN";
+                    return "Sun";
             }
         }
         return "";
     }
 
     public static String degreeToShortDirection(double degree) {
-        String[] directions = {"B",    // Bắc
-                "BĐB",  // Bắc Đông Bắc
-                "ĐB",   // Đông Bắc
-                "ĐĐB",  // Đông Đông Bắc
-                "Đ",    // Đông
-                "ĐĐN",  // Đông Đông Nam
-                "ĐN",   // Đông Nam
-                "NĐN",  // Nam Đông Nam
-                "N",    // Nam
-                "NTN",  // Nam Tây Nam
-                "TN",   // Tây Nam
-                "TTN",  // Tây Tây Nam
-                "T",    // Tây
-                "TTB",  // Tây Tây Bắc
-                "TB",   // Tây Bắc
-                "BTB"   // Bắc Tây Bắc
+        String[] directions = {
+                "N",    // North
+                "NNE",  // North-Northeast
+                "NE",   // Northeast
+                "ENE",  // East-Northeast
+                "E",    // East
+                "ESE",  // East-Southeast
+                "SE",   // Southeast
+                "SSE",  // South-Southeast
+                "S",    // South
+                "SSW",  // South-Southwest
+                "SW",   // Southwest
+                "WSW",  // West-Southwest
+                "W",    // West
+                "WNW",  // West-Northwest
+                "NW",   // Northwest
+                "NNW"   // North-Northwest
+
         };
         int idx = (int) Math.round(degree / 22.5) % 16;
         if (idx < 0) idx += 16;
@@ -81,63 +83,63 @@ public class WeatherUtil {
     public static String getWeatherStatus(int weatherCode) {
         switch (weatherCode) {
             case 0:
-                return "Trời quang đãng";
+                return "Clear sky";
             case 1:
-                return "Chủ yếu trời quang";
+                return "Mainly clear";
             case 2:
-                return "Có mây rải rác";
+                return "Partly cloudy";
             case 3:
-                return "Nhiều mây";
+                return "Overcast";
             case 45:
-                return "Sương mù";
+                return "Fog";
             case 48:
-                return "Sương mù đóng băng";
+                return "Depositing rime fog";
             case 51:
-                return "Mưa phùn nhẹ";
+                return "Light drizzle";
             case 53:
-                return "Mưa phùn vừa";
+                return "Moderate drizzle";
             case 55:
-                return "Mưa phùn nặng";
+                return "Dense drizzle";
             case 56:
-                return "Mưa phùn đóng băng nhẹ";
+                return "Light freezing drizzle";
             case 57:
-                return "Mưa phùn đóng băng nặng";
+                return "Dense freezing drizzle";
             case 61:
-                return "Mưa nhẹ";
+                return "Slight rain";
             case 63:
-                return "Mưa vừa";
+                return "Moderate rain";
             case 65:
-                return "Mưa nặng";
+                return "Heavy rain";
             case 66:
-                return "Mưa băng nhẹ";
+                return "Light freezing rain";
             case 67:
-                return "Mưa băng nặng";
+                return "Heavy freezing rain";
             case 71:
-                return "Tuyết nhẹ";
+                return "Slight snow fall";
             case 73:
-                return "Tuyết vừa";
+                return "Moderate snow fall";
             case 75:
-                return "Tuyết nặng";
+                return "Heavy snow fall";
             case 77:
-                return "Tuyết viên nhỏ";
+                return "Snow grains";
             case 80:
-                return "Mưa rào nhẹ";
+                return "Slight rain showers";
             case 81:
-                return "Mưa rào vừa";
+                return "Moderate rain showers";
             case 82:
-                return "Mưa rào nặng";
+                return "Violent rain showers";
             case 85:
-                return "Tuyết rào nhẹ";
+                return "Slight snow showers";
             case 86:
-                return "Tuyết rào nặng";
+                return "Heavy snow showers";
             case 95:
-                return "Giông";
+                return "Thunderstorm";
             case 96:
-                return "Giông kèm mưa đá nhẹ";
+                return "Thunderstorm with slight hail";
             case 99:
-                return "Giông kèm mưa đá nặng";
+                return "Thunderstorm with heavy hail";
             default:
-                return "Không xác định";
+                return "Unknown";
         }
     }
 

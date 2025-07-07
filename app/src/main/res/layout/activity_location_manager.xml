@@ -37,9 +37,10 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:gravity="center"
-                android:text="Quản lý vị trí"
+                android:text="@string/string44"
                 android:textColor="@android:color/white"
                 android:textSize="24sp" />
+
         </RelativeLayout>
 
         <LinearLayout
@@ -64,7 +65,7 @@
                 android:minHeight="@dimen/widget_size_32"
                 android:scrollHorizontally="true"
                 android:singleLine="true"
-                android:text="Tính năng phát hiện tự động, đang hoạt động không ổn định"
+                android:text="@string/string69"
                 android:textColor="#fff" />
 
             <ImageView
@@ -101,7 +102,7 @@
                 android:layout_height="@dimen/widget_size_50"
                 android:background="@drawable/background_border_white"
                 android:gravity="center"
-                android:text="Chỉnh sửa"
+                android:text="@string/string70"
                 android:textColor="@color/black"
                 android:textSize="@dimen/widget_size_16" />
 
@@ -112,7 +113,7 @@
                 android:layout_marginStart="@dimen/margin_24dp"
                 android:background="@drawable/background_border_white"
                 android:gravity="center"
-                android:text="Thêm địa điểm"
+                android:text="@string/string71"
                 android:textColor="@color/black"
                 android:textSize="@dimen/widget_size_16" />
         </LinearLayout>

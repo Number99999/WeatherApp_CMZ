@@ -45,7 +45,7 @@
             android:layout_marginBottom="16dp"
             android:background="@drawable/background_title_boder"
             android:gravity="center"
-            android:text="Cài Đặt"
+            android:text="@string/string20"
             android:textSize="22sp"
             android:textStyle="bold" />
 
@@ -76,14 +76,14 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Nhiệt độ" />
+                        android:text="@string/string21" />
 
                     <TextView
                         android:id="@+id/txt_temp_model"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:alpha="0.7"
-                        android:text="độ C" />
+                        android:text="°C" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -151,14 +151,14 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Lương mưa" />
+                        android:text="@string/string23" />
 
                     <TextView
                         android:id="@+id/txt_rainfall_model"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:alpha="0.7"
-                        android:text="ml" />
+                        android:text="mm" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -227,17 +227,15 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Khả năng hiển thị" />
+                        android:text="@string/string23" />
 
                     <TextView
-                        android:id="@+id/txt_visibilyty_model"
+                        android:id="@+id/txt_visibility_model"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:alpha="0.7"
                         android:text="km" />
                 </LinearLayout>
-
-
             </LinearLayout>
 
             <LinearLayout
@@ -305,14 +303,14 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Tốc độ gió" />
+                        android:text="@string/string24" />
 
                     <TextView
                         android:id="@+id/txt_wind_speed_model"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:alpha="0.7"
-                        android:text="Dặm / giờ" />
+                        android:text="Miles / hour" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -382,14 +380,14 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Áp suất" />
+                        android:text="@string/string25" />
 
                     <TextView
                         android:id="@+id/txt_atm_model"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:alpha="0.7"
-                        android:text="ml thuỷ ngân" />
+                        android:text="mmHg" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -458,14 +456,15 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Định dạng thời gian" />
+                        android:text="@string/string26" />
 
                     <TextView
                         android:id="@+id/txt_time_model"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:alpha="0.7"
-                        android:text="Giờ" />
+                        android:text="Hour" />
+
                 </LinearLayout>
             </LinearLayout>
 
@@ -514,7 +513,7 @@
             android:layout_marginTop="16dp"
             android:layout_marginBottom="20dp"
             android:backgroundTint="#0d9bff"
-            android:text="Làm xong"
+            android:text="@string/string27"
             android:textStyle="bold" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

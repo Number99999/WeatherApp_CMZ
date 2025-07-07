@@ -42,10 +42,10 @@ class ActivitySettingTheme : AppCompatActivity() {
         setupFullRecycleView()
 
         tabLayout = findViewById<TabLayout>(R.id.tabLayout)
-        tabLayout.addTab(tabLayout.newTab().setText("Biểu tượng"))
-        tabLayout.addTab(tabLayout.newTab().setText("Tiện ích"))
-        tabLayout.addTab(tabLayout.newTab().setText("Thông báo"))
-        tabLayout.addTab(tabLayout.newTab().setText("Nền trực tiếp"))
+        tabLayout.addTab(tabLayout.newTab().setText("Icons"))
+        tabLayout.addTab(tabLayout.newTab().setText("Widgets"))
+        tabLayout.addTab(tabLayout.newTab().setText("Notifications"))
+        tabLayout.addTab(tabLayout.newTab().setText("Live Wallpaper"))
 
         tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
@@ -83,11 +83,11 @@ class ActivitySettingTheme : AppCompatActivity() {
         curTab = 0;
         tabLayout.selectTab(tabLayout.getTabAt(0))
         val lst = mutableListOf(
-            ItemThemeIconModel("Mặc định", 0, R.drawable.theme_icon_1, true),
-            ItemThemeIconModel("Bằng phẳng", 1, R.drawable.theme_icon_2, false),
+            ItemThemeIconModel("Default", 0, R.drawable.theme_icon_1, true),
+            ItemThemeIconModel("Flat", 1, R.drawable.theme_icon_2, false),
             ItemThemeIconModel("Chibi", 2, R.drawable.theme_icon_3, false),
             ItemThemeIconModel("3D", 3, R.drawable.theme_icon_4, false),
-            ItemThemeIconModel("Phẳng chìm", 4, R.drawable.theme_icon_5, false),
+            ItemThemeIconModel("Flat Shadow", 4, R.drawable.theme_icon_5, false),
         )
         if (adapterIcon == null) {
             adapterIcon = SettingThemeIconAdapter(lst) { }
@@ -105,11 +105,11 @@ class ActivitySettingTheme : AppCompatActivity() {
                 curTab = idx
                 tabLayout.selectTab(tabLayout.getTabAt(idx))
                 val lst = mutableListOf(
-                    ItemThemeIconModel("Mặc định", 0, R.drawable.theme_icon_1, true),
-                    ItemThemeIconModel("Bằng phẳng", 1, R.drawable.theme_icon_2, false),
+                    ItemThemeIconModel("Default", 0, R.drawable.theme_icon_1, true),
+                    ItemThemeIconModel("Flat", 1, R.drawable.theme_icon_2, false),
                     ItemThemeIconModel("Chibi", 2, R.drawable.theme_icon_3, false),
                     ItemThemeIconModel("3D", 3, R.drawable.theme_icon_4, false),
-                    ItemThemeIconModel("Phẳng chìm", 4, R.drawable.theme_icon_5, false),
+                    ItemThemeIconModel("Flat Depth", 4, R.drawable.theme_icon_5, false),
                 )
                 if (adapterIcon == null) {
                     adapterIcon = SettingThemeIconAdapter(lst) { }
@@ -125,15 +125,19 @@ class ActivitySettingTheme : AppCompatActivity() {
                 tabLayout.selectTab(tabLayout.getTabAt(idx))
                 val lst = mutableListOf(
                     ItemThemeNotificationModel(
-                        "Đơn giản", 0, R.drawable.theme_noti_1, "bg_7.png", false
-                    ), ItemThemeNotificationModel(
-                        "Biểu đồ hàng giờ", 1, R.drawable.theme_noti_2, "bg_10.png", false
-                    ), ItemThemeNotificationModel(
-                        "Biểu đồ 7 ngày", 2, R.drawable.theme_noti_3, "bg_2.png", false
-                    ), ItemThemeNotificationModel(
-                        "Thời tiết 7 ngày", 3, R.drawable.theme_noti_4, "bg_12.png", false
-                    ), ItemThemeNotificationModel(
-                        "Thời tiết hàng giờ", 4, R.drawable.theme_noti_5, "bg_14.png", false
+                        "Simple", 0, R.drawable.theme_noti_1, "bg_7.png", false
+                    ),
+                    ItemThemeNotificationModel(
+                        "Hourly Chart", 1, R.drawable.theme_noti_2, "bg_10.png", false
+                    ),
+                    ItemThemeNotificationModel(
+                        "7-Day Chart", 2, R.drawable.theme_noti_3, "bg_2.png", false
+                    ),
+                    ItemThemeNotificationModel(
+                        "7-Day Weather", 3, R.drawable.theme_noti_4, "bg_12.png", false
+                    ),
+                    ItemThemeNotificationModel(
+                        "Hourly Weather", 4, R.drawable.theme_noti_5, "bg_14.png", false
                     )
                 )
 

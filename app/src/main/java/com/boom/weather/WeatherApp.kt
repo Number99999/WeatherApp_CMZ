@@ -14,7 +14,6 @@ import com.google.android.gms.ads.initialization.InitializationStatus
 import com.google.android.gms.ads.initialization.OnInitializationCompleteListener
 import dagger.hilt.android.HiltAndroidApp
 
-
 @HiltAndroidApp
 class WeatherApp : Application(), Application.ActivityLifecycleCallbacks {
     private var activityReferences = 0

@@ -128,7 +128,7 @@ class ActivityChooseLocation : AppCompatActivity(), OnMapReadyCallback {
                 setUIRecycleViewMap(addressList)
                 setUIRecycleViewCity(addressList)
             } else {
-                Toast.makeText(this, "Không tìm thấy địa điểm", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, getString(R.string.string16), Toast.LENGTH_SHORT).show()
             }
         } catch (e: IOException) {
             e.printStackTrace()
@@ -183,7 +183,7 @@ class ActivityChooseLocation : AppCompatActivity(), OnMapReadyCallback {
                     } else {
                         Toast.makeText(
                             this@ActivityChooseLocation,
-                            "Không tìm thấy địa điểm",
+                            getString(R.string.string16),
                             Toast.LENGTH_SHORT
                         ).show()
                     }
@@ -240,14 +240,14 @@ class ActivityChooseLocation : AppCompatActivity(), OnMapReadyCallback {
                 currentMarker?.remove()
                 val currentLatLng = LatLng(lat, lng)
                 currentMarker = myMap.addMarker(
-                    MarkerOptions().position(currentLatLng).title("Vị trí hiện tại")
+                    MarkerOptions().position(currentLatLng).title(getString(R.string.string18))
                 )
                 myMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 15f))
             }
 
             override fun onError(exception: Exception) {
                 Toast.makeText(
-                    this@ActivityChooseLocation, "Không lấy được vị trí", Toast.LENGTH_SHORT
+                    this@ActivityChooseLocation, getString(R.string.string16), Toast.LENGTH_SHORT
                 ).show()
                 exception.printStackTrace();
             }
@@ -264,7 +264,7 @@ class ActivityChooseLocation : AppCompatActivity(), OnMapReadyCallback {
                 getCurLocation()
             } else {
                 Toast.makeText(
-                    this, "can't get location because permission denied", Toast.LENGTH_SHORT
+                    this, getString(R.string.string17), Toast.LENGTH_SHORT
                 ).show()
             }
         }

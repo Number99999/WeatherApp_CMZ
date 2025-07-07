@@ -38,7 +38,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:gravity="center"
-                android:text="Phản hồi và gợi ý"
+                android:text="@string/string53"
                 android:textColor="@android:color/white"
                 android:textSize="24sp" />
         </RelativeLayout>
@@ -49,7 +49,7 @@
             android:layout_height="@dimen/widget_size_250"
             android:background="@color/white"
             android:gravity="top|start"
-            android:hint="Vui lòng viết phản hồi hoặc đề xuất của bạn"
+            android:hint="@string/string66"
             android:inputType="textMultiLine"
             android:overScrollMode="always"
             android:padding="12dp"
@@ -63,7 +63,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
             android:background="@color/white"
-            android:hint="Email của bạn (tùy chọn)"
+            android:hint="@string/string67"
             android:inputType="textEmailAddress"
             android:paddingStart="12dp"
             android:paddingTop="4dp"
@@ -79,7 +79,7 @@
             android:layout_gravity="center"
             android:layout_marginTop="30dp"
             android:background="@drawable/background_btn_blue"
-            android:text="Gửi đi"
+            android:text="@string/string68"
             android:textSize="20dp"
             app:backgroundTint="@null" />
     </LinearLayout>

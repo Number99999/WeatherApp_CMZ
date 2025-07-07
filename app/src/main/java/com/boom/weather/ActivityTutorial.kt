@@ -53,7 +53,7 @@ class ActivityTutorial : AppCompatActivity() {
                 }
 
                 3 -> {
-                    val changeP = Intent(this, MainActivity::class.java)
+                    val changeP = Intent(this, ActivityChooseLanguage::class.java)
                     startActivity(changeP)
                     finish()
                 }

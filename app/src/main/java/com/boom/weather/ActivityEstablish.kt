@@ -76,7 +76,7 @@ class ActivityEstablish : AppCompatActivity() {
     private fun setupSpinnerTemp() {
         val spinner: TextView = findViewById(R.id.fake_spinner_temp)
         val items = listOf("C", "F")
-        val detail = listOf("độ C", "độ F")
+        val detail = listOf("°C", "°F")
         var i = items.indexOf(_safeData.typeTemp)
 
         spinner.text = items.get(i);
@@ -96,7 +96,7 @@ class ActivityEstablish : AppCompatActivity() {
     private fun setupSpinnerRainfall() {
         val spinner: TextView = findViewById(R.id.fake_spinner_rain)
         val items = listOf("mm", "cm", "in")
-        val detail = listOf("mi-li-mét", "xăng-ti-mét", "inch");
+        val detail = listOf("millimeter", "centimeter", "inch")
 
         findViewById<TextView>(R.id.txt_rainfall_model).text = detail.get(0)
         var i = items.indexOf(_safeData.rainfall)
@@ -116,7 +116,7 @@ class ActivityEstablish : AppCompatActivity() {
         val items = listOf("km", "mile", "m")
         var i = items.indexOf(_safeData.visibility)
         spinner.text = items.get(i);
-        val detail = listOf("ki-lô-mét", "dặm", "mét")
+        val detail = listOf("kilometer", "mile", "meter")
         findViewById<TextView>(R.id.txt_visibilyty_model).text = detail.get(0)
         (spinner.parent as View).setOnClickListener {
             i++;
@@ -132,7 +132,7 @@ class ActivityEstablish : AppCompatActivity() {
         val spinner: TextView = findViewById(R.id.fake_spinner_wind_speed)
         val items = listOf("mph", "km/h", "m/s")
         val txtDetail = findViewById<TextView>(R.id.txt_wind_speed_model)
-        val detail = listOf("dặm trên giờ", "ki-lô-mét trên giờ", "mét trên giây")
+        val detail = listOf("miles per hour", "kilometers per hour", "meters per second")
         var i = items.indexOf(_safeData.winSpeed)
         spinner.text = items.get(i);
         (spinner.parent as View).setOnClickListener {
@@ -149,13 +149,13 @@ class ActivityEstablish : AppCompatActivity() {
         val spinner: TextView = findViewById(R.id.fake_spinner_atm)
         val items = listOf("mmHg", "inHg", "psi", "bar", "mBar", "hPa", "presure")
         val detail = listOf(
-            "milimét thủy ngân",
-            "inch thủy ngân",
-            "pound trên inch vuông",
+            "millimeter of mercury",
+            "inch of mercury",
+            "pound per square inch",
             "bar",
-            "milibar",
+            "millibar",
             "hectopascal",
-            "khí quyển"
+            "atmosphere"
         )
         val txtDetail = findViewById<TextView>(R.id.txt_atm_model)
         var i = items.indexOf(_safeData.presure)

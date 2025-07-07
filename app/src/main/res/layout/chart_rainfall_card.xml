@@ -16,7 +16,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_12dp"
             android:layout_marginTop="@dimen/margin_8dp"
-            android:text="TỈ LỆ MƯA"
+            android:text="@string/string74"
             android:textSize="@dimen/font_size_16"
             android:textStyle="bold" />
 

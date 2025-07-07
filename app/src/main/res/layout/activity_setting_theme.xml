@@ -28,7 +28,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="Chủ đề"
+            android:text="@string/string49"
             android:textSize="@dimen/font_size_20" />
     </RelativeLayout>
 

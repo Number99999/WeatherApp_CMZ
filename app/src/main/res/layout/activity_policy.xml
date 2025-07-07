@@ -22,7 +22,7 @@
         android:layout_height="?attr/actionBarSize"
         android:layout_marginStart="@dimen/margin_8dp"
         android:gravity="center"
-        android:text="Chính sách và quyền riêng tư"
+        android:text="@string/string72"
         android:textColor="@color/black"
         android:textSize="@dimen/font_size_16"
         android:textStyle="bold"

@@ -45,7 +45,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="Thời tiết"
+                android:text="@string/string43"
                 android:textColor="#FFF"
                 android:textSize="24sp"
                 android:textStyle="bold" />
@@ -85,7 +85,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
                         android:layout_weight="1"
-                        android:text="Quản lý vị trí"
+                        android:text="@string/string44"
                         android:textColor="#FFF"
                         android:textSize="16sp" />
                 </LinearLayout>
@@ -101,7 +101,7 @@
                         android:paddingStart="10dp"
                         android:paddingTop="10dp"
                         android:paddingBottom="10dp"
-                        android:text="Thiết lập"
+                        android:text="@string/string20"
                         android:textColor="#FFF"
                         android:textSize="20sp"
                         android:textStyle="bold" />
@@ -125,7 +125,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
                         android:layout_weight="1"
-                        android:text="Thông báo"
+                        android:text="@string/string45"
                         android:textColor="#FFF"
                         android:textSize="16sp" />
 
@@ -159,7 +159,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
                         android:layout_weight="1"
-                        android:text="Thời tiết hàng ngày"
+                        android:text="@string/string46"
                         android:textColor="#FFF"
                         android:textSize="16sp" />
 
@@ -192,7 +192,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
                         android:layout_weight="1"
-                        android:text="Nền trực tiếp"
+                        android:text="@string/string47"
                         android:textColor="#FFF"
                         android:textSize="16sp" />
 
@@ -225,7 +225,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
                         android:layout_weight="1"
-                        android:text="Thiết lập"
+                        android:text="@string/string20"
                         android:textColor="#FFF"
                         android:textSize="16sp" />
                 </LinearLayout>
@@ -249,11 +249,33 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
                         android:layout_weight="1"
-                        android:text="Chọn theme"
+                        android:text="@string/string49"
                         android:textColor="#FFF"
                         android:textSize="16sp" />
                 </LinearLayout>
 
+                <LinearLayout
+                    android:id="@+id/nav_layout_choose_language"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="8dp">
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/icon_language" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_weight="1"
+                        android:text="@string/string88"
+                        android:textColor="#FFF"
+                        android:textSize="16sp" />
+                </LinearLayout>
                 <!-- Layout Customize -->
                 <LinearLayout
                     android:id="@+id/nav_layout_customize"
@@ -273,7 +295,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
                         android:layout_weight="1"
-                        android:text="Tùy chỉnh bố cục"
+                        android:text="@string/string48"
                         android:textColor="#FFF"
                         android:textSize="16sp" />
                 </LinearLayout>
@@ -289,7 +311,7 @@
                         android:paddingStart="10dp"
                         android:paddingTop="10dp"
                         android:paddingBottom="10dp"
-                        android:text="Nhà phát triển"
+                        android:text="@string/string50"
                         android:textColor="#FFF"
                         android:textSize="20sp"
                         android:textStyle="bold" />
@@ -313,7 +335,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
                         android:layout_weight="1"
-                        android:text="Xóa quảng cáo"
+                        android:text="@string/string51"
                         android:textColor="#FFF"
                         android:textSize="16sp" />
                 </LinearLayout>
@@ -336,7 +358,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
                         android:layout_weight="1"
-                        android:text="Đánh giá chúng tôi"
+                        android:text="@string/string52"
                         android:textColor="#FFF"
                         android:textSize="16sp" />
                 </LinearLayout>
@@ -359,7 +381,10 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
                         android:layout_weight="1"
-                        android:text="Phản hồi và gợi ý"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:singleLine="true"
+                        android:text="@string/string53"
                         android:textColor="#FFF"
                         android:textSize="16sp" />
                 </LinearLayout>
@@ -382,7 +407,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
                         android:layout_weight="1"
-                        android:text="Ch.sách q.riêng tư"
+                        android:text="@string/string54"
                         android:textColor="#FFF"
                         android:textSize="16sp" />
                 </LinearLayout>
@@ -405,7 +430,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
                         android:layout_weight="1"
-                        android:text="Chia sẻ với bạn bè"
+                        android:text="@string/string55"
                         android:textColor="#FFF"
                         android:textSize="16sp" />
                 </LinearLayout>

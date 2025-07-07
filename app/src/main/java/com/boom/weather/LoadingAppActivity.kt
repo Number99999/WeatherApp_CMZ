@@ -24,6 +24,11 @@ class LoadingAppActivity : AppCompatActivity() {
     }
 
     fun activeActivity() {
+//        var changePage = Intent(this, ActivityChooseLanguage::class.java);
+//        startActivity(changePage);
+//        finish()
+//        return;
+
         if (LocalStorageManager.getString(KeysStorage.isFirstOpenApp) == null) {
             var changePage = Intent(this, ActivityRequestLocation::class.java);
             startActivity(changePage);

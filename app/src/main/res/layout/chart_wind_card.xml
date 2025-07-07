@@ -20,12 +20,17 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="GIÓ (MPH)"></TextView>
+                android:text="@string/string75" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Hàng ngày"></TextView>
+                android:layout_weight="1" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/string76" />
         </LinearLayout>
 
         <com.github.mikephil.charting.charts.LineChart

@@ -32,7 +32,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="Tuỳ chỉnh bố cục"
+            android:text="Customize layout"
             android:textColor="@android:color/white"
             android:textSize="24sp" />
     </LinearLayout>
@@ -53,19 +53,19 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/widget_size_32"
             android:layout_weight="1"
-            android:text="Mô-đun" />
+            android:text="Module" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="20dp"
-            android:text="Bật/ tắt" />
+            android:text="On / Off" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="15dp"
-            android:text="Kéo" />
+            android:text="Drag" />
     </LinearLayout>
 
     <LinearLayout
@@ -93,7 +93,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/widget_size_20"
             android:layout_weight="1"
-            android:text="Tình trạng hiện tại"
+            android:text="Current status"
             android:textSize="16dp" />
 
         <!--        <Switch-->

@@ -26,7 +26,6 @@ import com.boom.weather.Model.FakeGlobal
 import com.boom.weather.Model.Object.KeyEventFirebase
 import com.boom.weather.Model.Object.KeysStorage
 import com.boom.weather.Model.Object.PermissionModel
-import com.boom.weather.ActivityTutorial
 
 class ActivityRequestLocation : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,7 +49,7 @@ class ActivityRequestLocation : AppCompatActivity() {
         ActivityResultContracts.RequestPermission()
     ) { isGranted: Boolean ->
         if (isGranted) {
-            Toast.makeText(this, "Đã được cấp quyền vị trí", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Location permission granted", Toast.LENGTH_SHORT).show()
         } else {
             Toast.makeText(this, "Từ chối quyền vị trí", Toast.LENGTH_SHORT).show()
         }
@@ -192,7 +191,7 @@ class ActivityRequestLocation : AppCompatActivity() {
                 startActivity(changePage);
             } else {
                 Toast.makeText(
-                    this, "Cần cấp quyền vị trí để sử dụng tính năng này!", Toast.LENGTH_SHORT
+                    this, "Location permission is required to use this feature!", Toast.LENGTH_SHORT
                 ).show()
             }
         }

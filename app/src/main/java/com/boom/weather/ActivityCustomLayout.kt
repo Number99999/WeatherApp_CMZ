@@ -39,31 +39,30 @@ class ActivityCustomLayout : AppCompatActivity() {
     private fun setupRecycleView() {
         val recyclerView = findViewById<RecyclerView>(R.id.recyclerView)
         val data = listOf(
-            CustomLayoutItem("Dự báo theo giờ", R.drawable.icon_chart, _safeData.hourly),
-            CustomLayoutItem("Dự báo hàng ngày", R.drawable.icon_chart, _safeData.daily),
-            CustomLayoutItem("Lượng mưa", R.drawable.icon_rainfall, _safeData.rainfall),
-            CustomLayoutItem("Gió", R.drawable.windy, _safeData.wind),
-            CustomLayoutItem(
-                "Chất lượng không khí", R.drawable.icon_air_quality, _safeData.airQuality
-            ),
-            CustomLayoutItem("Chi tiết", R.drawable.icon_detail, _safeData.detail),
-            CustomLayoutItem("Nhiếp ảnh", R.drawable.icon_camera, _safeData.camera),
-            CustomLayoutItem("Dị ứng", R.drawable.icon_allergy, _safeData.allergy),
-            CustomLayoutItem("Bản đồ", R.drawable.icon_map, _safeData.map),
-            CustomLayoutItem("CN & Sức ép", R.drawable.icon_sucep, _safeData.sucep)
+            CustomLayoutItem("Hourly Forecast", R.drawable.icon_chart, _safeData.hourly),
+            CustomLayoutItem("Daily Forecast", R.drawable.icon_chart, _safeData.daily),
+            CustomLayoutItem("Rainfall", R.drawable.icon_rainfall, _safeData.rainfall),
+            CustomLayoutItem("Wind", R.drawable.windy, _safeData.wind),
+            CustomLayoutItem("Air Quality", R.drawable.icon_air_quality, _safeData.airQuality),
+            CustomLayoutItem("Details", R.drawable.icon_detail, _safeData.detail),
+            CustomLayoutItem("Photography", R.drawable.icon_camera, _safeData.camera),
+            CustomLayoutItem("Allergies", R.drawable.icon_allergy, _safeData.allergy),
+            CustomLayoutItem("Map", R.drawable.icon_map, _safeData.map),
+            CustomLayoutItem("UV & Pressure", R.drawable.icon_sucep, _safeData.sucep)
         )
+
         val adapter = CustomLayoutAdapter(data) { title, isChecked ->
             when (title) {
-                "Dự báo theo giờ" -> _safeData.hourly = isChecked
-                "Dự báo hàng ngày" -> _safeData.daily = isChecked
-                "Lượng mưa" -> _safeData.rainfall = isChecked
-                "Gió" -> _safeData.wind = isChecked
-                "Chất lượng không khí" -> _safeData.airQuality = isChecked
-                "Chi tiết" -> _safeData.detail = isChecked
-                "Nhiếp ảnh" -> _safeData.camera = isChecked
-                "Dị ứng" -> _safeData.allergy = isChecked
-                "Bản đồ" -> _safeData.map = isChecked
-                "CN & Sức ép" -> _safeData.sucep = isChecked
+                "Hourly Forecast" -> _safeData.hourly = isChecked
+                "Daily Forecast" -> _safeData.daily = isChecked
+                "Rainfall" -> _safeData.rainfall = isChecked
+                "Wind" -> _safeData.wind = isChecked
+                "Air Quality" -> _safeData.airQuality = isChecked
+                "Details" -> _safeData.detail = isChecked
+                "Photography" -> _safeData.camera = isChecked
+                "Allergies" -> _safeData.allergy = isChecked
+                "Map" -> _safeData.map = isChecked
+                "UV & Pressure" -> _safeData.sucep = isChecked
             }
             LocalStorageManager.putObject(KeysStorage.customLayout, _safeData)
         }
