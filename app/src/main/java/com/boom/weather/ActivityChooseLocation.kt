@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.boom.weather.CustomAdapter.LocationInMapAdapter
 import com.boom.weather.Manager.AdManager
+import com.boom.weather.Manager.LocaleManager
 import com.boom.weather.Manager.NetworkManager
 import com.boom.weather.Model.LocationInMapModel
 import com.boom.weather.Model.LocationWeatherModel
@@ -42,7 +43,7 @@ import kotlinx.coroutines.withContext
 import java.io.IOException
 import java.util.Locale
 
-class ActivityChooseLocation : AppCompatActivity(), OnMapReadyCallback {
+class ActivityChooseLocation : BaseActivity(), OnMapReadyCallback {
     private lateinit var myMap: GoogleMap  // Holds the map reference
     private var currentMarker: Marker? = null  // Holds the current marker
     private lateinit var searchViewMap: SearchView  // Holds the search view reference
@@ -114,8 +115,8 @@ class ActivityChooseLocation : AppCompatActivity(), OnMapReadyCallback {
 
     private fun searchLocation(query: String?) {
         val location = query ?: return
-
-        val geocoder = Geocoder(this)
+        val locale = Locale(LocaleManager(this).getSavedLanguage())
+        val geocoder = Geocoder(this, locale)
         try {
             val addressList = geocoder.getFromLocationName(location, 1)
             if (addressList != null && addressList.isNotEmpty()) {

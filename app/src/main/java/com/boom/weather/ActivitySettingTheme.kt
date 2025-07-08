@@ -19,7 +19,7 @@ import com.boom.weather.Model.Object.KeysStorage
 import com.boom.weather.Model.SettingThemeModel
 import com.google.android.material.tabs.TabLayout
 
-class ActivitySettingTheme : AppCompatActivity() {
+class ActivitySettingTheme : BaseActivity() {
     private lateinit var tabLayout: TabLayout
     private lateinit var recyclerViewIcon: RecyclerView
     private lateinit var recyclerViewNoti: RecyclerView

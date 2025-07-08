@@ -117,5 +117,33 @@
     <string name="string85">We are a small development team committed to providing you with more free and easy-to-use products. We hope you\'ll give us a 5-star rating, as it will be the biggest motivation for us to keep improving the quality!</string>
     <string name="string86">Rate</string>
     <string name="string87">Default</string>
-
+    <string name="string89">Clear sky</string>
+    <string name="string90">Mainly clear</string>
+    <string name="string91">Partly cloudy</string>
+    <string name="string92">Overcast</string>
+    <string name="string93">Fog</string>
+    <string name="string94">Depositing rime fog</string>
+    <string name="string95">Light drizzle</string>
+    <string name="string96">Moderate drizzle</string>
+    <string name="string97">Dense drizzle</string>
+    <string name="string98">Light freezing drizzle</string>
+    <string name="string99">Dense freezing drizzle</string>
+    <string name="string100">Slight rain</string>
+    <string name="string101">Moderate rain</string>
+    <string name="string102">Heavy rain</string>
+    <string name="string103">Light freezing rain</string>
+    <string name="string104">Heavy freezing rain</string>
+    <string name="string105">Slight snow fall</string>
+    <string name="string106">Moderate snow fall</string>
+    <string name="string107">Heavy snow fall</string>
+    <string name="string108">Snow grains</string>
+    <string name="string109">Slight rain showers</string>
+    <string name="string110">Moderate rain showers</string>
+    <string name="string111">Violent rain showers</string>
+    <string name="string112">Slight snow showers</string>
+    <string name="string113">Heavy snow showers</string>
+    <string name="string114">Thunderstorm</string>
+    <string name="string115">Thunderstorm with slight hail</string>
+    <string name="string116">Thunderstorm with heavy hail</string>
+    <string name="string117">Set to default location</string>
 </resources>

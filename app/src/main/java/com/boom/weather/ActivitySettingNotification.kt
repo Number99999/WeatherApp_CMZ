@@ -16,7 +16,7 @@ import com.boom.weather.Model.NotificationModel
 import com.boom.weather.Model.Object.KeyEventFirebase
 import com.boom.weather.Model.Object.KeysStorage
 
-class ActivitySettingNotification : AppCompatActivity() {
+class ActivitySettingNotification : BaseActivity() {
     private var _safeData: NotificationModel
     private var _firstData: NotificationModel
     override fun onCreate(savedInstanceState: Bundle?) {

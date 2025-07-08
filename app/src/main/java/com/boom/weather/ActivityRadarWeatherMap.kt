@@ -10,7 +10,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.boom.weather.Model.FakeGlobal
 
-class ActivityRadarWeatherMap : AppCompatActivity() {
+class ActivityRadarWeatherMap : BaseActivity() {
     private lateinit var webView: WebView
 
     override fun onCreate(savedInstanceState: Bundle?) {

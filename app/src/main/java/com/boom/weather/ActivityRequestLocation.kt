@@ -27,7 +27,7 @@ import com.boom.weather.Model.Object.KeyEventFirebase
 import com.boom.weather.Model.Object.KeysStorage
 import com.boom.weather.Model.Object.PermissionModel
 
-class ActivityRequestLocation : AppCompatActivity() {
+class ActivityRequestLocation : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()

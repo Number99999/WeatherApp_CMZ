@@ -78,7 +78,7 @@ import java.util.Locale
 import kotlin.math.roundToInt
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity() {
+class MainActivity : BaseActivity() {
     lateinit var adManager: AdManager
     private val handler = android.os.Handler()
     private lateinit var updateRunnable: Runnable
@@ -446,7 +446,7 @@ class MainActivity : AppCompatActivity() {
 
             UpdateCurrentTime()
             val txtWeatherStatus = findViewById<TextView>(R.id.weatherStatus)
-            val current = WeatherUtil.getWeatherStatus(currentWeather.getInt("weathercode"))
+            val current = WeatherUtil.getWeatherStatus(this,currentWeather.getInt("weathercode"))
             txtWeatherStatus.text = current
 
             val imgWeatherIcon = findViewById<ImageView>(R.id.weatherIcon)

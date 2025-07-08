@@ -444,7 +444,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_24dp"
                 android:layout_marginTop="@dimen/margin_12dp"
-                android:text="Đặt làm vị trí mặc định"
+                android:text="@string/string117"
                 android:textColor="@color/black"
                 android:textStyle="normal" />
 

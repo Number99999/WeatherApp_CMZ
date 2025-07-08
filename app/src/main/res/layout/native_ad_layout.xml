@@ -81,7 +81,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
                 android:layout_marginTop="8dp"
-                android:text="Cài đặt"
+                android:text="@string/string20"
                 android:textAllCaps="false"
                 android:textColor="#ffffff"
                 android:background="@drawable/background_blue_2"

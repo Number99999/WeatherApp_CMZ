@@ -13,7 +13,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.boom.weather.Manager.AdManager
 
-class ActivityTutorial : AppCompatActivity() {
+class ActivityTutorial : BaseActivity() {
     private lateinit var view1: RelativeLayout
     private lateinit var view2: RelativeLayout
     private lateinit var view3: RelativeLayout

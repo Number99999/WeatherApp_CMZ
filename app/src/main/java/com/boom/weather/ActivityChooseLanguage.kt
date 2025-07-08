@@ -2,10 +2,9 @@ package com.boom.weather
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Button
 import android.widget.ImageView
+import android.widget.RelativeLayout
 import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -17,7 +16,7 @@ import com.boom.weather.Model.ChooseLanguageModel
 import com.boom.weather.Model.ItemChooseLanguageModel
 import com.boom.weather.Model.Object.KeysStorage
 
-class ActivityChooseLanguage : AppCompatActivity(),
+class ActivityChooseLanguage : BaseActivity(),
     SettingChooseLanguageAdapter.OnItemClickListener {
     private var _data: ChooseLanguageModel = LocalStorageManager.getObject<ChooseLanguageModel>(
         KeysStorage.settingLanguage, ChooseLanguageModel::class.java
@@ -44,7 +43,7 @@ class ActivityChooseLanguage : AppCompatActivity(),
                 finish()
             }
         }
-        findViewById<Button>(R.id.btn_apply).setOnClickListener {
+        findViewById<RelativeLayout>(R.id.btn_apply).setOnClickListener {
             if (isClosed == true) {
             } else {
                 isClosed = true
@@ -76,9 +75,24 @@ class ActivityChooseLanguage : AppCompatActivity(),
     override fun onItemClick(position: Int) {
         val adapter =
             (findViewById<RecyclerView>(R.id.listLanguage).adapter as SettingChooseLanguageAdapter)
-        val item = adapter.items[position]
-        if (item.isChoose == true) return;
-        item.isChoose = true
+        val newSelectedItem = adapter.items[position]
+
+        if (newSelectedItem.isChoose == true) {
+            return
+        }
+
+        val oldSelectedIndex = adapter.items.indexOfFirst { it.isChoose }
+        if (oldSelectedIndex != -1) {
+            adapter.items[oldSelectedIndex].isChoose = false
+        }
+
+        newSelectedItem.isChoose = true
+
+        if (oldSelectedIndex != -1) {
+            adapter.notifyItemChanged(oldSelectedIndex)
+        }
+        adapter.notifyItemChanged(position)
+
         _data.en = false
         _data.es = false
         _data.pt = false
@@ -88,45 +102,47 @@ class ActivityChooseLanguage : AppCompatActivity(),
         _data.ja = false
 
         val lMgr = LocaleManager(this)
+        val localeCode: String
         when (position) {
             0 -> {
                 _data.en = true
-                lMgr.setLocale("en")  // Set to English
+                localeCode = "en"
             }
 
             1 -> {
                 _data.es = true
-                lMgr.setLocale("es")  // Set to Spanish
+                localeCode = "es"
             }
 
             2 -> {
                 _data.pt = true
-                lMgr.setLocale("pt")  // Set to Portuguese
+                localeCode = "pt"
             }
 
             3 -> {
                 _data.fr = true
-                lMgr.setLocale("fr")  // Set to French
+                localeCode = "fr"
             }
 
             4 -> {
                 _data.hi = true
-                lMgr.setLocale("hi")  // Set to Hindi
+                localeCode = "hi"
             }
 
             5 -> {
                 _data.tl = true
-                lMgr.setLocale("tl")  // Set to Filipino
+                localeCode = "tl"
             }
 
             6 -> {
                 _data.ja = true
-                lMgr.setLocale("ja")  // Set to Japanese
+                localeCode = "ja"
             }
-        }
-        LocalStorageManager.putObject(KeysStorage.settingLanguage, _data)
-        adapter.notifyDataSetChanged()
 
+            else -> return
+        }
+        lMgr.setLocale(localeCode)
+        LocalStorageManager.putObject(KeysStorage.settingLanguage, _data)
         recreate()
     }
 }

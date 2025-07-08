@@ -1,6 +1,9 @@
 package com.boom.weather.Utils;
 
+import android.content.Context;
+
 import com.boom.weather.Model.FakeGlobal;
+import com.boom.weather.R;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -80,68 +83,69 @@ public class WeatherUtil {
         return directions[idx];
     }
 
-    public static String getWeatherStatus(int weatherCode) {
+    public static String getWeatherStatus(Context context, int weatherCode) {
         switch (weatherCode) {
             case 0:
-                return "Clear sky";
+                return context.getString(R.string.string89);
             case 1:
-                return "Mainly clear";
+                return context.getString(R.string.string90);
             case 2:
-                return "Partly cloudy";
+                return context.getString(R.string.string91);
             case 3:
-                return "Overcast";
+                return context.getString(R.string.string92); // "Overcast"
             case 45:
-                return "Fog";
+                return context.getString(R.string.string93); // "Fog"
             case 48:
-                return "Depositing rime fog";
+                return context.getString(R.string.string94); // "Depositing rime fog"
             case 51:
-                return "Light drizzle";
+                return context.getString(R.string.string95); // "Light drizzle"
             case 53:
-                return "Moderate drizzle";
+                return context.getString(R.string.string96); // "Moderate drizzle"
             case 55:
-                return "Dense drizzle";
+                return context.getString(R.string.string97); // "Dense drizzle"
             case 56:
-                return "Light freezing drizzle";
+                return context.getString(R.string.string98); // "Light freezing drizzle"
             case 57:
-                return "Dense freezing drizzle";
+                return context.getString(R.string.string99); // "Dense freezing drizzle"
             case 61:
-                return "Slight rain";
+                return context.getString(R.string.string100); // "Slight rain"
             case 63:
-                return "Moderate rain";
+                return context.getString(R.string.string101); // "Moderate rain"
             case 65:
-                return "Heavy rain";
+                return context.getString(R.string.string102); // "Heavy rain"
             case 66:
-                return "Light freezing rain";
+                return context.getString(R.string.string103); // "Light freezing rain"
             case 67:
-                return "Heavy freezing rain";
+                return context.getString(R.string.string104); // "Heavy freezing rain"
             case 71:
-                return "Slight snow fall";
+                return context.getString(R.string.string105); // "Slight snow fall"
             case 73:
-                return "Moderate snow fall";
+                return context.getString(R.string.string106); // "Moderate snow fall"
             case 75:
-                return "Heavy snow fall";
+                return context.getString(R.string.string107); // "Heavy snow fall"
             case 77:
-                return "Snow grains";
+                return context.getString(R.string.string108); // "Snow grains"
             case 80:
-                return "Slight rain showers";
+                return context.getString(R.string.string109); // "Slight rain showers"
             case 81:
-                return "Moderate rain showers";
+                return context.getString(R.string.string110); // "Moderate rain showers"
             case 82:
-                return "Violent rain showers";
+                return context.getString(R.string.string111); // "Violent rain showers"
             case 85:
-                return "Slight snow showers";
+                return context.getString(R.string.string112); // "Slight snow showers"
             case 86:
-                return "Heavy snow showers";
+                return context.getString(R.string.string113); // "Heavy snow showers"
             case 95:
-                return "Thunderstorm";
+                return context.getString(R.string.string114);
             case 96:
-                return "Thunderstorm with slight hail";
+                return context.getString(R.string.string115);
             case 99:
-                return "Thunderstorm with heavy hail";
+                return context.getString(R.string.string116);
             default:
-                return "Unknown";
+                return context.getString(R.string.string89);
         }
     }
+
 
     public static String getWeatherIconName(int code, boolean isDay) {
         int iconCode;

@@ -13,7 +13,7 @@ import com.boom.weather.FrameWork.Data.LocalStorageManager
 import com.boom.weather.Model.CustomLayoutModel
 import com.boom.weather.Model.Object.KeysStorage
 
-class ActivityCustomLayout : AppCompatActivity() {
+class ActivityCustomLayout : BaseActivity() {
     private lateinit var _safeData: CustomLayoutModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

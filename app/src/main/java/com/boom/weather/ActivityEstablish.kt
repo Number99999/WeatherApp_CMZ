@@ -22,7 +22,7 @@ import com.boom.weather.Model.Object.KeysStorage
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-class ActivityEstablish : AppCompatActivity() {
+class ActivityEstablish : BaseActivity() {
     private lateinit var _safeData: EstablishModel
     private lateinit var _firstData: EstablishModel
     override fun onCreate(savedInstanceState: Bundle?) {

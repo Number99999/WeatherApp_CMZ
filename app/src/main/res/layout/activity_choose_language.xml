@@ -41,16 +41,22 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1" />
 
-            <Button
+            <RelativeLayout
                 android:id="@+id/btn_apply"
-                android:layout_width="wrap_content"
+                android:layout_width="@dimen/widget_size_79"
                 android:layout_height="@dimen/widget_size_35"
                 android:layout_gravity="center"
-                android:layout_marginEnd="@dimen/widget_size_15"
+                android:layout_marginEnd="@dimen/widget_size_10"
                 android:background="@drawable/background_button_green"
-                android:text="@string/string14"
-                android:textSize="@dimen/widget_size_14"
-                app:backgroundTint="@null" /> <!-- Button có layout_weight=1 để chiếm không gian còn lại -->
+                app:backgroundTint="@null">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="@string/string14"
+                    android:textSize="@dimen/font_size_16" />
+            </RelativeLayout>
         </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
