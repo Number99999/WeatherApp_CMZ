@@ -13,7 +13,6 @@ import android.widget.SearchView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
@@ -138,9 +137,13 @@ class ActivityChooseLocation : BaseActivity(), OnMapReadyCallback {
 
     private fun loadNativeAds() {
         var adMgr = AdManager.getInstance(this@ActivityChooseLocation);
-        adMgr.loadNativeClickAd(findViewById<FrameLayout>(R.id.ad_container), onAdLoaded = {
+        val contain = findViewById<FrameLayout>(R.id.ad_container)
+        contain.visibility = View.GONE
+        adMgr.loadNativeClickAd(contain, onAdLoaded = {
+            contain.visibility = View.VISIBLE
             println("onAdLoaded")
         }, onAdFailed = { println("onAdFailed") }, onAdImpression = {
+            contain.visibility = View.GONE
             println("onAdImpression")
         })
     }
@@ -161,7 +164,6 @@ class ActivityChooseLocation : BaseActivity(), OnMapReadyCallback {
         recyclerView.adapter = adapter
         recyclerView.layoutManager = GridLayoutManager(this, 2)
     }
-
 
     private fun initEventOnTypingSearchViewMap() {
         searchViewMap.setOnQueryTextListener(object : SearchView.OnQueryTextListener {

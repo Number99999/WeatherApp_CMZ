@@ -2,15 +2,20 @@ package com.boom.weather.CustomAdapter
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.view.isGone
 import androidx.recyclerview.widget.RecyclerView
+import com.boom.weather.ActivityChooseLocation
 import com.boom.weather.MainActivity
+import com.boom.weather.Manager.AdManager
 import com.boom.weather.Model.FakeGlobal
 import com.boom.weather.Model.LocationWeatherModel
 import com.boom.weather.R
@@ -19,6 +24,7 @@ import com.boom.weather.Service.LocationService
 
 class ItemLocationManagerAdapter(private var items: MutableList<LocationWeatherModel>) :
     RecyclerView.Adapter<ItemLocationManagerAdapter.ViewHolder>() {
+    private var isClicked: Boolean = false;
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var title = itemView.findViewById<TextView>(R.id.txt_title_location)
@@ -26,6 +32,7 @@ class ItemLocationManagerAdapter(private var items: MutableList<LocationWeatherM
         var iconStatus = itemView.findViewById<ImageView>(R.id.icon_status)
         var txtDefault = itemView.findViewById<TextView>(R.id.txt_default)
         var contain = itemView.findViewById<LinearLayout>(R.id.contain_card)
+        var txtAdd = itemView.findViewById<TextView>(R.id.txt_add)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -35,11 +42,36 @@ class ItemLocationManagerAdapter(private var items: MutableList<LocationWeatherM
     }
 
     override fun getItemCount(): Int = items.size
+    private fun loadNativeAds(ctx: View) {
+        var adMgr = AdManager.getInstance(ctx.context);
+        val container = ctx.findViewById<FrameLayout>(R.id.contain_ads)
+        container.visibility = View.GONE
+        adMgr.loadNativeClickAd(container, onAdLoaded = {
+            println("onAdLoaded")
+            container.visibility = View.VISIBLE
+        }, onAdFailed = { println("onAdFailed") }, onAdImpression = {
+            println("onAdImpression")
+            container.visibility = View.GONE
+        })
+    }
 
     @SuppressLint("NotifyDataSetChanged")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = items[position]
         val context = holder.itemView.context
+        if (position == items.lastIndex) {
+            holder.contain.visibility = View.GONE
+            holder.txtAdd.visibility = View.VISIBLE
+            holder.itemView.setOnClickListener {
+                val changePage = Intent(context, ActivityChooseLocation::class.java);
+                context.startActivity(changePage)
+
+                Handler(Looper.getMainLooper()).postDelayed({
+                    it.isClickable = true // Bật lại click sau 1 giây
+                }, 1000)
+            }
+            return;
+        }
         val defaultAdd =
             DatabaseService.getInstance(context.applicationContext).locationWeatherService.getDefaultLocationWeather();
         holder.txtDefault.visibility = if (item.isDefaultLocation == 1) {
@@ -83,7 +115,7 @@ class ItemLocationManagerAdapter(private var items: MutableList<LocationWeatherM
         }
         holder.fullPath.text = shortPathLocation(item.fullPathLocation)
         val btn_delete = holder.itemView.findViewById<ImageView>(R.id.btn_delete)
-        btn_delete.visibility = if (item.isEdit) View.VISIBLE else View.GONE
+        btn_delete.visibility = if (position != 0) View.VISIBLE else View.GONE
         btn_delete.setOnClickListener {
             items.remove(item)
             DatabaseService.getInstance(context.applicationContext).locationWeatherService.deleteItemInTable(
@@ -97,11 +129,9 @@ class ItemLocationManagerAdapter(private var items: MutableList<LocationWeatherM
                 .setImageResource(weatherIcon);
         }
 
-        val btn_drag = holder.itemView.findViewById<ImageView>(R.id.btn_drag_to_move)
-        btn_drag.visibility = if (item.isEdit) View.VISIBLE else View.GONE
-//        btn_drag.setOnDragListener {
-//
-//        }
+        if (position % 2 == 1 && position != items.lastIndex) {
+            loadNativeAds(holder.itemView)
+        }
     }
 
     @SuppressLint("NotifyDataSetChanged")

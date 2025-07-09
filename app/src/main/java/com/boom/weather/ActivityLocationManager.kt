@@ -1,14 +1,11 @@
 package com.boom.weather
 
 import android.Manifest
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.view.View
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -39,34 +36,23 @@ class ActivityLocationManager : BaseActivity() {
         }
 
         addEventOnBtnBackClicked()
-        if (NetworkManager.getInstance(this).isConnected())
-            setupAdapter()
+        if (NetworkManager.getInstance(this).isConnected()) setupAdapter()
         else {
             findViewById<TextView>(R.id.txt_title).text = "Network not connected";
-            findViewById<TextView>(R.id.btn_edit).visibility = View.GONE;
-            findViewById<TextView>(R.id.btn_add_location).visibility = View.GONE;
-        }
-        findViewById<TextView>(R.id.btn_add_location).setOnClickListener {
-            val changePage = Intent(this, ActivityChooseLocation::class.java)
-            changePage.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-            startActivity(changePage)
         }
         findViewById<TextView>(R.id.txt_title).isSelected = true
     }
-
-
+    
     private fun setupAdapter() {
         var listModel: List<LocationWeatherModel> =
             DatabaseService.getInstance(this).locationWeatherService.getAllLocationWeather();
         val recyclerView = findViewById<RecyclerView>(R.id.recycler_view)
-        var newList = listModel.toMutableList();
-
-        var adapter = ItemLocationManagerAdapter(listModel.toMutableList())
-
-        findViewById<TextView>(R.id.btn_edit).setOnClickListener {
-            adapter.btnEditClicked();
-        }
-
+        val newList = listModel.toMutableList()
+        newList.add(LocationWeatherModel())
+        var adapter = ItemLocationManagerAdapter(newList.toMutableList())
+//        findViewById<TextView>(R.id.btn_edit).setOnClickListener {
+//            adapter.btnEditClicked();
+//        }
         if (LocationService.checkPermissionLocation() == false) {
             recyclerView.adapter = adapter
             recyclerView.layoutManager =
@@ -107,7 +93,6 @@ class ActivityLocationManager : BaseActivity() {
                 @Override
                 override fun onLocationReceived(address: LocationWeatherModel) {
                     newList.add(0, address);
-                    println("onLocationReceived ${newList.size}")
                     adapter = ItemLocationManagerAdapter(newList.toMutableList())
                     recyclerView.adapter = adapter
                     recyclerView.layoutManager = LinearLayoutManager(

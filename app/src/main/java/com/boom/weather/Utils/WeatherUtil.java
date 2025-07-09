@@ -35,7 +35,7 @@ public class WeatherUtil {
         return list.get(0);
     }
 
-    public static String getDayOfWeek(String dateStr) {
+    public static String getDayOfWeek( String dateStr) {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             LocalDate date = LocalDate.parse(dateStr, java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd"));
             switch (date.getDayOfWeek().getValue()) {

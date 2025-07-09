@@ -131,31 +131,38 @@
                 <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_weight="1">
+                    android:layout_weight="1"
+                    android:background="@drawable/tut4">
 
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:scaleType="fitXY"
-                        android:src="@drawable/tut4" />
-
-                    <Button
-                        android:id="@+id/btn_next"
+                    <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/widget_size_10"
-                        android:layout_marginTop="@dimen/widget_size_55"
-                        android:layout_marginEnd="@dimen/widget_size_10"
-                        android:background="@drawable/background_btn_blue"
-                        android:text="@string/string10"
-                        android:textSize="@dimen/font_size_16"
-                        app:backgroundTint="@null" />
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
 
-                    <FrameLayout
-                        android:id="@+id/ad_container"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="bottom" />
+                        <Button
+                            android:id="@+id/btn_next"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/widget_size_10"
+                            android:layout_marginTop="@dimen/widget_size_55"
+                            android:layout_marginEnd="@dimen/widget_size_10"
+                            android:layout_marginBottom="@dimen/widget_size_20"
+                            android:background="@drawable/background_btn_blue"
+                            android:text="@string/string10"
+                            android:textSize="@dimen/font_size_16"
+                            app:backgroundTint="@null" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:layout_weight="1" />
+
+                        <FrameLayout
+                            android:id="@+id/ad_container"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom" />
+                    </LinearLayout>
                 </FrameLayout>
             </LinearLayout>
         </RelativeLayout>

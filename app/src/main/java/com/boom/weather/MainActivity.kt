@@ -21,7 +21,6 @@ import android.widget.ScrollView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -186,7 +185,8 @@ class MainActivity : BaseActivity() {
                 }
                 listRainPop.add(maxRain)
                 val fullStr = arrTime.getString(dayIndex * 24)
-                val dayOfWeek = WeatherUtil.getDayOfWeek(fullStr.substring(0, 10))
+                val dayOfWeek =
+                    WeatherUtil.getDayOfWeek(fullStr.substring(0, 10))
                 val dateShort = "${fullStr.substring(8, 10)}/${fullStr.substring(5, 7)}"
                 listTime.add("$dayOfWeek\n$dateShort")
                 listData.add(BarEntry(dayIndex.toFloat(), maxRain))
@@ -446,7 +446,7 @@ class MainActivity : BaseActivity() {
 
             UpdateCurrentTime()
             val txtWeatherStatus = findViewById<TextView>(R.id.weatherStatus)
-            val current = WeatherUtil.getWeatherStatus(this,currentWeather.getInt("weathercode"))
+            val current = WeatherUtil.getWeatherStatus(this, currentWeather.getInt("weathercode"))
             txtWeatherStatus.text = current
 
             val imgWeatherIcon = findViewById<ImageView>(R.id.weatherIcon)
