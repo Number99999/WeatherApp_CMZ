@@ -51,7 +51,8 @@ class AdManager @Inject constructor(
 
         InterstitialAd.load(
             activity,
-            AdUnitIds.INTERSTITIAL,
+//            AdUnitIds.INTERSTITIAL,
+            "ca-app-pub-3940256099942544/1033173712",
             AdRequest.Builder().build(),
             object : InterstitialAdLoadCallback() {
                 override fun onAdLoaded(ad: InterstitialAd) {
@@ -89,14 +90,14 @@ class AdManager @Inject constructor(
 
         showInterstitialAd(
             activity = activity, onAdStartShowing = onAdStartShowing, onAdClosed = {
-            lastAdShownTimeMap[adTag] = SystemClock.elapsedRealtime()
-            isFirstAdShownMap[adTag] = false
-            loadInterstitialAdIfNeeded(activity)
-            onAdClosed()
-        }, onAdFailedToShow = {
-            loadInterstitialAdIfNeeded(activity)
-            onAdFailedToShow(it)
-        }, onAdImpression = onAdImpression
+                lastAdShownTimeMap[adTag] = SystemClock.elapsedRealtime()
+                isFirstAdShownMap[adTag] = false
+                loadInterstitialAdIfNeeded(activity)
+                onAdClosed()
+            }, onAdFailedToShow = {
+                loadInterstitialAdIfNeeded(activity)
+                onAdFailedToShow(it)
+            }, onAdImpression = onAdImpression
         )
     }
 
@@ -153,7 +154,8 @@ class AdManager @Inject constructor(
         onAdStartShowing()
         InterstitialAd.load(
             activity,
-            AdUnitIds.INTERSTITIAL,
+//            AdUnitIds.INTERSTITIAL,
+            "ca-app-pub-3940256099942544/1033173712",
             AdRequest.Builder().build(),
             object : InterstitialAdLoadCallback() {
                 override fun onAdLoaded(ad: InterstitialAd) {
@@ -181,7 +183,9 @@ class AdManager @Inject constructor(
         val view = inflater.inflate(R.layout.native_ad_layout, container, false)
         val adView = view.findViewById<NativeAdView>(R.id.native_ad_views)
         val iconImageView = view.findViewById<ImageView>(R.id.ad_app_icon)
-        val adLoader = AdLoader.Builder(context, AdUnitIds.NATIVE).forNativeAd { nativeAd ->
+//        val adLoader = AdLoader.Builder(context, AdUnitIds.NATIVE).forNativeAd { nativeAd ->
+        val adLoader = AdLoader.Builder(context, "ca-app-pub-3940256099942544/2247696110")
+            .forNativeAd { nativeAd ->
                 container.removeAllViews()
                 displayNativeAd(adView, nativeAd, view)
                 adView.visibility = View.VISIBLE
@@ -190,15 +194,15 @@ class AdManager @Inject constructor(
                 container.addView(view)
                 onAdLoaded(nativeAd)
             }.withAdListener(object : AdListener() {
-                override fun onAdFailedToLoad(error: LoadAdError) {
-                    Log.e("ADS", "Ad failed: ${error.code} - ${error.message}")
-                    container.addView(view)
-                }
+            override fun onAdFailedToLoad(error: LoadAdError) {
+                Log.e("ADS", "Ad failed: ${error.code} - ${error.message}")
+                container.addView(view)
+            }
 
-                override fun onAdImpression() {
-                    onAdImpression()
-                }
-            }).build()
+            override fun onAdImpression() {
+                onAdImpression()
+            }
+        }).build()
 
         adLoader.loadAd(AdRequest.Builder().build())
     }
@@ -211,25 +215,25 @@ class AdManager @Inject constructor(
         val view = inflater.inflate(R.layout.native_ad_layout, container, false)
         val adView = view.findViewById<NativeAdView>(R.id.native_ad_view_intro)
         val adLoader = AdLoader.Builder(context, AdUnitIds.NATIVE).forNativeAd { nativeAd ->
-                container.removeAllViews()
-                displayNativeAd(adView, nativeAd, view)
-                adView.visibility = View.VISIBLE
-                adView.setNativeAd(nativeAd)
+            container.removeAllViews()
+            displayNativeAd(adView, nativeAd, view)
+            adView.visibility = View.VISIBLE
+            adView.setNativeAd(nativeAd)
 
-                container.addView(view)
-                onAdLoaded(nativeAd)
-            }.withAdListener(object : AdListener() {
-                override fun onAdFailedToLoad(error: LoadAdError) {
+            container.addView(view)
+            onAdLoaded(nativeAd)
+        }.withAdListener(object : AdListener() {
+            override fun onAdFailedToLoad(error: LoadAdError) {
 //                    ALog.d("AdManager", "Native ad failed to load: ${error.message}")
-                    container.addView(view)
-                    onAdFailed(error.message)
-                }
+                container.addView(view)
+                onAdFailed(error.message)
+            }
 
-                override fun onAdImpression() {
-                    super.onAdImpression()
-                    onAdImpression()
-                }
-            }).build()
+            override fun onAdImpression() {
+                super.onAdImpression()
+                onAdImpression()
+            }
+        }).build()
 
         adLoader.loadAd(AdRequest.Builder().build())
     }

@@ -10,9 +10,9 @@ import com.boom.weather.FrameWork.SDK.RemoteConfigManager
 import com.boom.weather.Service.LocationService
 import com.boom.weather.Utils.AppOpenAdManager
 import com.google.android.gms.ads.MobileAds
-import com.google.android.gms.ads.initialization.InitializationStatus
-import com.google.android.gms.ads.initialization.OnInitializationCompleteListener
+import com.google.android.gms.ads.RequestConfiguration
 import dagger.hilt.android.HiltAndroidApp
+
 
 @HiltAndroidApp
 class WeatherApp : Application(), Application.ActivityLifecycleCallbacks {
@@ -24,11 +24,19 @@ class WeatherApp : Application(), Application.ActivityLifecycleCallbacks {
 
     override fun onCreate() {
         super.onCreate()
-//        MobileAds.initialize(this) {}
+
+        val testDeviceIds = listOf("8693390D219BB212A4160FB1F4E70F96") // test device id
+        val configuration = RequestConfiguration.Builder()
+            .setTestDeviceIds(testDeviceIds)
+            .build()
+        MobileAds.setRequestConfiguration(configuration)
+
         MobileAds.initialize(
-            this, OnInitializationCompleteListener { initializationStatus: InitializationStatus? ->
-                Log.d("Mediation", "Google Mobile Ads SDK Initialized")
-            })
+            this
+        ) { initializationStatus ->
+            Log.d("Mediation", "Google Mobile Ads SDK Initialized")
+        }
+
         initApp()
     }
 
