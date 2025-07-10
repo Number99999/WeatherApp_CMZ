@@ -9,7 +9,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
-        android:name=".WeatherApp"
+        android:name="com.cmzsoft.weather.WeatherApp"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -20,16 +20,16 @@
         android:theme="@style/Theme.Weather"
         tools:targetApi="31">
         <activity
-            android:name=".ActivityChooseLanguage"
+            android:name="com.cmzsoft.weather.ActivityChooseLanguage"
             android:exported="false" />
         <activity
-            android:name=".ActivityTutorial"
+            android:name="com.cmzsoft.weather.ActivityTutorial"
             android:exported="false" />
         <activity
-            android:name=".ActivityRadarWeatherMap"
+            android:name="com.cmzsoft.weather.ActivityRadarWeatherMap"
             android:exported="false" />
         <activity
-            android:name=".LoadingAppActivity"
+            android:name="com.cmzsoft.weather.LoadingAppActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -38,43 +38,43 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ActivityChooseLocation"
+            android:name="com.cmzsoft.weather.ActivityChooseLocation"
             android:exported="false"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".ActivityCustomLayout"
+            android:name="com.cmzsoft.weather.ActivityCustomLayout"
             android:exported="false" />
         <activity
-            android:name=".ActivityFeedback"
+            android:name="com.cmzsoft.weather.ActivityFeedback"
             android:exported="false" />
         <activity
-            android:name=".ActivityLocationManager"
+            android:name="com.cmzsoft.weather.ActivityLocationManager"
             android:exported="false" />
         <activity
-            android:name=".ActivityPolicy"
+            android:name="com.cmzsoft.weather.ActivityPolicy"
             android:exported="false" />
         <activity
-            android:name=".ActivityRequestLocation"
+            android:name="com.cmzsoft.weather.ActivityRequestLocation"
             android:exported="false" />
         <activity
-            android:name=".ActivitySettingNotification"
+            android:name="com.cmzsoft.weather.ActivitySettingNotification"
             android:exported="false" />
         <activity
-            android:name=".ActivitySettingTheme"
+            android:name="com.cmzsoft.weather.ActivitySettingTheme"
             android:exported="false" />
         <activity
-            android:name=".ActivityEstablish"
+            android:name="com.cmzsoft.weather.ActivityEstablish"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name="com.cmzsoft.weather.MainActivity"
             android:exported="false" />
         <activity
-            android:name=".ActivityWeatherPerHour"
+            android:name="com.cmzsoft.weather.ActivityWeatherPerHour"
             android:exported="false" />
 
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-4686550583292348~5590976638" />
+            android:value="ca-app-pub-7340251527995818~8284130762" />
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyAE_6F6J92mVoin5BvwysIpafryT0gUyRs" />

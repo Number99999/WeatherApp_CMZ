@@ -1,21 +1,21 @@
 {
   "project_info": {
-    "project_number": "736039471386",
-    "project_id": "weather-forecast-e8e97",
-    "storage_bucket": "weather-forecast-e8e97.firebasestorage.app"
+    "project_number": "308422521057",
+    "project_id": "weatherapp-b7f4e",
+    "storage_bucket": "weatherapp-b7f4e.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:736039471386:android:acbba21f113598a3f144a3",
+        "mobilesdk_app_id": "1:308422521057:android:66ff17350a41f0239547a0",
         "android_client_info": {
-          "package_name": "com.boom.weather"
+          "package_name": "com.cmzsoft.weather"
         }
       },
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyCxIliogZNnm7cOdRHrXQq9WM2VPo6yHk4"
+          "current_key": "AIzaSyAsyTk3WtYhq0kFJ2o8iBRRM7JGeFMdwwU"
         }
       ],
       "services": {

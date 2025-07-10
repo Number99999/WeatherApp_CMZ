@@ -113,7 +113,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_gravity="center_vertical"
             android:background="@drawable/background_activity_request_location"
             android:orientation="vertical">
@@ -262,13 +262,13 @@
     <ScrollView
         android:id="@+id/request_location_3"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:visibility="visible"
         app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical">
 
             <ImageView
