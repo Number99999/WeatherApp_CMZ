@@ -50,22 +50,22 @@ android {
             buildConfigField(
                 "String",
                 "BANNER_AD_UNIT_ID",
-                "\"ca-app-pub-3940256099942544/6300978111\""
+                "\"ca-app-pub-6234439167982040/4203094539\""
             )
             buildConfigField(
                 "String",
                 "INTERSTITIAL_AD_UNIT_ID",
-                "\"ca-app-pub-3940256099942544/1033173712\""
+                "\"ca-app-pub-6234439167982040/4884269749\""
             )
             buildConfigField(
                 "String",
                 "APP_OPEN_AD_UNIT_ID",
-                "\"ca-app-pub-3940256099942544/9257395921\""
+                "\"ca-app-pub-6234439167982040/6055232258\""
             )
             buildConfigField(
                 "String",
                 "NATIVE_AD_UNIT_ID",
-                "\"ca-app-pub-3940256099942544/2247696110\""
+                "\"ca-app-pub-6234439167982040/9367791307\""
             )
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -110,7 +110,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.4.0")
     implementation("com.google.ads.mediation:inmobi:10.8.3.1")
-    implementation("com.google.ads.mediation:ironsource:8.9.0.0")
+//    implementation("com.google.ads.mediation:ironsource:8.9.0.0")
     implementation("com.google.ads.mediation:vungle:7.5.0.0")
     implementation("com.google.ads.mediation:mintegral:16.9.71.0")
     implementation("com.google.ads.mediation:pangle:7.2.0.3.0")

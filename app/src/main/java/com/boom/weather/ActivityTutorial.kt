@@ -11,6 +11,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.boom.weather.FrameWork.SDK.RemoteConfigManager
 import com.boom.weather.Manager.AdManager
 
 class ActivityTutorial : BaseActivity() {
@@ -62,6 +63,7 @@ class ActivityTutorial : BaseActivity() {
     }
 
     private fun loadNativeAds() {
+        if(RemoteConfigManager.getInstance().getRemoteConfig().nativeAdsEnabled==false) return;
         var adMgr = AdManager.getInstance(this@ActivityTutorial);
         adMgr.loadNativeClickAd(findViewById<FrameLayout>(R.id.ad_container), onAdLoaded = {
             println("onAdLoaded")

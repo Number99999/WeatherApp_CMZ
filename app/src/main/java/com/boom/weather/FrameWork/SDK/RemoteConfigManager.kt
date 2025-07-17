@@ -38,6 +38,9 @@ class RemoteConfigManager private constructor() {
     fun getBoolean(key: String): Boolean {
         return mFirebaseRemoteConfig.getBoolean(key)
     }
+    fun getRemoteConfig():RemoteConfigModel{
+        return remoteConfig;
+    }
 
     fun getLong(key: String): Long {
         return mFirebaseRemoteConfig.getLong(key)

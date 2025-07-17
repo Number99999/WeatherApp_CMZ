@@ -78,7 +78,7 @@ class WeatherApp : Application(), Application.ActivityLifecycleCallbacks {
             hasAppStartedOnce = true
         }
 
-        if (isReturningFromBackground) {
+        if (isReturningFromBackground && RemoteConfigManager.getInstance().getRemoteConfig().aoaEnabled==true) {
             isReturningFromBackground = false
 //            AdLoadingDialogFragment.show(
 //                (activity as AppCompatActivity).supportFragmentManager

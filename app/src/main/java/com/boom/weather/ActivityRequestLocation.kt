@@ -21,6 +21,7 @@ import androidx.core.view.WindowInsetsCompat
 import com.boom.weather.CustomView.PermissionDialogFragment
 import com.boom.weather.FrameWork.Data.LocalStorageManager
 import com.boom.weather.FrameWork.EventApp.FirebaseManager
+import com.boom.weather.FrameWork.SDK.RemoteConfigManager
 import com.boom.weather.Manager.AdManager
 import com.boom.weather.Model.FakeGlobal
 import com.boom.weather.Model.Object.KeyEventFirebase
@@ -114,6 +115,7 @@ class ActivityRequestLocation : BaseActivity() {
     }
 
     private fun loadNativeAds() {
+        if(RemoteConfigManager.getInstance().getRemoteConfig().nativeAdsEnabled==false) return;
         var adMgr = AdManager.getInstance(this@ActivityRequestLocation);
         adMgr.loadNativeClickAd(findViewById<FrameLayout>(R.id.ad_container), onAdLoaded = {
             FirebaseManager.getInstance(context = this)

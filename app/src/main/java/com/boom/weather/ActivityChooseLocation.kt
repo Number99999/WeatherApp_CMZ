@@ -18,6 +18,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.boom.weather.CustomAdapter.LocationInMapAdapter
+import com.boom.weather.FrameWork.SDK.RemoteConfigManager
 import com.boom.weather.Manager.AdManager
 import com.boom.weather.Manager.LocaleManager
 import com.boom.weather.Manager.NetworkManager
@@ -136,14 +137,13 @@ class ActivityChooseLocation : BaseActivity(), OnMapReadyCallback {
     }
 
     private fun loadNativeAds() {
-        var adMgr = AdManager.getInstance(this@ActivityChooseLocation);
+        if(RemoteConfigManager.getInstance().getRemoteConfig().nativeAdsEnabled==false) return;        var adMgr = AdManager.getInstance(this@ActivityChooseLocation);
         val contain = findViewById<FrameLayout>(R.id.ad_container)
         contain.visibility = View.GONE
         adMgr.loadNativeClickAd(contain, onAdLoaded = {
             contain.visibility = View.VISIBLE
             println("onAdLoaded")
         }, onAdFailed = { println("onAdFailed") }, onAdImpression = {
-            contain.visibility = View.GONE
             println("onAdImpression")
         })
     }

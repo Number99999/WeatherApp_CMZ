@@ -31,6 +31,7 @@ import androidx.lifecycle.lifecycleScope
 import com.boom.weather.APICall.RequestAPI
 import com.boom.weather.FrameWork.Data.LocalStorageManager
 import com.boom.weather.FrameWork.EventApp.FirebaseManager
+import com.boom.weather.FrameWork.SDK.RemoteConfigManager
 import com.boom.weather.Manager.AdManager
 import com.boom.weather.Model.DataWeatherPerHourModel
 import com.boom.weather.Model.EstablishModel
@@ -570,6 +571,7 @@ class MainActivity : BaseActivity() {
 
     fun showInterAds() {
         LocalStorageManager.putString(KeysStorage.isFirstOpenApp, "false")
+//        if(RemoteConfigManager.getInstance().getRemoteConfig().)
         adManager.showInterstitialAdIfEligible(
             this,
             minIntervalMillis = 60_000L,
@@ -601,6 +603,7 @@ class MainActivity : BaseActivity() {
     }
 
     private fun loadNativeAds() {
+        if(RemoteConfigManager.getInstance().getRemoteConfig().nativeAdsEnabled==false) return;
         var adMgr = AdManager.getInstance(this@MainActivity);
         val container = findViewById<FrameLayout>(R.id.ad_container)
         container.visibility = View.GONE
@@ -609,7 +612,6 @@ class MainActivity : BaseActivity() {
             container.visibility = View.VISIBLE
         }, onAdFailed = { println("onAdFailed") }, onAdImpression = {
             println("onAdImpression")
-            container.visibility = View.GONE
         })
     }
 

@@ -9,10 +9,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="PLACEHOLDER" />
-                  <option name="mobileSdkAppId" value="" />
-                  <option name="projectId" value="" />
-                  <option name="projectNumber" value="" />
+                  <option name="appId" value="com.boom.weather" />
+                  <option name="mobileSdkAppId" value="1:736039471386:android:acbba21f113598a3f144a3" />
+                  <option name="projectId" value="weather-forecast-e8e97" />
+                  <option name="projectNumber" value="736039471386" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />
