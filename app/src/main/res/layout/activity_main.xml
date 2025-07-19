@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:ads="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/main"
     android:layout_width="match_parent"
@@ -437,56 +436,48 @@
                 android:layout_marginTop="@dimen/margin_12dp"
                 android:text="BANGKOK"
                 android:textColor="@color/black"
-                android:textSize="@dimen/font_size_16"
+                android:textSize="@dimen/font_size_20"
                 android:textStyle="bold" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/margin_24dp"
+                android:layout_gravity="center_horizontal"
                 android:layout_marginTop="@dimen/margin_12dp"
                 android:text="@string/string117"
                 android:textColor="@color/black"
+                android:textSize="@dimen/font_size_20"
                 android:textStyle="normal" />
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="@dimen/widget_size_250"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_8dp"
-                android:layout_marginBottom="@dimen/margin_12dp">
-
-                <Button
-                    android:id="@+id/rej_set_default_1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="?android:attr/windowBackground"
-                    android:text="Never"
-                    android:textColor="@color/bg_blue_1"
-                    app:backgroundTint="@null"
-                    app:backgroundTintMode="@null" />
+                android:layout_marginTop="@dimen/margin_24dp"
+                android:layout_marginBottom="@dimen/margin_24dp"
+                android:gravity="center">
 
                 <Button
                     android:id="@+id/rej_set_default_2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="?android:attr/windowBackground"
-                    android:text="Cancel"
-                    android:textColor="@color/bg_blue_1"
+                    android:layout_width="@dimen/widget_size_100"
+                    android:layout_height="@dimen/height_aspect_ins_1_1"
+                    android:background="@drawable/background_btn_grey_2"
+                    android:text="CANCEL"
+                    android:textColor="#FFFFFF"
                     app:backgroundTint="@null"
                     app:backgroundTintMode="@null" />
 
                 <Button
                     android:id="@+id/btn_accept_set_default"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="?android:attr/windowBackground"
-                    android:text="Ok"
-                    android:textColor="@color/bg_blue_1"
+                    android:layout_width="@dimen/widget_size_100"
+                    android:layout_height="@dimen/height_aspect_ins_1_1"
+                    android:layout_marginStart="@dimen/margin_8dp"
+                    android:background="@drawable/background_btn_blue"
+                    android:text="OK"
+                    android:textColor="#FFFFFF"
                     app:backgroundTint="@null"
                     app:backgroundTintMode="@null" />
             </LinearLayout>
         </LinearLayout>
-
     </FrameLayout>
 
     <FrameLayout

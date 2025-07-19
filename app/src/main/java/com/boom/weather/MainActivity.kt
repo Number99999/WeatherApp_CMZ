@@ -1361,9 +1361,9 @@ class MainActivity : BaseActivity() {
         contain.visibility = View.VISIBLE;
         findViewById<TextView>(R.id.txt_title_popup_confirm_defaul).text =
             FakeGlobal.getInstance().curLocation.name;
-        findViewById<Button>(R.id.rej_set_default_1).setOnClickListener {
-            contain.visibility = View.GONE
-        }
+//        findViewById<Button>(R.id.rej_set_default_1).setOnClickListener {
+//            contain.visibility = View.GONE
+//        }
         findViewById<Button>(R.id.rej_set_default_2).setOnClickListener {
             contain.visibility = View.GONE
         }
