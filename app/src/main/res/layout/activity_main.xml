@@ -440,7 +440,7 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="@dimen/widget_size_210"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="@dimen/margin_12dp"
@@ -452,6 +452,7 @@
             <LinearLayout
                 android:layout_width="@dimen/widget_size_250"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
                 android:layout_marginTop="@dimen/margin_24dp"
                 android:layout_marginBottom="@dimen/margin_24dp"
                 android:gravity="center">
@@ -460,8 +461,9 @@
                     android:id="@+id/rej_set_default_2"
                     android:layout_width="@dimen/widget_size_100"
                     android:layout_height="@dimen/height_aspect_ins_1_1"
+                    android:autoSizeTextType="uniform"
                     android:background="@drawable/background_btn_grey_2"
-                    android:text="CANCEL"
+                    android:text="@string/string118"
                     android:textColor="#FFFFFF"
                     app:backgroundTint="@null"
                     app:backgroundTintMode="@null" />
@@ -472,7 +474,7 @@
                     android:layout_height="@dimen/height_aspect_ins_1_1"
                     android:layout_marginStart="@dimen/margin_8dp"
                     android:background="@drawable/background_btn_blue"
-                    android:text="OK"
+                    android:text="@string/string119"
                     android:textColor="#FFFFFF"
                     app:backgroundTint="@null"
                     app:backgroundTintMode="@null" />
